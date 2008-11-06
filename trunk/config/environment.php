@@ -1,8 +1,8 @@
 <?php
 // include environment specific settings
-switch(getenv('DSS_ENV')) {
+switch(getenv('ROBOFRAME_ENV')) {
    default:
-     die('No environment set. Set "DSS_ENV" to "development", "test" or "production" and restart the webserver!');
+     die('No environment set. Set "ROBOFRAME_ENV" to "development", "test" or "production" and restart the webserver!');
      
    case 'development':
       define('APP_ENV', 'development');
