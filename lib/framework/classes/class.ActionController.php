@@ -1,8 +1,17 @@
 <?php
+require_once('classes/class.View.php');
 abstract class ActionController extends Controller {
   protected $name;
-  protected $viewData = array();
-  public    $layout = 'default';
+  protected $viewData      = array();
+  public    $layout        = 'default';
+  public    $output_format = 'xhtml';
+  
+  public function set_output_format($output_format) {
+    $this->output_format = $output_format;
+  }
+  public function get_output_format() {
+    return $this->output_format;
+  }
   
   public function setName($name) {
     $this->name = $name;
@@ -29,9 +38,16 @@ abstract class ActionController extends Controller {
     $this->displayView($action);
   }
   public function displayView($action) {
-    $layout = LAYOUT_ROOT.'/'.$this->layout.'.php';
+    //$view_path = VIEW_ROOT . '/' . $this->getName() . '/' . $action . '.'.$this->get_output_format().'.php';
+    $view = new View($this->getName(), $action, $this->viewData, $this->get_output_format(), $this->layout);
+    $view->render();
+/*    
+    //if($this->get_output_format() == 'xhtml') {
+    //  $layout = LAYOUT_ROOT.'/'.$this->layout.'.php';
+    //}
+    
     //$view = VIEW_ROOT . "/" . $this->getName() . "/" . $action . ".php";
-    $content = VIEW_ROOT . '/' . $this->getName() . '/' . $action . '.php';
+    $content = VIEW_ROOT . '/' . $this->getName() . '/' . $action . '.'.$this->get_output_format().'.php';
     //if (!is_file($view)) {
     if (!is_file($content)) {
       //exit("View [".$view."] not found");
@@ -49,7 +65,7 @@ abstract class ActionController extends Controller {
       include($content);
     }
     //include $view;
-
+*/
     exit(0);
   }
   

@@ -13,7 +13,7 @@ class FrontController extends Controller {
     return $instance;
   }
   public function dispatch() {
-    $page = !empty($_GET["page"]) ? $_GET["page"] : "home";
+    $page = !empty($_GET["controller"]) ? $_GET["controller"] : "home";
     $action = !empty($_GET["action"]) ? $_GET["action"] : "index";
     $this->forward($page, $action);
   }
