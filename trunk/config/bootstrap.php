@@ -12,13 +12,14 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . PAGE_ROOT);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . LIBRARY_PATH);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FRAMEWORK_PATH);
 
-require_once(APP_BASE.'/config/environment.php');
-require_once(APP_BASE.'/config/application.php');
-require_once(APP_BASE.'/config/views.php');
-
+require_once(FRAMEWORK_PATH.'/classes/class.Logger.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Registry.php');
 require_once(FRAMEWORK_PATH.'/classes/class.PluginManager.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Model.php');
+
+require_once(APP_BASE.'/config/environment.php');
+require_once(APP_BASE.'/config/application.php');
+//require_once(APP_BASE.'/config/views.php');
 
 PluginManager::initialize_all();
 

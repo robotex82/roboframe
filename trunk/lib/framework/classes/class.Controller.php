@@ -27,7 +27,7 @@ abstract class Controller {
     //e.g. pages/home/HomeActions.php
     $file = CONTROLLER_ROOT . "/" . $file_class . ".php";
     if (!is_file($file)) {
-      exit("Page [".CONTROLLER_ROOT . "/" . $class . ".php] not found");
+      exit("Controller [".CONTROLLER_ROOT . "/" . $class . ".php] not found");
     }
     require_once $file;
     $controller = new $class();
