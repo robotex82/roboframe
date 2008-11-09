@@ -25,11 +25,12 @@ class OutputPdf {
   }
   
   public function after_render($view) {
+    $filename = $view->get_controller_name().'-'.$view->get_action_name().'.pdf';
     // set Headers
     if($this->direct_download == true) {
-      $view->get_view_item('pdf')->Output($view->get_controller_name().'-'.$view->get_action_name(), 'D');
+      $view->get_view_item('pdf')->Output($filename, 'D');
     } else {
-      $view->get_view_item('pdf')->Output($view->get_action_name(), 'I');
+      $view->get_view_item('pdf')->Output($filename, 'I');
     }
   }
 }

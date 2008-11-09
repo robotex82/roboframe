@@ -5,10 +5,16 @@ abstract class ActionController extends Controller {
   protected $viewData      = array();
   public    $layout        = 'default';
   public    $output_format = 'xhtml';
+
+  /* Alias for set_output_format() */
+  public function render_as($output_format) {
+    $this->set_output_format($output_format);
+  }
   
   public function set_output_format($output_format) {
     $this->output_format = $output_format;
   }
+  
   public function get_output_format() {
     return $this->output_format;
   }
