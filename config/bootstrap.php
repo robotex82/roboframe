@@ -12,6 +12,7 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . PAGE_ROOT);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . LIBRARY_PATH);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FRAMEWORK_PATH);
 
+require_once(FRAMEWORK_PATH.'/classes/class.Roboframe.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Logger.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Registry.php');
 require_once(FRAMEWORK_PATH.'/classes/class.PluginManager.php');
