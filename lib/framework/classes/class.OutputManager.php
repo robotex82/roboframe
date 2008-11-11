@@ -1,7 +1,7 @@
 <?php
 class OutputManager {
   //protected $output_format = 'xhtml';
-  protected $view_data = array();
+  //protected $view_data = array();
   protected $output_manager = null;
   
   public static function get_output_manager_for($output_format) {
