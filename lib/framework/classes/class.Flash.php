@@ -1,7 +1,7 @@
 <?php
 class Flash {
-  $data array();
-  $keys_to_delete = array();
+  protected $data = array();
+  protected $keys_to_delete = array();
 
   public function __construct() {
     if(!is_array($_SESSION['flash'])) {
@@ -24,9 +24,20 @@ class Flash {
       return $this->data[$key];
     }
   } 
-  
+  /*
   public function __set($key, $value)  {
     $this->data[$key] = $value;
+  }
+  */
+  
+  public function add_data($key, $value)  {
+    $this->data[$key] = $value;
+  }
+  
+  public function __call($method, $args) {
+    if(isset($args[0])) {
+      $this->add_data($method, $args[0]);
+    }
   }
 }
 ?>
