@@ -5,7 +5,12 @@ abstract class ActionController extends Controller {
   protected $viewData      = array();
   public    $layout        = 'default';
   public    $output_format = 'xhtml';
-
+  protected $flash;
+  
+  public function __construct() {
+    $this->flash = new Flash();
+  }
+  
   /* Alias for set_output_format() */
   public function render_as($output_format) {
     $this->set_output_format($output_format);
@@ -45,6 +50,7 @@ abstract class ActionController extends Controller {
   }
   public function displayView($action) {
     //$view_path = VIEW_ROOT . '/' . $this->getName() . '/' . $action . '.'.$this->get_output_format().'.php';
+    $this->setVar('flash', $this->flash);
     $view = new View($this->getName(), $action, $this->viewData, $this->get_output_format(), $this->layout);
     $view->render();
 /*    
