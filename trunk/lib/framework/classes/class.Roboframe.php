@@ -47,5 +47,9 @@ class Roboframe {
     }
     return $controllers;
   }
+  
+  public static function enable_sessions() {
+    session_start();
+  }
 }    
 ?>

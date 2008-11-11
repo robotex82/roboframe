@@ -8,6 +8,9 @@ try {
   die('Error creating Logger Object!');
 }
 
+// start Session
+Roboframe::enable_sessions();
+
 // put application config here
 $application['name'] = 'app_name';
 ?>
