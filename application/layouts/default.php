@@ -9,6 +9,9 @@
 </head>
 <body>
   <div id="content">
+    <div class="flash">
+      <p style="color: green"><?= $flash->notice; ?></p>
+    </div>
     <? include($content); ?>
   </div>
 </body>
