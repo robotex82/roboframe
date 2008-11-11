@@ -2,6 +2,7 @@
 require_once(FRAMEWORK_PATH.'/classes/class.Database.php');
 abstract class Model {
   protected $data = array();
+  protected $validators = array();
   
   public $database_connection = null;
   
@@ -23,6 +24,22 @@ abstract class Model {
     if (array_key_exists($key, $this->data)) {
       return $this->data[$key];
     }
+  }
+  
+  public function __call($method, $args) {
+    if(substr($method, 0, 8) == 'validate_') {
+      echo 'Call for validation => '.substr($method, 8, 0).'!';
+      $validator_type = substr($method, 8, 0);
+      $options_as_array = array_slice($args, 1);
+      $this->add_validator(ValidationManager::get_validator($validator_type, $args[0], $options_as_array));
+    }
+  }
+  
+  private function add_validator($validator) {
+    $this->validators[] = $validator;
+  }
+  
+  public function validate() {
   }
 }
 ?>
