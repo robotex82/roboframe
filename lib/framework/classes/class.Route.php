@@ -1,129 +1,177 @@
 <?php
 class Route {
-  private $route_data;
-//  private $controller_name;
-//  private $action_name;  
-  private $url_params = array();    
+  /*
+   * Default action if no action provided
+   */
+  private $default_action = 'index';
 
-  public function __construct($route_data) {
-    $this->set_route_data($route_data); 
-  }  
+  /*
+   * i.e. 'admin/report/show/:id/:format'
+   */
+  private $route_template;
   
-  public function set_route_data(array $route_data) {
-    $this->route_data_is_valid($route_data);
-    $this->route_data = $route_data; 
+  /*
+   * i.e. array(3 => 'id', 4 => 'format')
+   */
+  private $route_template_dynamic_parts = array();
+  
+  /*
+   * i.e. array(0 => 'admin', 1 => 'report', 2 => 'show')
+   */
+  private $route_template_static_parts = array();
+  
+  /*
+   * i.e. array('controller' => 'report', 'action' => 'show')
+   */
+  private $route_defaults = array();
+  
+  /*
+   * calculated params after matching and parsing
+   * i.e. array('id' => '5', 'format' => 'pdf')
+   */
+  private $request_params;
+  
+  /*
+   * i.e. array(0 => 'admin', 1 => 'report', 2 => 'show', 3 => '5', 4 => 'pdf')
+   */
+  private $request_url;
+
+  /**
+   * Sets the request URL. Is called in the constructor only
+   */
+  private function set_request_url(array $url) {
+    echo 'Request URL:';
+    print_r($url);
+    $this->request_url = $url;
   }
   
-  public function get_route_data() { 
-    return $this->route_data; 
+  private function get_request_url() {
+    return $this->request_url;
   }
   
-  public function get_route_data_url() { 
-    return $this->route_data['url']; 
+  /**
+   * returns the route defaults.
+   */
+  private function get_route_defaults() {
+    return $this->route_defaults;
   }
   
-  public function get_route_data_url_dynamic_part_count() { 
-    $route_data_url_parts = explode('/', $this->get_route_data_url());
-    $dynamic_part_count = 0;
-    foreach($route_data_url_parts as $route_data_url_part) {
-      if(substr($route_data_url_part, 0, 1) == ":") {
-        $dynamic_part_count++;
+  /**
+   * Sets the route defaults.
+   */
+  private function set_route_defaults(array $route_defaults) {
+    echo 'Route defaults:';
+    print_r($route_defaults);
+    $this->route_defaults = $route_defaults;
+  }
+  
+  /**
+   * Sets the route tempalte. Sets the dynamic parts too.
+   */
+  private function set_route_template($route_template) {
+    $route_template_parts = explode('/', $route_template);
+    $position = 0;
+    foreach($route_template_parts as $part) {
+      if(substr($part, 0, 1) == ':') {
+        $this->route_template_dynamic_parts[$position] = substr($part, 1);
+      } else {
+        $this->route_template_static_parts[$position] = $part;
       }
+      $position++;
+    }
+    echo 'Route template dynamic parts:';
+    print_r($this->route_template_dynamic_parts);
+    echo 'Route template static parts:';
+    print_r($this->route_template_static_parts);
+    $this->route_template = $route_template;
+  }
+  
+  private function get_route_template() {
+    return $this->route_template;
+  }
+  
+  private function route_template_part_count() {
+    return count(explode('/', $this->get_route_template()));
+  }
+  
+  private function request_url_part_count() {
+    return count(explode('/', $this->get_request_url()));
+  }
+  
+  /**
+   * adds an entry to the route defaults.
+   */
+  private function add_to_route_defaults($key, $value) {
+    $this->route_defaults[$key] = $value;
+  }
+  
+  /**
+   * Sets the controller name. Is called after succesfully matching the URL against the route
+   */
+  private function set_controller_name($controller_name) {
+    $this->controller_name = $controller_name;  
+  }
+  
+  /**
+   * Sets the action name. Is called after succesfully matching the URL against the route
+   */
+  private function set_action_name($action_name) {
+    $this->action_name = $action_name;  
+  }
+  
+  /**
+   * Adds a parameter to the request param array.
+   */
+  private function add_request_param(string $key, string $value) {
+    $this->request_params[$key] = $value;
+  }
+  
+  /**
+   * Splits a URL at the slashes into parts. Returns an array with parts
+   */
+  public static function split_url($url) {
+    return explode('/', $url);
+  }
+
+  /**
+   * First param should be a valid route template like 'admin/report/show/:id/:format'
+   * Second param should be the route defaults like array('controller' => 'report', 'action' => 'show')  
+   */
+  public function __construct($route_template, array $route_defaults) {
+    $this->set_route_template($route_template);
+    $this->set_route_defaults($route_defaults);
+    if(!array_key_exists('action', $this->get_route_defaults())) {
+      $this->add_to_route_defaults('action', 'index');      
     }  
-    return $dynamic_part_count;
   }
   
-  public function get_url_params_count() {
-    return count($this->url_params);
-  }
-  
-  public function set_controller_name($controller_name) {
-    $this->add_url_param('controller', $controller_name);
-  }
- 
-  public function get_controller_name() {
-    return $this->get_url_param('controller'); 
-  }
-
-  public function set_action_name($action_name) {
-    $this->add_url_param('action', $action_name);
-  }
-
-  public function get_action_name() {
-    return $this->get_url_param('action'); 
-  }
-/*  
-  public function set_url_params(array $url_params) {
-    $this->url_params = $url_params;
-  }
-*/  
-  public function add_url_param($key, $value) {
-    $this->url_params[$key] = $value;
-  }
-  
-  public function get_url_params() {
-    return $this->url_params; 
-  }
-  
-  public function get_url_param($key) {
-    if(array_key_exists($key, $this->url_params)) {
-      return $this->url_params[$key]; 
-    }
-  }
-  
-  public function route_data_is_valid($route_data) {
-    if(!array_key_exists('url', $route_data)) {
-      throw new Exception('Missing [url] directive in [routes.ini]'); 
-    }
+  /**
+   * Matches the passed URL to this route. 
+   * Returns true if the route matches
+   */
+  public function match_url($url) {
+    $this->set_request_url(Route::split_url($url));
     
-    if(!array_key_exists('controller', $route_data)) {
-      throw new Exception('Missing [controller] directive in [routes.ini]'); 
-    }
-    
-    if(!array_key_exists('action', $route_data)) {
-      throw new Exception('Missing [action] directive in [routes.ini]'); 
-    }
-    
-    return true;
-  }  
-  
-  public function match($request_url) {
-    if(empty($request_url) and empty($this->route_data['url'])) {
-      $this->set_controller_name($this->route_data['controller']);
-      $this->set_action_name($this->route_data['action']);
-      return true;
-    }
-    
-    $request_url_parts = explode('/', $request_url);
-    $route_data_url_parts = explode('/', $this->route_data['url']);
-    
-    if(count($request_url_parts) != count($route_data_url_parts)) {
-      return false;    
-    }
-    
-    $url_part = 0;
-    foreach($route_data_url_parts as $route_data_url_part) {
-    //echo 'Processing: '.$route_data_url_part;
-      if(substr($route_data_url_part, 0, 1) == ":") {
-        $param_key = substr($route_data_url_part, 1);
-        $this->add_url_param($param_key, $request_url_parts[$url_part]);
-        //echo 'Mapping '.$param_key.' => '.$request_url_parts[$url_part];
-      }
-      $url_part++;
-    }
-    
-    if($this->get_route_data_url_dynamic_part_count() != $this->get_url_params_count()) {
+    // if the request url hast more parts then the route template, it can't match
+    if($this->request_url_part_count() > $this->route_template_part_count()) {
       return false;
     }
-    
-    return true;
-    /*
-    $regexp = '/^:(.*)\/:(.*)\/:(.*)$/';
-    if(preg_match($regexp, $url, $matches)) {
-      return true;
-    }
-    */
   }
   
+  /**
+   * Returns the controller name, if the route has matched
+   */
+  public function get_controller_name() {}
+  
+  /**
+   * Returns the action name, if the route has matched
+   */
+  public function get_action_name() {}
+  
+  /**
+   * Returns the calculated request parameters, if the route has matched
+   */
+  public function get_request_params() {}
+
 }
 ?>
