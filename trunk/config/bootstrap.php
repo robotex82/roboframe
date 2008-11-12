@@ -13,11 +13,14 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . LIBRARY_PATH)
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FRAMEWORK_PATH);
 
 require_once(FRAMEWORK_PATH.'/classes/class.Roboframe.php');
+Roboframe::check_requirements();
+
 require_once(FRAMEWORK_PATH.'/classes/class.Logger.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Registry.php');
 require_once(FRAMEWORK_PATH.'/classes/class.PluginManager.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Flash.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Model.php');
+require_once(FRAMEWORK_PATH.'/classes/class.Router.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Route.php');
 
 require_once(APP_BASE.'/config/environment.php');

@@ -51,5 +51,23 @@ class Roboframe {
   public static function enable_sessions() {
     session_start();
   }
+  
+  public static function check_requirements() {
+    Roboframe::check_needed_libs();
+  }
+  
+  public static function check_needed_libs() {
+    if(!is_dir(LIBRARY_PATH.'/adodb')) {
+      die('Could not find adodb library in ['.LIBRARY_PATH.'/adodb]. Please make sure you installed adodb!');
+    }
+    
+    if(!is_dir(LIBRARY_PATH.'/fpdf')) {
+      die('Could not find fpdf library in ['.LIBRARY_PATH.'/fpdf]. Please make sure you installed fpdf!');
+    }
+    
+    if(!is_dir(LIBRARY_PATH.'/simpletest')) {
+      die('Could not find simpletest library in ['.LIBRARY_PATH.'/simpletest]. Please make sure you installed simpletest!');
+    }
+  }
 }    
 ?>
