@@ -4,10 +4,13 @@ class Database {
   public static function get_connection() {
     $settings = Database::load_settings();
     
-    switch ($settings['db_driver']) {
+    switch ($settings['adapter']) {
     case 'oci8':
         require_once(FRAMEWORK_PATH.'/classes/class.OracleAdapter.php');
         return OracleAdapter::connect($settings);
+    case 'mysql':
+        require_once(FRAMEWORK_PATH.'/classes/class.MysqlAdapter.php');
+        return MysqlAdapter::connect($settings);
     }
   }
   

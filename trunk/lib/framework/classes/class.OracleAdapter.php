@@ -1,7 +1,7 @@
 <?php
 class OracleAdapter {
   public static function connect($settings) {
-    $connection = ADONewConnection($settings['db_driver']);
+    $connection = ADONewConnection($settings['adapter']);
 
     if(array_key_exists('debug', $settings)) {
       $connection->debug = false;
