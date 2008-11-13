@@ -1,5 +1,7 @@
 <?php
 require_once(LIBRARY_PATH.'/adodb/adodb.inc.php');
+require_once(LIBRARY_PATH.'/adodb/adodb-exceptions.inc.php');
+
 class Database {
   public static function get_connection() {
     $settings = Database::load_settings();
