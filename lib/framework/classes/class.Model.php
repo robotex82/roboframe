@@ -4,10 +4,14 @@ abstract class Model {
   protected $data = array();
   protected $validators = array();
   
-  public $database_connection = null;
+  //public $database_connection = null;
   
-  function __construct() {
-    $this->database_connection = Database::get_connection();
+  public function __construct() {
+    //$this->database_connection = Database::get_connection();
+  }
+  
+  public function database_connection($connection_name = false) {
+    return Database::get_connection($connection_name);
   }
   
   public function __set($key, $value)  {
