@@ -3,8 +3,8 @@ require_once(LIBRARY_PATH.'/adodb/adodb.inc.php');
 require_once(LIBRARY_PATH.'/adodb/adodb-exceptions.inc.php');
 
 class Database {
-  public static function get_connection() {
-    $settings = Database::load_settings();
+  public static function get_connection($connection_name = false) {
+    $settings = Database::load_settings($connection_name);
     
     switch ($settings['adapter']) {
     case 'oci8':
@@ -19,12 +19,13 @@ class Database {
   /*
    * Loads settings from APP_BASE/config/content_server.ini
    */
-  public static function load_settings() {
+  public static function load_settings($connection_name = false) {
+    $connection_name = ($connection_name) ? $connection_name : APP_ENV;
     if(!($settings = parse_ini_file(APP_BASE.'/config/database.ini', true))) {
       throw new Exception('Could not read the Database configuration file. '.
                           'Please make sure that there is a proper database.ini file in the '.APP_BASE.'/config folder!');
     }
-    $env_settings = $settings[APP_ENV];
+    $env_settings = $settings[$connection_name];
     return $env_settings;  
   }
   
