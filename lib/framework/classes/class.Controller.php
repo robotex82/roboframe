@@ -20,7 +20,7 @@ abstract class Controller {
     //I tend to prefer $this->getRequest()->getSession(), but whatever!
   }
   
-  public function forward($page, $action) {
+  public function forward($page, $action, $request_data = array()) {
     //e.g. HomeActions
     $controller_without_underscore = str_replace('_', ' ', $page);
     $controller_as_single_words = ucwords($controller_without_underscore);
@@ -35,7 +35,7 @@ abstract class Controller {
     }
     require_once $file;
     $controller = new $class();
-    $controller->set_request($_REQUEST);
+    $controller->set_request($request_data);
     $controller->setName($page);
     $controller->dispatchAction($action);
     exit(0);
