@@ -29,13 +29,22 @@ class Route {
    * calculated params after matching and parsing
    * i.e. array('id' => '5', 'format' => 'pdf')
    */
-  private $request_params;
+  private $request_params = array();
   
   /*
    * i.e. array(0 => 'admin', 1 => 'report', 2 => 'show', 3 => '5', 4 => 'pdf')
    */
   private $request_url = array();
-
+  
+  /*
+   * i.e. 'report'
+   */
+  private $controller_name;
+  
+  /*
+   * i.e. 'show'
+   */
+  private $action_name;  
   /**
    * Sets the request URL. Is called in the constructor only
    */
@@ -49,6 +58,14 @@ class Route {
     return $this->request_url;
   }
   
+  private function get_part_from_request_url($position) {
+//echo 'Getting part ['.$position.'] from request URL. Value ['.$this->request_url[$position].']';
+    if(array_key_exists($position, $this->request_url)) {
+//echo 'Value ['.$this->request_url[$position].']';
+      return $this->request_url[$position];
+    }  
+  }
+  
   /**
    * returns the route defaults.
    */
@@ -60,8 +77,8 @@ class Route {
    * Sets the route defaults.
    */
   private function set_route_defaults(array $route_defaults) {
-    echo 'Route defaults:';
-    print_r($route_defaults);
+//echo 'Route defaults:';
+//print_r($route_defaults);
     $this->route_defaults = $route_defaults;
   }
   
@@ -79,10 +96,10 @@ class Route {
       }
       $position++;
     }
-    echo 'Route template dynamic parts:';
-    print_r($this->route_template_dynamic_parts);
-    echo 'Route template static parts:';
-    print_r($this->route_template_static_parts);
+//echo 'Route template dynamic parts:';
+//print_r($this->route_template_dynamic_parts);
+//echo 'Route template static parts:';
+//print_r($this->route_template_static_parts);
     $this->route_template = $route_template;
   }
   
@@ -122,7 +139,7 @@ class Route {
   /**
    * Adds a parameter to the request param array.
    */
-  private function add_request_param(string $key, string $value) {
+  private function add_to_request_params($key, $value) {
     $this->request_params[$key] = $value;
   }
   
@@ -140,9 +157,11 @@ class Route {
   public function __construct($route_template, array $route_defaults) {
     $this->set_route_template($route_template);
     $this->set_route_defaults($route_defaults);
+/*
     if(!array_key_exists('action', $this->get_route_defaults())) {
       $this->add_to_route_defaults('action', 'index');      
     }  
+*/    
   }
   
   /**
@@ -162,10 +181,24 @@ class Route {
     if(!$this->match_static_route_parts_with_request_url()) {
       return false;
     }
+    
+    //map dynamic route params to the request and fill the request params
+    $this->extract_request_params_from_request_url();
+    
+    //fill request from route defaults
+    $this->extract_request_params_from_route_defaults();
 /*    
-    // map dynamic route params to the request and fill the request params
-    $this->extract_request_params_from_request_url() {}
+    if(!array_key_exists('action', $this->get_route_defaults())) {
+      $this->add_to_route_defaults('action', 'index');      
+      //$this->set_action_name('index');
+    }  
 */    
+    $this->set_controller_name($this->request_params['controller']);
+    $this->set_action_name($this->request_params['action']);
+    
+    unset($this->request_params['controller']);
+    unset($this->request_params['action']);
+    
     return true;
     
   }
@@ -181,20 +214,41 @@ class Route {
     return true;
   }
   
+  public function extract_request_params_from_request_url() {
+    foreach($this->route_template_dynamic_parts as $position => $name) {
+//echo 'Position ['.$position.'], name ['.$name.']'."\r\n";      
+      $this->add_to_request_params($name, $this->get_part_from_request_url($position));
+    }
+  }
+  
+  public function extract_request_params_from_route_defaults() {
+    foreach($this->get_route_defaults() as $name => $value) {
+      $this->add_to_request_params($name, $value);
+    }
+  }
+  
   /**
    * Returns the controller name, if the route has matched
    */
-  public function get_controller_name() {}
+  public function get_controller_name() {
+//    return $this->request_params['controller'];
+    return $this->controller_name;
+  }
   
   /**
    * Returns the action name, if the route has matched
    */
-  public function get_action_name() {}
+  public function get_action_name() {
+//    return $this->request_params['action'];
+    return $this->action_name;
+  }
   
   /**
    * Returns the calculated request parameters, if the route has matched
    */
-  public function get_request_params() {}
+  public function get_request_params() {
+    return $this->request_params;
+  }
 
 }
 ?>

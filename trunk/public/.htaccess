@@ -1,7 +1,14 @@
+Options +FollowSymlinks
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /roboframe
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ index2.php?url=$1 [QSA,L]
+    RewriteRule ^(.*)$ dispatch.php?url=$1 [QSA,L]
+
+#RewriteRule ^$ index.html [QSA]
+#RewriteRule ^([^.]+)$ $1.html [QSA]
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteRule ^(.*)$ dispatch.php?url=$1 [QSA,L]
 </IfModule> 

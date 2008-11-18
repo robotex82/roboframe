@@ -13,6 +13,20 @@ class TestOfRouteClass extends UnitTestCase {
   function test_root_route() {
   }
   
+  function test_empty_request_url() {
+    $url = '';
+    $route_template = '/';
+    $route_defaults = array('controller' => 'home', 'action' => 'index');
+    
+    $r = new Route($route_template, $route_defaults);
+    
+    $this->assertIsA($r, 'Route');
+    
+    $this->assertTrue($r->match_url($url), 'URL ['.$url.'] should match route template ['.$route_template.']');
+    $this->assertEqual($r->get_controller_name(), 'home', 'Controller name from route object should take route defaults on empty route and home route definition.');
+    $this->assertEqual($r->get_action_name(), 'index', 'Action name from route object should take route defaults on empty route and home route definition.');
+  }
+  
   function test_default_route() {
     $route_template = ':controller/:action/:id';
     $route_defaults = array();
@@ -55,7 +69,7 @@ class TestOfRouteClass extends UnitTestCase {
     $this->assertFalse($r->match_url($too_long_url), 'URL ['.$too_long_url.'] should not match route template ['.$route_template.']');
   }
   
-  function test_controller_and_action_are_filled_correctly() {
+  function test_request_params() {
     $route_template = 'admin/report/show/:id/:format';
     $route_defaults = array('controller' => 'report', 'action' => 'show');
     $test_url_1 = 'admin/report/show/5/pdf'; // Should match.
@@ -64,7 +78,11 @@ class TestOfRouteClass extends UnitTestCase {
     $r = new Route($route_template, $route_defaults);
     $this->assertIsA($r, 'Route');
     $r->match_url($test_url_1);
-    $this->assertEqual($r->get_controller_name(), 'report', 'Controller name from route object should equal controller name from route details if given.');
+    $request_params = $r->get_request_params();
+//    $this->assertEqual($request_params['controller'], 'report');
+//    $this->assertEqual($request_params['action'], 'show');
+    $this->assertEqual($request_params['id'], '5');
+    $this->assertEqual($request_params['format'], 'pdf');
 
     
     $route_template = ':controller/:action/:id';
@@ -74,7 +92,54 @@ class TestOfRouteClass extends UnitTestCase {
     $r = new Route($route_template, $route_defaults);
     $this->assertIsA($r, 'Route');
     $r->match_url($test_url_2);
-    $this->assertEqual($r->get_controller_name(), 'blog', 'Controller name from request URL should equal controller name in route object if route matches.');
+    $request_params = $r->get_request_params();
+//    $this->assertEqual($request_params['controller'], 'blog');
+//    $this->assertEqual($request_params['action'], 'show');
+    $this->assertEqual($request_params['id'], '1');
   }
+ 
+  function test_controller_action_and_params_are_filled_correctly() {
+    $route_template = 'admin/report/show/:id/:format';
+    $route_defaults = array('controller' => 'report', 'action' => 'show');
+    $test_url_1 = 'admin/report/show/5/pdf'; // Should match.
+
+    
+    $r = new Route($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route');
+    $r->match_url($test_url_1);
+    $this->assertEqual($r->get_controller_name(), 'report', 'Controller name from route object should equal controller name from route details if given.');
+    $this->assertEqual($r->get_action_name(), 'show', 'Action name from route object should equal action name from route details if given.');
+    
+    $request_params = $r->get_request_params();
+    $this->assertEqual($request_params['id'], '5', 'Request params should include mapped values. Missing [id=5] for URL ['.$test_url_1.'] and template ['.$route_template.']');
+    $this->assertEqual($request_params['format'], 'pdf', 'Request params should include mapped values. Missing [format=pdf] for URL ['.$test_url_1.'] and template ['.$route_template.']');
+
+    
+    $route_template = ':controller/:action/:id';
+    $route_defaults = array();
+    $test_url_2 = 'blog/show/1'; // Should match.
+    
+    $r = new Route($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route');
+    $r->match_url($test_url_2);
+    $request_params = $r->get_request_params();
+    $this->assertEqual($r->get_controller_name(), 'blog', 'Controller name from request URL should equal controller name in route object if route matches.');
+    $this->assertEqual($r->get_action_name(), 'show', 'Action name from request URL should equal action name in route object if route matches.');
+    $this->assertEqual($request_params['id'], '1', 'Request params should include mapped values. Missing [id=1] for URL ['.$test_url_2.'] and template ['.$route_template.']');
+  }
+  
+  function test_controller_and_action_are_omitted_in_params() {
+    $route_template = ':controller/:action/:id';
+    $route_defaults = array();
+    $test_url_2 = 'blog/show/1'; // Should match.
+    
+    $r = new Route($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route');
+    $r->match_url($test_url_2);
+    $request_params = $r->get_request_params();
+    $this->assertFalse(array_key_exists('controller', $request_params), 'Request params should not include [controller] field');
+    $this->assertFalse(array_key_exists('action', $request_params), 'Request params should not include [action] field');
+  }
+/* */  
 }  
 ?>
