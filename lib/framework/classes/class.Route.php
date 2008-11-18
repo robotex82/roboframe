@@ -34,14 +34,14 @@ class Route {
   /*
    * i.e. array(0 => 'admin', 1 => 'report', 2 => 'show', 3 => '5', 4 => 'pdf')
    */
-  private $request_url;
+  private $request_url = array();
 
   /**
    * Sets the request URL. Is called in the constructor only
    */
   private function set_request_url(array $url) {
-    echo 'Request URL:';
-    print_r($url);
+//echo 'Request URL:';
+//print_r($url);
     $this->request_url = $url;
   }
   
@@ -95,7 +95,7 @@ class Route {
   }
   
   private function request_url_part_count() {
-    return count(explode('/', $this->get_request_url()));
+    return count($this->get_request_url());
   }
   
   /**
@@ -153,9 +153,32 @@ class Route {
     $this->set_request_url(Route::split_url($url));
     
     // if the request url hast more parts then the route template, it can't match
+//echo "Checking [".$this->request_url_part_count()."] against [".$this->route_template_part_count()."]\r\n";
     if($this->request_url_part_count() > $this->route_template_part_count()) {
       return false;
     }
+    
+    // static parts of the route must match their counterparts in the request URL
+    if(!$this->match_static_route_parts_with_request_url()) {
+      return false;
+    }
+/*    
+    // map dynamic route params to the request and fill the request params
+    $this->extract_request_params_from_request_url() {}
+*/    
+    return true;
+    
+  }
+  
+  public function match_static_route_parts_with_request_url() {
+    $request_url = $this->get_request_url();
+    foreach($this->route_template_static_parts as $position => $route_part) {
+//echo "Checking [".$request_url[$position]."] against [".$route_part."]\r\n";
+      if($request_url[$position] != $route_part) {
+        return false;
+      }
+    }
+    return true;
   }
   
   /**
