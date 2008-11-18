@@ -54,5 +54,27 @@ class TestOfRouteClass extends UnitTestCase {
 
     $this->assertFalse($r->match_url($too_long_url), 'URL ['.$too_long_url.'] should not match route template ['.$route_template.']');
   }
+  
+  function test_controller_and_action_are_filled_correctly() {
+    $route_template = 'admin/report/show/:id/:format';
+    $route_defaults = array('controller' => 'report', 'action' => 'show');
+    $test_url_1 = 'admin/report/show/5/pdf'; // Should match.
+
+    
+    $r = new Route($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route');
+    $r->match_url($test_url_1);
+    $this->assertEqual($r->get_controller_name(), 'report', 'Controller name from route object should equal controller name from route details if given.');
+
+    
+    $route_template = ':controller/:action/:id';
+    $route_defaults = array();
+    $test_url_2 = 'blog/show/1'; // Should match.
+    
+    $r = new Route($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route');
+    $r->match_url($test_url_2);
+    $this->assertEqual($r->get_controller_name(), 'blog', 'Controller name from request URL should equal controller name in route object if route matches.');
+  }
 }  
 ?>
