@@ -5,7 +5,7 @@ class View {
   protected $view_data = array();
   protected $output_manager = null;
   protected $output_format;
-  protected $layout = 'default';
+  //protected $layout = 'default';
   protected $layout_path;
   protected $view_path;
   protected $controller_name;

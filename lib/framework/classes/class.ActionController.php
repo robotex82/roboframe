@@ -3,7 +3,7 @@ require_once('classes/class.View.php');
 abstract class ActionController extends Controller {
   protected $name;
   protected $viewData      = array();
-  public    $layout        = 'default';
+  public    $layout; //        = 'default';
   public    $output_format = 'xhtml';
   protected $flash;
   
