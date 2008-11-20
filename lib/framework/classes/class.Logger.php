@@ -24,8 +24,8 @@ class Logger {
     if(!$filename) {
       $filename = 'logs/'.date("Y-m-d").'.log';
     }
-    if(!is_dir("./logs/")) {
-      mkdir("./logs");
+    if(!is_dir(dirname($filename))) {
+      throw new Exception('Could not write log! Directory ['.dirname($filename).'] is missing!');
     }
     $now = date("Y-m-d H:i:s");
     $ip_address = $_SERVER['REMOTE_ADDR'].' ';
