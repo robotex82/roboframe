@@ -7,6 +7,10 @@ abstract class ActionController extends Controller {
   public    $output_format = 'xhtml';
   protected $flash;
   
+  public function flash() {
+    return $this->flash;
+  }
+  
   public function __construct() {
     $this->flash = new Flash();
   }
@@ -41,16 +45,24 @@ abstract class ActionController extends Controller {
   }
   public function dispatchAction($action) {
     //$actionMethod = "do" . ucfirst($action);
-    $actionMethod = $action;
-    if (!method_exists($this, $actionMethod)) {
-      exit("Method [".$actionMethod."] does not exist in Controller [".$this->getName()."]");
+    $action_method = $action;
+    if (!method_exists($this, $action_method)) {
+      exit("Method [".$action_method."] does not exist in Controller [".$this->getName()."]");
     }
-    $this->$actionMethod();
+    
+    $before_method = 'before_'.$action_method;
+    if (method_exists($this, $before_method)) {
+      if(!$this->$before_method()) {
+        echo 'Filter chain broken on method ['.$before_method.']!';
+        exit(0);
+      }
+    }
+    $this->$action_method();
     $this->displayView($action);
   }
   public function displayView($action) {
     //$view_path = VIEW_ROOT . '/' . $this->getName() . '/' . $action . '.'.$this->get_output_format().'.php';
-    $this->setVar('flash', $this->flash);
+    $this->setVar('flash', $this->flash());
     $view = new View($this->getName(), $action, $this->viewData, $this->get_output_format(), $this->layout);
     $view->render();
 /*    

@@ -10,6 +10,10 @@ abstract class Controller {
   public function request() {
     return $this->request;
   }
+  
+  private function get_request_data() {
+    return $this->request->get_data();
+  }
 /*  
   public function getRequest() {
   }
@@ -35,10 +39,22 @@ abstract class Controller {
     }
     require_once $file;
     $controller = new $class();
-    $controller->set_request($request_data);
+    //$controller->set_request($request_data);
+    $controller->set_request($this->get_request_data());
     $controller->setName($page);
     $controller->dispatchAction($action);
     exit(0);
+  }
+  
+  public function redirect_to() {
+//    print_r(func_get_args());
+    $params = array();
+    foreach(func_get_args() as $arg) {
+      $arg_parts = explode(':', $arg);
+      $params[$arg_parts[0]] = $arg_parts[1];
+    }  
+    $r = new Router();
+    header('Location: '.Router::base_url().$r->url_for($params));
   }
 }
 ?>

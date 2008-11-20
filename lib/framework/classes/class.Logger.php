@@ -22,7 +22,7 @@ class Logger {
   
   public static function write($message, $filename = false) {
     if(!$filename) {
-      $filename = 'logs/'.date("Y-m-d").'.log';
+      $filename = APP_BASE.'/logs/'.date("Y-m-d").'.log';
     }
     if(!is_dir(dirname($filename))) {
       throw new Exception('Could not write log! Directory ['.dirname($filename).'] is missing!');

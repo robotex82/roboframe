@@ -68,6 +68,29 @@ class TestOfRouterClass extends UnitTestCase {
     $this->assertEqual($r->get_action_name(), 'index', 
                        'Action in Router object ['.$r->get_action_name().'] should be the same as from mapped URL data [index] if Route matches');
   }
+  
+  function test_build_url() {
+    $routes_filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
+    $valid_url = 'blog/show/1';
+    $url_params = array('controller' => 'blog', 'action' => 'show', 'id' => '1' );
+    $r = new Router(false, $routes_filename);
+    $this->assertEqual($r->url_for($url_params), $valid_url, 'Router with default route should create valid URL ['.$valid_url.'] from params ['.join('|', $url_params).']');
+  }
+  
+  function test_build_url_should_throw_exception_on_missing_middle_param() {
+    $routes_filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
+    $url_params = array('controller' => 'blog', 'id' => '1' );
+    $r = new Router(false, $routes_filename);
+    $this->expectException('Exception', 'Invoking url_for() with missing middle param should throw an Exception');        
+    $r->url_for($url_params);
+  }
+  
+  function test_base_url() {
+    $dispatcher_url = '/roboframe/dispatch.php';
+    $dispatcher_filename = 'D:/roboframe/public/dispatch.php';
+    
+    $this->assertEqual(Router::base_url($dispatcher_url, $dispatcher_filename), '/roboframe/');
+  }
 
 }
 ?>

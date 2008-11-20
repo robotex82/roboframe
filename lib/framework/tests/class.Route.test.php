@@ -140,6 +140,67 @@ class TestOfRouteClass extends UnitTestCase {
     $this->assertFalse(array_key_exists('controller', $request_params), 'Request params should not include [controller] field');
     $this->assertFalse(array_key_exists('action', $request_params), 'Request params should not include [action] field');
   }
+  
+  function test_match_params() {
+    $route_template = ':controller/:action/:id';
+    $route_defaults = array();
+    $test_url = 'blog/show/1';
+    $url_params = array( 'controller'=>'blog', 'action'=>'show', 'id'=>'1' );
+    
+    $r = new Route($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route');
+    
+    $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
+    $url = $r->build_url();
+    $this->assertEqual($url, $test_url, 'URL from Route ['.$url.'] must match test URL ['.$test_url.'] if params match');
+
+    $test_url = 'blog/show';
+    $url_params = array( 'controller'=>'blog', 'action'=>'show' );
+    
+    $r = new Route($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route');
+    
+    $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
+    $url = $r->build_url();
+    $this->assertEqual($url, $test_url, 'URL from Route ['.$url.'] must match test URL ['.$test_url.'] if params match');
+    
+    
+    $route_template = 'admin/report/show/:id/:format';
+    $route_defaults = array('controller' => 'report', 'action' => 'show');
+    $test_url = 'admin/report/show/5/pdf'; // Should match.
+    $url_params = array( 'id'=>'5', 'format'=>'pdf' );
+    
+    $r = new Route($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route');
+    
+    $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
+    $url = $r->build_url();
+    $this->assertEqual($url, $test_url, 'URL from Route ['.$url.'] must match test URL ['.$test_url.'] if params match');
+    
+    $route_template = 'admin/report/show/:id/:format/static';
+    $route_defaults = array('controller' => 'report', 'action' => 'show');
+    $test_url = 'admin/report/show/5/pdf/static'; // Should match.
+    $url_params = array( 'id'=>'5', 'format'=>'pdf' );
+    
+    $r = new Route($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route');
+    
+    $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
+    $url = $r->build_url();
+    $this->assertEqual($url, $test_url, 'URL from Route ['.$url.'] must match test URL ['.$test_url.'] if params match');
+  }
+  
+  function test_match_params_doesnt_match_on_missing_middle_param() {
+    $route_template = ':controller/:action/:id';
+    $route_defaults = array();
+    $test_url = 'blog/show/1';
+    $url_params = array( 'controller'=>'blog', 'id'=>'1' );
+    
+    $r = new Route($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route');
+    
+    $this->assertFalse($r->match_params($url_params), 'Route ['.$route_template.'] should not match params ['.join('|', $url_params).']');
+  }
 /* */  
 }  
 ?>

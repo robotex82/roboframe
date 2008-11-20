@@ -23,5 +23,9 @@ class Request {
       return $this->data[$key];
     }
   }
+  
+  public function get_data() {
+    return $this->data;
+  }
 }
 ?>

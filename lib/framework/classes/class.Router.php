@@ -20,7 +20,7 @@ class Router {
   public function set_action_name($action_name) { $this->action_name = $action_name; }
   public function get_action_name() { return $this->action_name; }
   
-  public function __construct($url, $routes_filename = false) {
+  public function __construct($url = false, $routes_filename = false) {
     $this->load_routes($routes_filename);
     $this->set_url($url);
   }
@@ -68,6 +68,28 @@ class Router {
       }
     }      
     throw new Exception('Tried all routes ['.$this->get_route_count().'] on URL ['.$this->get_url().']. Did not match!');
+  }
+  
+  public function url_for(array $url_params) {
+//    $url_params = func_get_args();
+//print_r($url_params);
+    foreach($this->routes as $route) {
+      if($route->match_params($url_params)) {
+        return $route->build_url();
+      }
+    }      
+    throw new Exception('Could not build URL from params ['.join('|', $url_params).']!');
+  }
+  
+  public static function base_url($dispatcher_url = false, $dispatcher_filename = false) {
+    if(!$dispatcher_url) {
+      $dispatcher_url = $_SERVER['SCRIPT_NAME'];
+    }
+    
+    if(!$dispatcher_filename) {
+      $dispatcher_filename = $_SERVER['SCRIPT_FILENAME'];
+    }
+    return str_replace('/'.basename($dispatcher_filename), '', $dispatcher_url).'/';
   }
 }
 ?>

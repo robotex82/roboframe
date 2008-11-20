@@ -21,7 +21,9 @@ class FrontController extends Controller {
 //print_r($_GET['url']);
     $r = new Router($_GET['url']);
     $r->match_all_routes();
-    $this->forward($r->get_controller_name(), $r->get_action_name(), $r->get_request_params());
+    $this->set_request($r->get_request_params());
+    $this->forward($r->get_controller_name(), $r->get_action_name());
+    //$this->forward($r->get_controller_name(), $r->get_action_name(), $r->get_request_params());
   }
 }
 ?>
