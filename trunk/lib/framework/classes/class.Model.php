@@ -8,6 +8,9 @@ abstract class Model {
   
   public function __construct() {
     //$this->database_connection = Database::get_connection();
+    if(method_exists($this, 'init')) {
+      $this->init();
+    }
   }
   
   public function database_connection($connection_name = false) {
@@ -29,7 +32,7 @@ abstract class Model {
       return $this->data[$key];
     }
   }
-  
+/*  
   public function __call($method, $args) {
     if(substr($method, 0, 8) == 'validate_') {
       echo 'Call for validation => '.substr($method, 8, 0).'!';
@@ -44,6 +47,15 @@ abstract class Model {
   }
   
   public function validate() {
+    $return_value = true;
+    foreach($this->validators as $v) {
+      if(!$v->validate()) {
+        $return_value = false;
+        $this->add_to_error_messages($v->get_error_message());
+      }
+    }
+    return $return_value;
   }
+*/
 }
 ?>

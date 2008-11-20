@@ -45,6 +45,21 @@ class Route {
    * i.e. 'show'
    */
   private $action_name;  
+  
+  /*
+   * params for url creation
+   */
+  private $build_url_params = array();  
+  
+  
+  private function add_to_build_url_params($key, $value) {
+    $this->build_url_params[$key] = $value;
+  }
+  
+  private function get_build_url_params() {
+    return $this->build_url_params;
+  }
+  
   /**
    * Sets the request URL. Is called in the constructor only
    */
@@ -162,6 +177,81 @@ class Route {
       $this->add_to_route_defaults('action', 'index');      
     }  
 */    
+  }
+  
+  public function match_params(array $params) {
+/*
+    $params = func_get_args();
+    
+    if(func_num_args() == 1 and is_array($params[0])) {
+      $params = $params[0];
+    }
+
+    // process params into an array
+    foreach($params as $p) {
+      $p_parts = explode(':', $p);
+      $this->add_to_build_url_params($p_parts[0], $p_parts[1]);
+    }
+*/    
+    foreach($params as $key => $value) {
+      $this->add_to_build_url_params($key, $value);    
+    }
+
+
+    $build_url_params = $this->get_build_url_params();
+    
+    if(count($build_url_params) > count($this->route_template_dynamic_parts)) {
+      return false;
+    }
+    
+    // check if all build_url_params keys exists in the route template
+    foreach($build_url_params as $key => $value) {
+      if(!in_array($key, $this->route_template_dynamic_parts)) {
+        return false;
+      }
+    }
+
+    // foreach dynamic part in the template, check if there is a counterpart in the url build params,
+    // if not, check, if there more dynamic parts at higher positions. if yes, route doesn't match.
+    $missing_key = false;
+    foreach($this->route_template_dynamic_parts as $position => $value) {
+      if($missing_key) {
+        return false;
+      }
+      if(!array_key_exists($value, $build_url_params)) {
+       $missing_key = true;
+      }
+    }
+
+    return true;
+  }
+  
+  public function build_url() {
+    $build_url_params = $this->get_build_url_params();
+    $route_template = $this->get_route_template();
+    $route_template_parts = explode('/', $route_template);
+    
+    $url = '';
+
+    foreach($route_template_parts as $part) {
+      if(substr($part, 0, 1) == ':') {
+        $url.= $build_url_params[substr($part, 1)].'/';
+      } else {
+        $url.= $part.'/';
+      }
+    }
+    $url = trim($url, '/');
+    /*
+    // Foreach build_url_params replace the counterpart in the template
+    foreach($build_url_params as $key => $value) {
+      $url = str_replace(':'.$key, $value, $url);
+    }
+    */
+    
+    // prepend base_url
+    
+    // return url
+    return $url;
   }
   
   /**
