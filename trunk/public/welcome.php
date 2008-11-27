@@ -28,6 +28,11 @@
         <td>config/bootstrap.php</td>
       </tr>
       <tr>
+        <td>DATA_BASE</td>
+        <td><?= DATA_BASE ?></td>
+        <td>config/bootstrap.php</td>
+      </tr>
+      <tr>
         <td>LIBRARY_PATH</td>
         <td><?= LIBRARY_PATH ?></td>
         <td>config/bootstrap.php</td>

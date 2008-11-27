@@ -1,6 +1,7 @@
 <?php
+define('APP_ENV', 'test');
 require_once(dirname(__FILE__).'/../config/bootstrap.php');
-
+echo "Loaded Roboframe with environment  => [".APP_ENV."]\r\n";
 //if (! defined('SIMPLE_TEST')) {
 define('SIMPLE_TEST_PATH', APP_BASE . '/lib/simpletest');
 //}
@@ -16,7 +17,7 @@ class AllPluginTests extends TestSuite {
       if(is_dir($plugin_tests_dir = $plugin.'/tests')) {
         if ($handle = opendir($plugin_tests_dir)) {
           while (false !== ($plugin_tests_dir_entry = readdir($handle))) {
-            if ($plugin_tests_dir_entry != "." && $plugin_tests_dir_entry != "..") {
+            if (substr($plugin_tests_dir_entry, 0, 1) != ".") {
               $this->addFile($plugin_tests_dir.'/'.$plugin_tests_dir_entry);
             }
           }

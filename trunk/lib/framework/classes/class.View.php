@@ -93,7 +93,11 @@ class View {
   
   public function render() {
     require_once(FRAMEWORK_PATH.'/helpers/xhtml.php');
-    require_once(APPLICATION_ROOT.'/helpers/application.php');    
+    require_once(APPLICATION_ROOT.'/helpers/application_helpers.php'); 
+    $controller_helper = APPLICATION_ROOT.'/helpers/'.$this->get_controller_name().'_helpers.php';
+    if(is_readable($controller_helper)) {
+      require_once($controller_helper);
+    }   
     //$view = VIEW_ROOT . "/" . $this->getName() . "/" . $action . ".php";
     $content = $this->get_view_path();
     $layout = $this->get_layout_path();

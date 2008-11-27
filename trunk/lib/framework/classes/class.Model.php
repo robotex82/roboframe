@@ -1,5 +1,10 @@
 <?php
 require_once(FRAMEWORK_PATH.'/classes/class.Database.php');
+require_once(FRAMEWORK_PATH.'/classes/validators/class.PresenceOfValidator.php');
+require_once(FRAMEWORK_PATH.'/classes/validators/class.LengthOfValidator.php');
+require_once(FRAMEWORK_PATH.'/classes/validators/class.InclusionOfValidator.php');
+require_once(FRAMEWORK_PATH.'/classes/validators/class.FormatOfValidator.php');
+
 abstract class Model {
   protected $data = array();
   protected $validators = array();
@@ -32,30 +37,54 @@ abstract class Model {
       return $this->data[$key];
     }
   }
-/*  
-  public function __call($method, $args) {
-    if(substr($method, 0, 8) == 'validate_') {
-      echo 'Call for validation => '.substr($method, 8, 0).'!';
-      $validator_type = substr($method, 8, 0);
-      $options_as_array = array_slice($args, 1);
-      $this->add_validator(ValidationManager::get_validator($validator_type, $args[0], $options_as_array));
+
+  protected function validates_presence_of() {
+    $args = func_get_args();
+    if(!is_string($args[0])) {
+      throw new Exception('Expected first param to be a String!');
+    }
+    $fields = array();
+    $fields = explode(',', $args[0]);    
+    for($i = 0;$i < count($fields); $i++) {
+      $fields[$i] = trim($fields[$i]);
+    }
+    $this->validators[] = new PresenceOfValidator($this, $fields);
+  }
+  
+  protected function validates_length_of() {
+    $args = func_get_args();
+    if(count($args) == 0) {
+      throw new Exception('Expected to get at least one length definition!');
+    }
+    
+    foreach($args as $condition) {
+      $condition_parts = explode(' is ', $condition);
+      $this->validators[] = new LengthOfValidator($this, $condition_parts[0], $condition_parts[1]);
     }
   }
   
-  private function add_validator($validator) {
-    $this->validators[] = $validator;
+  protected function validates_inclusion_of() {
+    $args = func_get_args();
+    if(count($args) != 2) {
+      throw new Exception('Expected to get at two parameters for method Model::validates_inclusion_of()!');
+    }  
+    $field = $args[0];
+    $possible_values = explode(', ', $args[1]);
+    $this->validators[] = new InclusionOfValidator($this, $field, $possible_values);
+    
+  }
+  
+  protected function validates_format_of($field, $pattern) {
+    $this->validators[] = new FormatOfValidator($this, $field, $pattern);
   }
   
   public function validate() {
-    $return_value = true;
-    foreach($this->validators as $v) {
-      if(!$v->validate()) {
-        $return_value = false;
-        $this->add_to_error_messages($v->get_error_message());
+    foreach($this->validators as $validator) {
+      if(!$validator->validate()) {
+        return false;
       }
     }
-    return $return_value;
+    return true;
   }
-*/
 }
 ?>

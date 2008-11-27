@@ -89,7 +89,7 @@ class Router {
     if(!$dispatcher_filename) {
       $dispatcher_filename = $_SERVER['SCRIPT_FILENAME'];
     }
-    return str_replace('/'.basename($dispatcher_filename), '', $dispatcher_url).'/';
+    return str_replace('/'.basename($dispatcher_filename), '', $dispatcher_url);
   }
 }
 ?>
