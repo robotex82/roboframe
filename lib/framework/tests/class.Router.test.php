@@ -89,7 +89,7 @@ class TestOfRouterClass extends UnitTestCase {
     $dispatcher_url = '/roboframe/dispatch.php';
     $dispatcher_filename = 'D:/roboframe/public/dispatch.php';
     
-    $this->assertEqual(Router::base_url($dispatcher_url, $dispatcher_filename), '/roboframe/');
+    $this->assertEqual(Router::base_url($dispatcher_url, $dispatcher_filename), '/roboframe');
   }
 
 }
