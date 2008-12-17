@@ -62,8 +62,9 @@ class Router {
       if($route->match_url($this->get_url())) {
         $this->set_controller_name($route->get_controller_name());
         $this->set_action_name($route->get_action_name());
-        $this->set_request_params($route->get_request_params());
+        //$this->set_request_params($route->get_request_params());
         
+        $this->set_request_params(array_merge($route->get_request_params(), $_POST));
         return true;
       }
     }      
