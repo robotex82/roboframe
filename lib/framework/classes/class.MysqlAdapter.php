@@ -19,6 +19,14 @@ class MysqlAdapter {
       die();
     } 
     
+    if(isset($settings['fetchmode']) && $settings['fetchmode'] == 'column') {
+      $connection->SetFetchMode(ADODB_FETCH_ASSOC);
+    }
+    
+    if(isset($settings['fetchmode']) && $settings['fetchmode'] == 'numeric') {
+      $connection->SetFetchMode(ADODB_FETCH_NUM);
+    }
+    
     return $connection;
   }
 }

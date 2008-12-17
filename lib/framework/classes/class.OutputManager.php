@@ -6,6 +6,9 @@ class OutputManager {
   
   public static function get_output_manager_for($output_format) {
     switch ($output_format) {
+    case 'csv':
+      require_once(FRAMEWORK_PATH.'/classes/class.OutputCsv.php');
+      return new OutputCsv();
     case 'xhtml':
       require_once(FRAMEWORK_PATH.'/classes/class.OutputXhtml.php');
       return new OutputXhtml();

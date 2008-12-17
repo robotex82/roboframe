@@ -54,7 +54,7 @@ abstract class Controller {
       $params[$arg_parts[0]] = $arg_parts[1];
     }  
     $r = new Router();
-    header('Location: '.Router::base_url().$r->url_for($params));
+    header('Location: '.Router::base_url().'/'.$r->url_for($params));
   }
 }
 ?>
