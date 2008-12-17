@@ -1,5 +1,7 @@
 <?php
+define('APP_ENV', 'test');
 require_once(dirname(__FILE__).'/../config/bootstrap.php');
+echo "Loaded Roboframe with environment  => [".APP_ENV."]\r\n";
 
 //if (! defined('SIMPLE_TEST')) {
 define('SIMPLE_TEST_PATH', APP_BASE . '/lib/simpletest');
