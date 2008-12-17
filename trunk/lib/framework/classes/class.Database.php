@@ -19,13 +19,31 @@ class Database {
   /*
    * Loads settings from APP_BASE/config/content_server.ini
    */
-  public static function load_settings($connection_name = false) {
+  public static function load_settings($connection_name = false, $filename = false) {
     $connection_name = ($connection_name) ? $connection_name : APP_ENV;
-    if(!($settings = parse_ini_file(APP_BASE.'/config/database.ini', true))) {
+   
+    if(!$filename) {
+      $filename = APP_BASE.'/config/database.ini';
+    }
+    
+    if(!($settings = parse_ini_file($filename, true))) {
       throw new Exception('Could not read the Database configuration file. '.
-                          'Please make sure that there is a proper database.ini file in the '.APP_BASE.'/config folder!');
+                          'Please make sure that there is a proper database.ini file in ['.$filename.'] folder!');
     }
     $env_settings = $settings[$connection_name];
+
+    if(!array_key_exists('adapter', $env_settings)) {
+      throw new Exception('Error in ['.$filename.']. Missing adapter directive in connection ['.$connection_name.']');
+    }
+    
+    if(!array_key_exists('username', $env_settings)) {
+      throw new Exception('Error in ['.$filename.']. Missing username directive in connection ['.$connection_name.']');
+    }
+    
+    if(!array_key_exists('password', $env_settings)) {
+      throw new Exception('Error in ['.$filename.']. Missing password directive in connection ['.$connection_name.']');
+    }
+    
     return $env_settings;  
   }
   
