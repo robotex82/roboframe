@@ -1,5 +1,6 @@
 <?
 define('APP_BASE', realpath(dirname(__FILE__).'/..'));
+define('DATA_BASE', realpath(dirname(__FILE__).'/../../roboframe_data'));
 define('LIBRARY_PATH', APP_BASE.'/lib');
 define('FRAMEWORK_PATH', APP_BASE.'/lib/framework');
 
@@ -20,6 +21,7 @@ require_once(FRAMEWORK_PATH.'/classes/class.Registry.php');
 require_once(FRAMEWORK_PATH.'/classes/class.PluginManager.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Flash.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Model.php');
+require_once(FRAMEWORK_PATH.'/classes/class.Mailer.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Router.php');
 require_once(FRAMEWORK_PATH.'/classes/class.Route.php');
 

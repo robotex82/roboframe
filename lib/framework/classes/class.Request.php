@@ -27,5 +27,9 @@ class Request {
   public function get_data() {
     return $this->data;
   }
+  
+  public function params() {
+    return $this->get_data();
+  }
 }
 ?>

@@ -8,6 +8,7 @@ require_once(FRAMEWORK_PATH.'/classes/validators/class.FormatOfValidator.php');
 abstract class Model {
   protected $data = array();
   protected $validators = array();
+  protected $errors = array();
   
   //public $database_connection = null;
   
@@ -15,6 +16,11 @@ abstract class Model {
     //$this->database_connection = Database::get_connection();
     if(method_exists($this, 'init')) {
       $this->init();
+    }
+    
+    $args = func_get_args();
+    if(isset($args[0]) and is_array($args[0])) {
+      $this->data = $args[0];
     }
   }
   
@@ -48,7 +54,7 @@ abstract class Model {
     for($i = 0;$i < count($fields); $i++) {
       $fields[$i] = trim($fields[$i]);
     }
-    $this->validators[] = new PresenceOfValidator($this, $fields);
+    $this->validators[] = new PresenceOfValidator($this, $fields, $args[1]);
   }
   
   protected function validates_length_of() {
@@ -66,7 +72,7 @@ abstract class Model {
   protected function validates_inclusion_of() {
     $args = func_get_args();
     if(count($args) != 2) {
-      throw new Exception('Expected to get at two parameters for method Model::validates_inclusion_of()!');
+      throw new Exception('Expected to get two parameters for method Model::validates_inclusion_of()!');
     }  
     $field = $args[0];
     $possible_values = explode(', ', $args[1]);
@@ -74,8 +80,8 @@ abstract class Model {
     
   }
   
-  protected function validates_format_of($field, $pattern) {
-    $this->validators[] = new FormatOfValidator($this, $field, $pattern);
+  protected function validates_format_of($field, $pattern, $message) {
+    $this->validators[] = new FormatOfValidator($this, $field, $pattern, $message);
   }
   
   public function validate() {
@@ -85,6 +91,28 @@ abstract class Model {
       }
     }
     return true;
+  }
+/*  
+  public function add_to_errors($field, $message) {
+    $this->errors[$field] = $message;
+  }
+*/
+  public function set_error_message_for($field, $message) {
+    $this->errors[$field] = $message;
+  }
+  
+  public function remove_error_message_for($field) {
+    unset($this->errors[$field]);
+  }
+  
+  public function get_error_messages() {
+    return $this->errors;
+  }
+  
+  public function error_message_for($fieldname) {
+    if(array_key_exists($fieldname, $this->errors)) {
+      return $this->errors[$fieldname];
+    }
   }
 }
 ?>

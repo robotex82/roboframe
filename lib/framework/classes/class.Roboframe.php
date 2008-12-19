@@ -39,7 +39,8 @@ class Roboframe {
     if ($handle = opendir($controller_dir)) {
       $controllers = array();
       while (false !== ($controller_dir_entry = readdir($handle))) {
-        if ($controller_dir_entry != "." && $controller_dir_entry != "..") {
+//        if ($controller_dir_entry != "." && $controller_dir_entry != "..") {
+        if (substr($controller_dir_entry, 0, 1) != '.') {
           $controllers[] = $controller_dir_entry;
         }
       }
