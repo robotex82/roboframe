@@ -17,7 +17,7 @@ class Database {
   }
   
   /*
-   * Loads settings from APP_BASE/config/content_server.ini
+   * Loads settings from APP_BASE/config/database.ini
    */
   public static function load_settings($connection_name = false, $filename = false) {
     $connection_name = ($connection_name) ? $connection_name : APP_ENV;

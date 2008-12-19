@@ -3,6 +3,7 @@ require_once(dirname(__FILE__).'/../test_assets/Model/presence_test.php');
 require_once(dirname(__FILE__).'/../test_assets/Model/length_test.php');
 require_once(dirname(__FILE__).'/../test_assets/Model/inclusion_test.php');
 require_once(dirname(__FILE__).'/../test_assets/Model/format_test.php');
+require_once(dirname(__FILE__).'/../test_assets/Model/post.php');
 class TestOfModelClass extends UnitTestCase {
   function __construct() {
     $this->UnitTestCase('Model Class Test');
@@ -17,6 +18,7 @@ class TestOfModelClass extends UnitTestCase {
   function test_validates_presence_of() {
     $t = new PresenceTest();
     $this->assertFalse($t->validate(), 'Test Model should not validate, if property [name] is empty');
+    $this->assertTrue($t->error_message_for('name') == 'name should be set', 'Test Model should return the right error message for field [name], returned ['.$t->error_message_for('name').']');
     $t->name = 'foo';
     $this->assertFalse($t->validate(), 'Test Model should not validate, if property [password] is empty');
     $t->password = 'bar';
@@ -45,8 +47,17 @@ class TestOfModelClass extends UnitTestCase {
     $t = new FormatTest();
     $t->birthdate = '1982-05';
     $this->assertFalse($t->validate(), 'Test Model should not validate, if format of [birthdate] does not match');
+    $this->assertTrue($t->error_message_for('birthdate') == 'birthdate should have the right format', 'Test Model should return the right error message for field [birthdate]');
     $t->birthdate = '1982-05-12';
     $this->assertTrue($t->validate(), 'Test Model should validate, if format of [birthdate] does match');
+    $this->assertTrue($t->error_message_for('birthdate') == false, 'Test Model should return the no error message for field [birthdate]');
+  }
+  
+  function test_contructor() {
+    $params = array('body' => 'Post body', 'title' => 'Post title');
+    $post = new Post($params);
+    $this->assertTrue($post->body == $params['body'], 'Post property [body] should equal params[body]');
+    $this->assertTrue($post->title == $params['title'], 'Post property [title] should equal params[title]');
   }
 }  
 ?>
