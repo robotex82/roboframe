@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>default</title>
-<? stylesheet_link_tag('default'); ?>
+<?= stylesheet_link_tag('default'); ?>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 </head>

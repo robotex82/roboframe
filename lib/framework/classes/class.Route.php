@@ -192,7 +192,8 @@ class Route {
       $p_parts = explode(':', $p);
       $this->add_to_build_url_params($p_parts[0], $p_parts[1]);
     }
-*/    
+*/
+    $this->clear_build_url_params();
     foreach($params as $key => $value) {
       $this->add_to_build_url_params($key, $value);    
     }
@@ -210,19 +211,24 @@ class Route {
         return false;
       }
     }
-
+//print_r($params); 
     // foreach dynamic part in the template, check if there is a counterpart in the url build params,
     // if not, check, if there more dynamic parts at higher positions. if yes, route doesn't match.
     $missing_key = false;
+//    $i = 0;
     foreach($this->route_template_dynamic_parts as $position => $value) {
+//    echo "Position:".$position.", Value: ".$value.", Missing Key: ".$missing_key."\r\n";
+      //if($missing_key) {
       if($missing_key) {
+//        echo "Returning...\r\n";
         return false;
       }
       if(!array_key_exists($value, $build_url_params)) {
        $missing_key = true;
       }
+      //$i++;
     }
-
+//echo "TRUE";
     return true;
   }
   
@@ -340,5 +346,8 @@ class Route {
     return $this->request_params;
   }
 
+  private function clear_build_url_params() {
+    $this->build_url_params = array();
+  }
 }
 ?>

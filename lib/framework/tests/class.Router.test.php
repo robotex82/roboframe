@@ -75,6 +75,12 @@ class TestOfRouterClass extends UnitTestCase {
     $url_params = array('controller' => 'blog', 'action' => 'show', 'id' => '1' );
     $r = new Router(false, $routes_filename);
     $this->assertEqual($r->url_for($url_params), $valid_url, 'Router with default route should create valid URL ['.$valid_url.'] from params ['.join('|', $url_params).']');
+    
+    $valid_url = 'blog/show';
+    $url_params = array('controller' => 'blog', 'action' => 'show'); 
+    //$r = new Router(false, $routes_filename);
+    $returned_url = $r->url_for($url_params);   
+    $this->assertEqual($returned_url, $valid_url, 'Router with default route should create valid URL ['.$valid_url.'] from params ['.join('|', $url_params).']. Returned ['.$returned_url.']');
   }
   
   function test_build_url_should_throw_exception_on_missing_middle_param() {
