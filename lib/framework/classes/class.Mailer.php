@@ -1,11 +1,15 @@
 <?php
+require_once('classes/class.View.php');
+
 class Mailer {
   protected $view_data = array();
-  protected $recipient;
+  protected $view_root;
+  protected $recipients;
   protected $subject;
   protected $body;
   protected $sender = null;
   protected $settings = array();
+  protected $output_format = 'xhtml';
   
   /*
    * Loads settings from APP_BASE/config/mailer.ini
@@ -44,25 +48,33 @@ class Mailer {
   
   
   public function __call($method, $args) {
-    $deliver_method = str_replace('deliver_', '', $method);
-    
-    if(substr($deliver_method, -17) == '_with_attachments' && is_array($args[0])) { 
-      $deliver_method = str_replace('_with_attachments', '', $deliver_method);
-      if(method_exists($this, $deliver_method)) {
-        return $this->send_with_attachments($deliver_method, $args[0]);
-      }    
-    } else {
-      if(method_exists($this, $deliver_method)) {
-        return $this->send($deliver_method);
-      }    
+    if(substr($method, 0, 7) == 'render_') {
+      $action_name = str_replace('render_', '', $method);
+      return $this->render_with_template($action_name);
     }
-    throw new Exception('Did not find Mailer method ['.$deliver_method.']!');
+    
+    if(substr($method, 0, 8) == 'deliver_') {
+      $deliver_method = str_replace('deliver_', '', $method);
+      
+      if(substr($deliver_method, -17) == '_with_attachments' && is_array($args[0])) { 
+        $deliver_method = str_replace('_with_attachments', '', $deliver_method);
+        if(method_exists($this, $deliver_method)) {
+          return $this->send_with_attachments($deliver_method, $args[0]);
+        }    
+      } else {
+        if(method_exists($this, $deliver_method)) {
+          return $this->send($deliver_method);
+        }    
+      }
+      throw new Exception('Did not find Mailer method ['.$deliver_method.']!');
+    }  
   }
   
   private function send($deliver_method) {
     // Execute deliver method
-    $this->$deliver_method();
-    
+    //$this->$deliver_method();
+    $this->body = $this->render_with_template($deliver_method);
+//    $this->render_body();
     // load template
       //$view = new View($this->getName(), $action, $this->view_data, $this->get_output_format(), $this->layout);
       //$view->render();    
@@ -74,7 +86,7 @@ class Mailer {
     $mail_header = '';
     $mail_header.= 'from: '.$this->settings['from_address']."\r\n";
     
-    if (mail($this->recipient, $this->subject, $this->body, $mail_header)) {
+    if (mail($this->recipients, $this->subject, $this->body, $mail_header)) {
       return true;
     } else {
       return false;
@@ -82,8 +94,12 @@ class Mailer {
   }
     
   private function send_with_attachments($deliver_method, $files) {
+    ini_set("memory_limit","64M");
+    ini_set("max_execution_time", 120);
+
     // Execute deliver method
-    $this->$deliver_method();
+    //$this->$deliver_method();
+    $this->body = $this->render_with_template($deliver_method);
     
     // load template
       //$view = new View($this->getName(), $action, $this->view_data, $this->get_output_format(), $this->layout);
@@ -116,19 +132,20 @@ class Mailer {
         throw new Exception('Could not add file ['.$file.'] as attachment. File is not readable!');
       } else {
         $filename = basename($file);
-        $file_content = fread(fopen($file,"r"),filesize($file));
-        $file_content = chunk_split(base64_encode($file_content));
+//        $file_content = fread(fopen($file,"r"),filesize($file));
+//        $file_content = chunk_split(base64_encode($file_content));
         $mail_header .= "\n--$boundary";
         $mail_header .= "\nContent-Type: application/octetstream; name=\"$filename\"";
         $mail_header .= "\nContent-Transfer-Encoding: base64";
         $mail_header .= "\nContent-Disposition: attachment; filename=\"$filename\"";
-        $mail_header .= "\n\n$file_content";
+//        $mail_header .= "\n\n$file_content";
+        $mail_header .= "\n\n".chunk_split(base64_encode(file_get_contents($file)));
       }
     }
     
     $mail_header .= "\n--$boundary--";
     
-    if (mail($this->recipient, $this->subject, $this->body, $mail_header)) {
+    if (mail($this->recipients, $this->subject, $this->body, $mail_header)) {
       return true;
     } else {
       return false;
@@ -143,8 +160,8 @@ class Mailer {
     $this->view_data[$key] = $value;
   }
   
-  public function recipient($recipient) {
-    $this->recipient = $recipient;
+  public function recipients($recipients) {
+    $this->recipients = $recipients;
   }
   
   public function subject($subject) {
@@ -154,5 +171,29 @@ class Mailer {
   public function body($body) {
     $this->body = $body;
   }
+  
+  public function output_format($of) {
+    $this->output_format = $of;
+  }
+  
+  public function set_view_root($view_root) {
+    $this->view_root = $view_root;
+  }
+  
+  public function get_view_root() {
+    return $this->view_root;
+  }
+  
+  private function render_with_template($action_name) {
+    $controller_name = Roboframe::camel_case_to_underscore(get_class($this));
+    
+    $this->$action_name();
+//    $view_data = array();
+    $layout = '';
+    $view = new View($controller_name, $action_name, $this->view_data, $this->output_format, $layout);
+    $view->set_view_root($this->get_view_root());
+    return $view->render(true);
+  }
+  
 }
 ?>

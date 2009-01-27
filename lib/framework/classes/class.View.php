@@ -8,10 +8,12 @@ class View {
   //protected $layout = 'default';
   protected $layout_path;
   protected $view_path;
+  protected $view_root;
   protected $controller_name;
   protected $action_name;  
   
   public function __construct($controller_name, $action_name, $view_data, $output_format, $layout) {
+    $this->set_view_root(VIEW_ROOT);
     //$this->set_view_path($view_path);
     $this->set_controller_name($controller_name);
     $this->set_action_name($action_name);
@@ -29,10 +31,19 @@ class View {
 */  
   public function get_view_path() {
     $output_format = $this->get_output_format();
-    $output_parts = explode(':', $output_format);
+    $output_parts = explode('|', $output_format);
     $output_extension = $output_parts[0];
-    return VIEW_ROOT . '/' . $this->get_controller_name() . '/' . $this->get_action_name() . '.'.$output_extension.'.php';
+//    return VIEW_ROOT . '/' . $this->get_controller_name() . '/' . $this->get_action_name() . '.'.$output_extension.'.php';
+    return $this->get_view_root() . '/' . $this->get_controller_name() . '/' . $this->get_action_name() . '.'.$output_extension.'.php';
     //return $this->view_path;
+  }
+  
+  public function set_view_root($view_root) {
+    $this->view_root = $view_root;
+  }
+  
+  public function get_view_root() {
+    return $this->view_root;
   }
   
   public function add_view_data($key, $data) {
@@ -91,7 +102,7 @@ class View {
     $this->action_name = $action_name;
   } 
   
-  public function render() {
+  public function render($return_content = false) {
     require_once(FRAMEWORK_PATH.'/helpers/xhtml.php');
     require_once(APPLICATION_ROOT.'/helpers/application_helpers.php'); 
     $controller_helper = APPLICATION_ROOT.'/helpers/'.$this->get_controller_name().'_helpers.php';
@@ -100,12 +111,14 @@ class View {
     }   
     //$view = VIEW_ROOT . "/" . $this->getName() . "/" . $action . ".php";
     $content = $this->get_view_path();
+    //$content = $this->get_view_root().$this->get_view_path();
     $layout = $this->get_layout_path();
 
     //if (!is_file($view)) {
+    //if (!is_file($content)) {
     if (!is_file($content)) {
       //exit("View [".$view."] not found");
-      exit('View ['.$content.'] not found');
+      exit('View ['.$content.'] not found in ['.$this->get_view_root().']');
     }
 
     if(method_exists($this->output_manager, 'before_render')) {
@@ -116,17 +129,27 @@ class View {
     foreach ($this->get_view_data() as $key => $value) {
       $$key = $value;
     }
-   
+
+    ob_start();
     // support for templates
     if(is_file($layout)) {
       include($layout);
     } else {
       include($content);
     }
-    
+    if($return_content) {
+      $rendered_content = ob_get_clean();
+    } else {
+      ob_end_flush();
+    }   
+
     if(method_exists($this->output_manager, 'after_render')) {
       $this->output_manager->after_render($this);
-    }  
+    } 
+    
+    if($return_content) {
+      return $rendered_content;
+    } 
   }
 }
 ?>

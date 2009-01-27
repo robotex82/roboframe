@@ -3,7 +3,7 @@ class OutputCsv {
   protected $layout = 'default';
   protected $direct_download = false;
   
-  public function __contruct() {
+  public function __construct() {
   }
   
   public function set_layout($layout) {

@@ -44,12 +44,18 @@ class TestOfMailerClass extends UnitTestCase {
   }
 
   function test_deliver() {
+    $view_root = realpath(dirname(__FILE__).'/../test_assets/Mailer/views');
+
     $tm = new TestMailer();
+    $tm->set_view_root($view_root);
     $this->assertTrue($tm->deliver_user_notification(), 'Delivering [user_notification] should return true');
   } 
   
   function test_deliver_with_attachments() {
+    $view_root = realpath(dirname(__FILE__).'/../test_assets/Mailer/views');
+  
     $tm = new TestMailer();
+    $tm->set_view_root($view_root);
     $files = array();
     $files[] = dirname(__FILE__).'/../test_assets/Mailer/attachment_1.txt';
     $files[] = dirname(__FILE__).'/../test_assets/Mailer/attachment_2.pdf';
@@ -58,5 +64,21 @@ class TestOfMailerClass extends UnitTestCase {
     }
     $this->assertTrue($tm->deliver_user_notification_with_attachments($files), 'Delivering [user_notification] with attachments should return true');
   } 
+  
+  function test_view_rendering() {
+    $view_root = realpath(dirname(__FILE__).'/../test_assets/Mailer/views');
+    
+    $tm = new TestMailer();    
+    $tm->set_view_root($view_root);
+    $test_content = "Test content from the View";
+    $rendered_content = $tm->render_test_mail();
+    $this->assertEqual($rendered_content, $test_content, 'Rendering test mail should return the test content ['.$test_content.'] but returned ['.$rendered_content.']');
+    
+    $tm = new TestMailer();    
+    $tm->set_view_root($view_root);
+    $test_content = "Hello bob!";
+    $rendered_content = $tm->render_test_dynamic_mail();
+    $this->assertEqual($rendered_content, $test_content, 'Rendering dynamic test mail should return the test content ['.$test_content.'] but returned ['.$rendered_content.']');
+  }
 }  
 ?>

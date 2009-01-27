@@ -70,5 +70,10 @@ class Roboframe {
       die('Could not find simpletest library in ['.LIBRARY_PATH.'/simpletest]. Please make sure you installed simpletest!');
     }
   }
+  
+  public static function camel_case_to_underscore($camel_cased) {
+    $underscored = str_replace(' ', '_', strtolower(preg_replace('/([^\s])([A-Z])/', '\1 \2', $camel_cased)));
+    return $underscored;
+  }
 }    
 ?>
