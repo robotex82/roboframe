@@ -38,7 +38,7 @@ class TestOfDatabaseClass extends UnitTestCase {
     $wrong_filename = dirname(__FILE__).'/../test_assets/Database/wrong_database.ini';
 
     $this->expectException('Exception', 'Attempting to load wrong database.ini file should throw an exception');    
-    $c = Database::load_settings(false, $filename);
+    $c = Database::load_settings(false, $wrong_filename);
 
   }
 }  

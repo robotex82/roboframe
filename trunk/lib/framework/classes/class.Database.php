@@ -22,7 +22,7 @@ class Database {
   public static function load_settings($connection_name = false, $filename = false) {
     $connection_name = ($connection_name) ? $connection_name : APP_ENV;
    
-    if(!$filename) {
+    if($filename === false) {
       $filename = APP_BASE.'/config/database.ini';
     }
     

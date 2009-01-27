@@ -2,9 +2,16 @@
 class TestMailer extends Mailer {
   public function user_notification() {
     //$this->sender('robotex82@arcor.de');
-    $this->recipient('roberto.vasquez-angel@hp.com');
+    $this->recipients('roberto.vasquez-angel@hp.com');
     $this->subject('my subject');
-    $this->body('message body');
+  }
+  
+  public function test_mail() {
+    
+  }
+  
+  public function test_dynamic_mail() {
+    $this->username = 'bob';
   }
 }
 ?>
