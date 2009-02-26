@@ -56,6 +56,20 @@ class TestOfRouterClass extends UnitTestCase {
     //$this->assertEqual($r->get_request_params(), $request_params, 'Request params ');                       
   }
   
+  function test_match_index_route() {
+    $routes_filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
+    $url = 'blog';
+    $url_parts = explode('/', $url);
+    
+    $r = new Router($url, $routes_filename);
+    $this->assertTrue($r->match_all_routes(), 'Router should match route on routable URL ['.$url.']');
+    $request_params = $r->get_request_params();
+    $this->assertEqual($r->get_controller_name(), $url_parts[0], 
+                       'Controller in Router object ['.$r->get_controller_name().'] should be the same as from mapped URL data ['.$url_parts[0].'] if Route matches');
+    $this->assertEqual($r->get_action_name(), 'index', 
+                       'Action in Router object ['.$r->get_action_name().'] should be [index] if no action given');
+  }
+  
   function test_match_home_route() {
     $routes_filename = dirname(__FILE__).'/../test_assets/Router/home_routes.ini';
     $url = '';
