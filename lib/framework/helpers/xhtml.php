@@ -91,3 +91,25 @@ function errors_message_for($args, $flash) {
   ?><div class="error_message"><?= $flash->error_messages[$options['model']['property']] ?></div>
   <?
 }
+
+function human_size($bytes) {
+//  echo $bytes;
+  $unit = 0;
+  $units = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB');
+  while($bytes > 1024) {
+    $bytes = $bytes / 1024;
+    $unit++;
+  }
+  echo round($bytes, 2)." ".$units[$unit];
+}
+
+function checkbox($args) {
+  $args_array = explode(', ', $args);
+  foreach($args_array as $value) {
+    $exploded_value = explode(' => ', $value);
+    $options[$exploded_value[0]] = substr($exploded_value[1], 1, -1);
+  }
+  
+//  print_r($options);
+  ?><input type="checkbox" name="<?= $options['name'] ?>" id="<?= $options['id'] ?>" value="<?= $options['value'] ?>" /><?
+}
