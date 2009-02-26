@@ -336,6 +336,9 @@ class Route {
    */
   public function get_action_name() {
 //    return $this->request_params['action'];
+    if(empty($this->action_name)) {
+      return 'index';
+    }
     return $this->action_name;
   }
   
