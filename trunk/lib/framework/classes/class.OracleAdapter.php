@@ -1,5 +1,25 @@
 <?php
 class OracleAdapter {
+  private static $datatypes = array(
+    'primary_key' => 'number NOT NULL',
+    'string'      => 'varchar2',
+    'text'        => 'varchar2',
+    'integer'     => 'numeric',
+    'float'       => 'float',
+    'datetime'    => 'date',
+    'timestamp'   => 'date (Y-m-d H:i:s)',
+    'time'        => 'date (H:i:s)',
+    'date'        => 'date (Y-m-d)',
+    'binary'      => 'bytea',
+    'boolean'     => 'boolean',
+    'number'      => 'numeric',
+    'inet'        => 'inet'
+  );
+  
+  public static function get_associated_datatype($datatype) {
+    return OracleAdapter::$datatypes[$datatype];
+  }
+  
   public static function connect($settings) {
     if(!array_key_exists('adapter', $settings)) {
       throw new Exception('Missing adapter directive in database settings');
@@ -29,6 +49,43 @@ class OracleAdapter {
     }
 
     return $connection;
+  }
+  
+  static function create_table($connection, $table_name, $fields, $options = array()) {
+    $sql = "CREATE TABLE ".$table_name." (";
+
+    $field_count = count($fields);
+    $i = 0;
+    foreach($fields as $field) {
+      $field_details = explode(":", $field);
+   
+      $sql.= $field_details[0]." ".self::get_associated_datatype($field_details[1]);
+      if(isset($field_details[2])) {
+        $sql.= "(".$field_details[2].")";
+      }
+      if($i < $field_count - 1) {
+        $sql.= ", ";
+      }
+      $i++;
+    }
+    
+    $sql.= ")";           
+    $connection->execute($sql);
+  }
+  
+  static function drop_table($connection, $table_name) {
+    $sql = "DROP TABLE ".$table_name;
+    $connection->execute($sql);
+  }
+  
+  static function table_exists($connection, $table_name) {
+    $sql = "SELECT table_name FROM user_tables WHERE table_name='".strtoupper($table_name)."'";
+    $result = $connection->getrow($sql);
+   
+    if(is_null($result['table_name'])) {
+      return false;
+    }
+    return true;
   }
 }
 ?>
