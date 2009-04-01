@@ -75,5 +75,24 @@ class Roboframe {
     $underscored = str_replace(' ', '_', strtolower(preg_replace('/([^\s])([A-Z])/', '\1 \2', $camel_cased)));
     return $underscored;
   }
+  
+  public static function enable_database() {
+    Roboframe::enable_module('Database');
+    $registry = Registry::instance();
+    $registry->set_entry('database_connection', Database::get_connection());
+  }
+  
+  public static function disable_database() {
+    $registry = Registry::instance();
+    $registry->remove_entry('database_connection');
+  }
+  
+  public static function enable_module($module_name) {
+    require_once(FRAMEWORK_PATH.'/classes/class.'.$module_name.'.php');
+  }
+
+  public static function timezone($timezone) {
+    date_default_timezone_set($timezone);
+  }
 }    
 ?>

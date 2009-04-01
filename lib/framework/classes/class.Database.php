@@ -1,9 +1,32 @@
 <?php
 require_once(LIBRARY_PATH.'/adodb/adodb.inc.php');
 require_once(LIBRARY_PATH.'/adodb/adodb-exceptions.inc.php');
+$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
+define('ADODB_ASSOC_CASE', 0);
 
 class Database {
+
+  public static function get_adapter_class($connection_name = false) {
+     $settings = Database::load_settings($connection_name);
+    
+    switch ($settings['adapter']) {
+    case 'oci8':
+        require_once(FRAMEWORK_PATH.'/classes/class.OracleAdapter.php');
+        return 'OracleAdapter';
+    case 'oci8po':
+        require_once(FRAMEWORK_PATH.'/classes/class.OracleAdapter.php');
+        return 'OracleAdapter';
+    case 'mysql':
+        require_once(FRAMEWORK_PATH.'/classes/class.MysqlAdapter.php');
+        return 'MysqlAdapter';
+    } 
+  }
+  
   public static function get_connection($connection_name = false) {
+    $settings = Database::load_settings($connection_name);
+    $adapter_class = Database::get_adapter_class($connection_name);
+    return $adapter_class::connect($settings);
+    /*
     $settings = Database::load_settings($connection_name);
     
     switch ($settings['adapter']) {
@@ -14,6 +37,7 @@ class Database {
         require_once(FRAMEWORK_PATH.'/classes/class.MysqlAdapter.php');
         return MysqlAdapter::connect($settings);
     }
+    */
   }
   
   /*
@@ -48,6 +72,29 @@ class Database {
   }
   
   public static function connect() {
+  }
+  
+  public static function create_table($table_name, $fields, $options = array()) {
+    $adapter_class = self::get_adapter_class();
+    return $adapter_class::create_table(self::get_connection(), $table_name, $fields, $options);
+  }
+  
+  public static function drop_table($table_name) {
+    $adapter_class = self::get_adapter_class();
+    return $adapter_class::drop_table(self::get_connection(), $table_name);
+  }
+  
+  public static function table_exists($table_name) {
+    $adapter_class = self::get_adapter_class();
+    return $adapter_class::table_exists(self::get_connection(), $table_name);
+  }
+  
+  public static function drop_table_if_exists($table_name) {
+    $adapter_class = self::get_adapter_class();
+    if($adapter_class::table_exists(self::get_connection(), $table_name)) {
+      return $adapter_class::drop_table(self::get_connection(), $table_name);
+    }
+    return true;
   }
 }
 ?>

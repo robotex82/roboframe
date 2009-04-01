@@ -41,5 +41,17 @@ class TestOfDatabaseClass extends UnitTestCase {
     $c = Database::load_settings(false, $wrong_filename);
 
   }
+  
+  function test_create_table() {
+    $table_name = "test_table";
+    $fields = array("a:integer", "b:string:20");
+    Database::create_table($table_name, $fields);
+    
+    $this->assertTrue(Database::get_connection()->execute("SELECT table_name FROM user_tables WHERE table_name='".strtoupper($table_name)."'"), 'Table ['.strtoupper($table_name).'] should exist after create_table()');
+
+    Database::drop_table($table_name);    
+//    Database::get_connection()->execute('DROP TABLE '.$table_name);
+    $this->assertFalse(Database::table_exists('test_table'), 'Table ['.strtoupper($table_name).'] should not exist after drop_table()');
+  }
 }  
 ?>

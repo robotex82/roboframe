@@ -49,5 +49,9 @@ class Registry {
   public function restore() {
     array_shift($this->data);
   }
+  
+  public function remove_entry($key) {
+    unset($this->data[0][$key]);
+  }
 }
 ?>
