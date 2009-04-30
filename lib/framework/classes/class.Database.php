@@ -71,7 +71,12 @@ class Database {
     return $env_settings;  
   }
   
-  public static function connect() {
+  /**
+   * Returns an instance of the currenty used Database Adapter
+   */
+  public static function adapter() {
+    $adapter_class = Database::get_adapter_class();
+    return new $adapter_class;
   }
   
   public static function create_table($table_name, $fields, $options = array()) {
@@ -95,6 +100,11 @@ class Database {
       return $adapter_class::drop_table(self::get_connection(), $table_name);
     }
     return true;
+  }
+  
+  public static function drop_sequence($sequence_name) {
+    $adapter_class = self::get_adapter_class();
+    return $adapter_class::drop_sequence($sequence_name);
   }
 }
 ?>

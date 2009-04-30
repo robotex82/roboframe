@@ -70,8 +70,7 @@ class TestOfOracleAdapterClass extends UnitTestCase {
     $fields = array("a:integer", "b:string:20");
     
     OracleAdapter::create_table($c, $table_name, $fields);
-    //$this->assertTrue($c->execute("SELECT table_name FROM user_tables WHERE table_name='".strtoupper($table_name)."'"), 'Table ['.strtoupper($table_name).'] should exist before drop_table()');
-    $this->assertTrue(OracleAdapter::table_exists($c, $table_name), 'Table ['.strtoupper($table_name).'] should exist before drop_table()');
+    $this->assertTrue(OracleAdapter::table_exists($c, $table_name), 'Table ['.strtoupper($table_name).'] should exist after create_table()');
     
     OracleAdapter::drop_table($c, $table_name);
     
@@ -113,6 +112,22 @@ class TestOfOracleAdapterClass extends UnitTestCase {
       $oracle_datatype = OracleAdapter::get_associated_datatype($native);
       $this->assertEqual($associated, $oracle_datatype, 'Associated datatype for PHP datatype ['.$native.'] should be ['.$associated.'] but is ['.$oracle_datatype.']');
     }
+  }
+  
+  function test_table_fields() {
+    $settings = Database::load_settings(APP_ENV);
+    $c = OracleAdapter::connect($settings);
+    $table_name = "test_table";
+    $fields = array("a:integer", "b:string:20");
+
+    Database::drop_table_if_exists($table_name);
+    
+    OracleAdapter::create_table($c, $table_name, $fields);    
+    
+    $attributes = array('a', 'b');
+    
+    $returned_attributes = OracleAdapter::table_fields($table_name);
+    $this->assertEqual($attributes, $returned_attributes, 'Table fields should match ['.join($attributes, ', ').'], but are ['.join($returned_attributes, ', ').']');
   }
 }  
 ?>

@@ -102,16 +102,27 @@ abstract class Migration {
     }
     
     unset($args[0]);
-    $fields = $args;
+    $fields = array_reverse($args);
+    // TODO: Make ID field optional
+    $fields[] = 'id:integer:32:primary_key';
+    $fields = array_reverse($fields);
     
     $database_adapter = Database::get_adapter_class();
-    $database_adapter::create_table($this->database_connection, $table_name, $fields);    
+    $database_adapter::create_table($this->database_connection, $table_name, $fields);  
+    // TODO: Make creation of sequence conditional
+    if($database_adapter::prefetch_primary_key()) {
+      $database_adapter::create_sequence($table_name.'_seq');
+    }
   }
   
   protected function drop_table($table_name) {
     $this->say('Dropping table ['.$table_name.']', true);
     $database_adapter = Database::get_adapter_class();
     $database_adapter::drop_table($this->database_connection, $table_name);   
+    
+    if($database_adapter::prefetch_primary_key()) {
+      $database_adapter::drop_sequence($table_name.'_seq');
+    }
   }
   
   private function add_index() {}

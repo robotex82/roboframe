@@ -1,4 +1,6 @@
 <?php
+require_once(FRAMEWORK_PATH.'/classes/class.DatabaseAdapter.php');
+
 class MysqlAdapter {
   public static function connect($settings) {
     
