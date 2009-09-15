@@ -13,7 +13,7 @@ class OutputManager {
     case 'xhtml':
       require_once(FRAMEWORK_PATH.'/classes/class.OutputXhtml.php');
       $output = new OutputXhtml();
-      if($exploded_output_format[1] == 'gzip') {
+      if(isset($exploded_output_format[1]) && $exploded_output_format[1] == 'gzip') {
         $output->enable_gzip();
       }
       return $output;

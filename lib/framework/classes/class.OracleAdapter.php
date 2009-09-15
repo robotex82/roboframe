@@ -84,7 +84,7 @@ class OracleAdapter extends DatabaseAdapter {
     $sql = "SELECT table_name FROM user_tables WHERE table_name='".strtoupper($table_name)."'";
     $result = $connection->getrow($sql);
 
-    if(is_null($result['table_name'])) {
+    if(!isset($result['table_name']) || is_null($result['table_name'])) {
       return false;
     }
     return true;

@@ -50,7 +50,7 @@ class TestOfRouterClass extends UnitTestCase {
                        'Controller in Router object ['.$r->get_controller_name().'] should be the same as from mapped URL data ['.$url_parts[0].'] if Route matches');
     $this->assertEqual($r->get_action_name(), $url_parts[1], 
                        'Action in Router object ['.$r->get_action_name().'] should be the same as from mapped URL data ['.$url_parts[1].'] if Route matches');
-    $this->assertEqual($request_params['id'], '1', 'Request params should include mapped values. Missing [id=1] for URL ['.$test_url_2.'] and template ['.$route_template.']');
+    $this->assertEqual($request_params['id'], '1', 'Request params should include mapped values. Missing [id=1] for URL ['.$url.'] and default template [":controller/:action/:id"]');
 
 
     //$this->assertEqual($r->get_request_params(), $request_params, 'Request params ');                       

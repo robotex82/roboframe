@@ -31,7 +31,8 @@ class Registry {
     if (array_key_exists($key, $this->data[0])) {
       return $this->data[0][$key];
     } else {
-      return null;
+      $null = null;
+      return $null;
     }
   } 
 /*
