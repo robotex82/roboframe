@@ -174,7 +174,7 @@ class Route {
     $this->set_route_defaults($route_defaults);
 /*
     if(!array_key_exists('action', $this->get_route_defaults())) {
-      $this->add_to_route_defaults('action', 'index');      
+      $this->add_to_route_defaults('action', 'index');
     }  
 */    
   }
@@ -211,7 +211,7 @@ class Route {
         return false;
       }
     }
-//print_r($params); 
+//print_r($params);
     // foreach dynamic part in the template, check if there is a counterpart in the url build params,
     // if not, check, if there more dynamic parts at higher positions. if yes, route doesn't match.
     $missing_key = false;
@@ -241,7 +241,13 @@ class Route {
 
     foreach($route_template_parts as $part) {
       if(substr($part, 0, 1) == ':') {
-        $url.= $build_url_params[substr($part, 1)].'/';
+//echo substr($part, 1);
+//print_r($build_url_params);
+        if(isset($build_url_params[substr($part, 1)])) {
+          $url.=$build_url_params[substr($part, 1)];
+        }
+//        $url.= $build_url_params[substr($part, 1)].'/';
+        $url.='/';
       } else {
         $url.= $part.'/';
       }
@@ -303,6 +309,10 @@ class Route {
     $request_url = $this->get_request_url();
     foreach($this->route_template_static_parts as $position => $route_part) {
 //echo "Checking [".$request_url[$position]."] against [".$route_part."]\r\n";
+      if(!isset($request_url[$position])) {
+        return false;
+      }
+
       if($request_url[$position] != $route_part) {
         return false;
       }

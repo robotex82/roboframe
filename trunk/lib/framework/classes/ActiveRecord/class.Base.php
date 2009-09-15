@@ -9,7 +9,7 @@ require_once(FRAMEWORK_PATH.'/classes/validators/class.FormatOfValidator.php');
 
 class Base {
   private $table_prefix = '';
-  private $_primary_key  = 'id';
+  //private $_primary_key  = 'id';
   private $attributes   = array();
   private $changed_attributes = array();
   private $attribute_columns = array();
@@ -38,8 +38,15 @@ class Base {
     return $this->database_adapter()->quoted_table_name($this->table_name());
   }
 
-  private function primary_key() {
-    return $this->_primary_key;
+  public static function primary_key() {
+    $called_class = get_called_class();
+    if(isset($called_class::$primary_key)) {
+      return $called_class::$primary_key;
+    } else {
+      return 'id';
+    }
+
+    //return $this->_primary_key;
   }
 
   static function find() {
@@ -56,7 +63,7 @@ class Base {
       case 'first':
         return self::find_first($options);
       case 'all':
-        return self::find_all($options);
+        return self::find_all($args);
       default:
         return self::find_by_ids($args, $options);
     }
@@ -119,10 +126,18 @@ class Base {
 
   private static function find_all($options) {
 
-    $callerd_class = get_called_class();
-    $table_name = $callerd_class::table_name();
+    $options = \Roboframe::dissect_args($options, 1);
+    $called_class = get_called_class();
+    $table_name = $called_class::table_name();
     $raw_sql = "SELECT *"
               ." FROM %s";
+    if(isset($options['order'])) {
+        $raw_sql.=" ORDER BY {$options['order']}";
+    }
+
+    if(isset($options['limit'])) {
+        $raw_sql.=" LIMIT {$options['limit']}";
+    }
 
     $sql = sprintf($raw_sql
          , $table_name
@@ -170,13 +185,20 @@ class Base {
     }
   }
 
-  public function delete($id) {
+  public static function delete($id) {
+    $called_class = get_called_class();
+    $table_name = $called_class::table_name();
 
+    $sql = "DELETE "  .
+           "FROM {$table_name} ".
+           "WHERE {$called_class::primary_key()} = {$id}";
+    \Database::adapter()->delete($sql, $called_class.' Delete', $called_class::primary_key(), $id);
   }
 
   public function new_record() {
     // retrieve the primary key attribute name
-    $primary_key = $this->_primary_key;
+    //$primary_key = $this->_primary_key;
+    $primary_key = self::primary_key();
 
     // check if primary key is set
     if($this->$primary_key) {
@@ -207,7 +229,8 @@ class Base {
     }
 //echo $sql;
 
-    $this->id = $this->database_adapter()->insert($sql, $this->class_name().' Create', $this->primary_key(), $this->id, $this->sequence_name());
+//    $this->id = $this->database_adapter()->insert($sql, $this->class_name().' Create', $this->primary_key(), $this->id, $this->sequence_name());
+    $this->id = $this->database_adapter()->insert($sql, $this->class_name().' Create', self::primary_key(), $this->id, $this->sequence_name());
     $this->reset_changed_attributes();
     return $this->id;
   }
@@ -232,7 +255,8 @@ class Base {
     }
 //echo $sql;
 
-    $this->id = $this->database_adapter()->update($sql, $this->class_name().' Update', $this->primary_key(), $this->id);
+//    $this->id = $this->database_adapter()->update($sql, $this->class_name().' Update', $this->primary_key(), $this->id);
+    $this->id = $this->database_adapter()->update($sql, $this->class_name().' Update', self::primary_key(), $this->id);
     $this->reset_changed_attributes();
     return $this->id;
   }

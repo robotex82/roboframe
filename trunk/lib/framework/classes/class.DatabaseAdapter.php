@@ -18,6 +18,11 @@ abstract class DatabaseAdapter {
     $this->connection()->execute($sql);
     return $id_value;
   }
+  
+  public function delete($sql, $name = null, $pk = null, $id_value = null) {
+    $this->connection()->execute($sql);
+    return $id_value;
+  }
 
   abstract function upcase_table_name();
   abstract function quoted_table_name($table_name);
