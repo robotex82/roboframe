@@ -1,5 +1,10 @@
 <?php
 class Logger {
+  public static function init() {
+    $registry = Registry::instance();
+    $registry->set_entry('logger', new Logger());
+  }
+  
   public function log($message) {
     Logger::write($message);
   }
