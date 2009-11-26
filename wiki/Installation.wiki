@@ -1,0 +1,15 @@
+#This page describes the installation of the roboframe php framework
+
+= Prerequisites =
+
+  * PHP > 5.3
+
+
+= Howto Install =
+
+  * Get the roboframe framework from svn
+  * Get the needed libraries
+
+= Creating an application =
+  * Generate the application skeleton
+  * Configure your webserver
