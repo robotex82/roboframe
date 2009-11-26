@@ -98,8 +98,10 @@ class Roboframe {
 
   public static function enable_database() {
     Roboframe::enable_module('Database');
+    /*
     $registry = Registry::instance();
     $registry->set_entry('database_connection', Database::get_connection());
+    */
   }
 
   public static function disable_database() {
@@ -109,6 +111,10 @@ class Roboframe {
 
   public static function enable_module($module_name) {
     require_once(FRAMEWORK_PATH.'/classes/class.'.$module_name.'.php');
+    if(method_exists($module_name, 'init')) {
+      $module_name::init();
+    }
+    
   }
 
   public static function timezone($timezone) {

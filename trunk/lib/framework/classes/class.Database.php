@@ -5,6 +5,10 @@ $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 define('ADODB_ASSOC_CASE', 0);
 
 class Database {
+  public static function init() {
+    $registry = Registry::instance();
+    $registry->set_entry('database_connection', Database::get_connection());
+  }
 
   public static function get_adapter_class($connection_name = false) {
      $settings = Database::load_settings($connection_name);

@@ -35,10 +35,10 @@ abstract class Model {
     return $this->get_var($key);
   } 
   
-  public function set_var($key, $value) {
+  private function set_var($key, $value) {
     $this->data[$key] = $value;
   }
-  public function get_var($key) {
+  private function get_var($key) {
     if (array_key_exists($key, $this->data)) {
       return $this->data[$key];
     }

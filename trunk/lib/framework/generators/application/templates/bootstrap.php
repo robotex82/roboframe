@@ -1,8 +1,9 @@
-<?php
+<|?php
 define('APP_BASE',         realpath(dirname(__FILE__).'/..'));
-define('DATA_BASE',        realpath(dirname(__FILE__).'/../../roboframe_data'));
-define('LIBRARY_PATH',     APP_BASE.'/lib');
-define('FRAMEWORK_PATH',   APP_BASE.'/lib/framework');
+// define('DATA_BASE',        realpath(dirname(__FILE__).'/../data'));
+define('LIBRARY_PATH',     '<?= $library_path ?>');
+// TODO: Find a way to get the fw-path dynamically 
+define('FRAMEWORK_PATH',   LIBRARY_PATH.'/framework');
 
 define('APPLICATION_ROOT', APP_BASE.'/application');
 define('MODEL_ROOT',       APPLICATION_ROOT.'/models');
@@ -26,7 +27,8 @@ foreach(explode(' ', $modules) as $module) {
 
 require_once(APP_BASE.'/config/environment.php');
 
-//Roboframe::enable_database();
+
+Roboframe::enable_database();
 Roboframe::enable_sessions();
 
 PluginManager::initialize_all();
@@ -42,4 +44,3 @@ function __autoload($class_name) {
     }
   include ($file);
 }
-?>

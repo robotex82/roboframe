@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__).'/../test_assets/Generator/test/test_generator.php');
 require_once(dirname(__FILE__).'/../test_assets/Generator/template/template_generator.php');
+require_once(dirname(__FILE__).'/../test_assets/Generator/option/option_generator.php');
 class TestOfGeneratorClass extends UnitTestCase {
   function __construct() {
     $this->UnitTestCase('Generator Class Test');
@@ -60,7 +61,6 @@ class TestOfGeneratorClass extends UnitTestCase {
       
     $g = new TemplateGenerator();
     $g->run();  
-    
     $this->assertTrue(file_exists($first_filename), 'File ['.$first_filename.'] should exist after running the Template Generator!');
     $pattern = "/Hello Bill/";
     $this->assertPattern($pattern, file_get_contents($first_filename), 'File ['.$first_filename.'] should match pattern ['.$pattern.']!');
@@ -74,6 +74,40 @@ class TestOfGeneratorClass extends UnitTestCase {
     $this->assertPattern($pattern, file_get_contents($third_filename), 'File ['.$third_filename.'] should match pattern ['.$pattern.']!');
     $pattern = "/color: black/";
     $this->assertPattern($pattern, file_get_contents($third_filename), 'File ['.$third_filename.'] should match pattern ['.$pattern.']!');
+  }
+  
+  function test_generator_options() {
+    $filename = dirname(__FILE__).'/../test_assets/Generator/target/testfile.txt';
+    @unlink($filename);
+
+    $g = new OptionGenerator();
+    $g->path = dirname(__FILE__).'/../test_assets/Generator/target/';
+    $g->run();
+    
+    $this->assertTrue(file_exists($filename), 'File ['.$filename.'] should exist after running the Option Generator!');
+    
+    $g->revert(true);
+    $g->run();
+    
+    $this->assertFalse(file_exists($filename), 'File ['.$filename.'] should not exist after reverting the Option Generator!');
+  }
+  
+  function test_map_options() {
+    $filename = dirname(__FILE__).'/../test_assets/Generator/target/testfile.txt';
+    @unlink($filename);
+    $options = array(dirname(__FILE__).'/../test_assets/Generator/target/');
+
+    $g = new OptionGenerator();
+    
+    $g->map_options($options);
+    $g->run();
+    
+    $this->assertTrue(file_exists($filename), 'File ['.$filename.'] should exist after running the Option Generator!');
+    
+    $g->revert(true);
+    $g->run();
+    
+    $this->assertFalse(file_exists($filename), 'File ['.$filename.'] should not exist after reverting the Option Generator!');
   }
 }  
 ?>

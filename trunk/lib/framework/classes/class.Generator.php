@@ -3,6 +3,7 @@ class Generator {
   private $_options = array();
   private $revert;
   private $verbose = true;
+  public $option_mappings = array();
   
   public function __construct($options = null, $revert = false) {
     if(is_array($options)) {
@@ -10,6 +11,12 @@ class Generator {
     }
 
     $this->revert = $revert;
+  }
+  
+  public function map_options($options) {
+    for($i = 0; $i < count($options); $i++) {
+      $this->set_var($this->option_mappings[$i], $options[$i]);
+    }
   }
   
   public function run() {
@@ -20,6 +27,56 @@ class Generator {
   
   public function revert($revert) {
     $this->revert = $revert;
+  }
+  
+  public function directory($target) {
+    // check whether the revert flag is set
+    if(!$this->revert) {
+      // check if the directory already exists
+      if(is_dir($target)) {
+        // target file exists, ask the user to confirm overwriting the directory
+        if($this->ask_overwrite($target)) {
+          $this->say("+  {$target}");
+/*
+          // if user confirms, try to overwrite the directory
+          if(mkdir($target)) {
+            $this->say("+  {$target}");
+          } else {
+            // throw an Exception if copying fails
+            throw new Exception("Could not create directory [{$target}]!");
+          }
+*/          
+        }  
+      } else {
+        if(mkdir($target)) {
+          $this->say("+  {$target}");
+        } else {
+          // throw an Exception if copying fails
+          throw new Exception("Could not create directory [{$target}]!");
+        }
+      }
+    } else {
+      // check if directory is empty
+      if(Generator::directory_is_empty($target)) {
+        // if yes, remove target directory
+        if(unlink($target)) {
+          $this->say("-  {$target}");
+        } else {
+          throw new Exception("Could not remove directory [{$target}]");
+        }
+      } else {  
+        // if not, ask user to decide
+        if($this->ask_delete_not_empty($target)) {
+          // if yes, remove
+          if(unlink($target)) {
+            $this->say("-  {$target}");
+          } else {
+            throw new Exception("Could not remove directory [{$target}]");
+          }
+        }  
+        // else keep it
+      }  
+    }
   }
   
   public function file($source, $target) {
@@ -84,6 +141,10 @@ class Generator {
     return $this->ask_user("[{$target}] has been modified. Delete?");  
   }
   
+  private function ask_delete_not_empty($target) {
+    return $this->ask_user("[{$target}] is not empty. Delete?");  
+  }
+  
   private function ask_user($question) {
     $choices = array('y', 'n');
     $user_input = null;
@@ -132,17 +193,16 @@ class Generator {
       }
       
       // open file and eval content
-      ini_set('implicit_flush', false);
+      //ini_set('implicit_flush', false);
       ob_start(); 
       eval('?>'.file_get_contents($source).'<?');
       // capture evaled code
       $rendered_template = ob_get_contents();
       ob_end_flush(); 
-      ini_set('implicit_flush', true);
-      
+      //ini_set('implicit_flush', true);  
       $rendered_template = str_replace('<|?', '<?', $rendered_template);
       $rendered_template = str_replace('?|>', '?>', $rendered_template);
-
+      
       // check if target file exists
       if(file_exists($target)) {
         // ask the user if he wants to overwrite the existing file
@@ -168,6 +228,44 @@ class Generator {
       } 
     }
 
+  }
+  
+  public function __set($key, $value)  {
+    $this->set_var($key, $value);
+  }
+  public function __get($key) {
+    return $this->get_var($key);
+  } 
+  
+  private function set_var($key, $value) {
+    $this->_options[$key] = $value;
+  }
+  private function get_var($key) {
+    if (array_key_exists($key, $this->_options)) {
+      return $this->_options[$key];
+    }
+  }
+  
+  static public function extract_generator_options_from_cli($arguments) {
+    unset($arguments[0]);
+    unset($arguments[1]);
+    return array_values($arguments);
+  }
+  
+  static public function search_generator($name) {
+    if(is_readable(APP_BASE.'/lib/generators/'.$name.'/generator.php')) {
+      require_once APP_BASE.'/lib/generators/'.$name.'/generator.php';;
+      return APP_BASE.'/lib/generators/'.$name.'/generator.php';
+    }
+
+  if(is_readable(FRAMEWORK_PATH.'/generators/'.$name.'/generator.php')) {
+      require_once(FRAMEWORK_PATH.'/generators/'.$name.'/generator.php');
+      return FRAMEWORK_PATH.'/generators/'.$name.'/generator.php';
+    }
+  }
+  
+  static public function directory_is_empty($dir) {
+    return (($files = @scandir($dir)) && count($files) <= 2); 
   }
 }
 ?>
