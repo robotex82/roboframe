@@ -3,7 +3,7 @@ class ApplicationGenerator extends Generator {
   public $option_mappings = array(0 => 'app_name');
   
   public function commands() {
-    $this->app_root      = getcwd()."{$this->app_name}";
+    $this->app_root      = getcwd()."/{$this->app_name}";
     $this->template_root = dirname(__FILE__).'/templates';
     $this->library_path  = realpath(dirname(__FILE__).'/../../../');
     
