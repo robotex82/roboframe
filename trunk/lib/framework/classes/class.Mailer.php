@@ -15,7 +15,7 @@ class Mailer {
    * Loads settings from APP_BASE/config/mailer.ini
    */
   public static function load_settings($filename = false) {
-    $environment_name = APP_ENV;
+    $environment_name = getenv('ROBOFRAME_ENV');
    
     if(!$filename) {
       $filename = APP_BASE.'/config/mailer.ini';

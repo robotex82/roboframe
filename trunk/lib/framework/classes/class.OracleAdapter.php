@@ -96,7 +96,7 @@ class OracleAdapter extends DatabaseAdapter {
 
   static function next_sequence_value($sequence_name) {
     $sql = "SELECT ${sequence_name}.nextval id FROM dual";
-    return Database::get_connection(APP_ENV)->getone($sql);
+    return Database::get_connection(getenv('ROBOFRAME_ENV'))->getone($sql);
   }
 
   static function table_fields($table_name) {
@@ -104,7 +104,7 @@ class OracleAdapter extends DatabaseAdapter {
     $sql = "SELECT lower(COLUMN_NAME) AS fields "
           ."FROM USER_TAB_COLUMNS "
           ."WHERE table_name = '".strtoupper($table_name)."'";
-    return Database::get_connection(APP_ENV)->getcol($sql);
+    return Database::get_connection(getenv('ROBOFRAME_ENV'))->getcol($sql);
   }
 
   static function sequence_name($table_name) {
@@ -113,12 +113,12 @@ class OracleAdapter extends DatabaseAdapter {
 
   static function create_sequence($sequence_name) {
     $sql = "CREATE SEQUENCE {$sequence_name} START WITH 1 NOCACHE";
-    Database::get_connection(APP_ENV)->execute($sql);
+    Database::get_connection(getenv('ROBOFRAME_ENV'))->execute($sql);
   }
 
   static function drop_sequence($sequence_name) {
     $sql = "DROP SEQUENCE {$sequence_name}";
-    Database::get_connection(APP_ENV)->execute($sql);
+    Database::get_connection(getenv('ROBOFRAME_ENV'))->execute($sql);
   }
 
   public function upcase_table_name() {

@@ -157,7 +157,7 @@ class Base {
   protected $errors = array();
 */
   public function __construct($attributes = array()) {
-    $this->database_connection = \Database::get_connection(APP_ENV);
+    $this->database_connection = \Database::get_connection(getenv('ROBOFRAME_ENV'));
     $this->database_adapter    = \Database::adapter();
 
     // init fields

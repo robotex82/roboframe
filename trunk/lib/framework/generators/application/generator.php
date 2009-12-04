@@ -17,6 +17,7 @@ class ApplicationGenerator extends Generator {
     $this->directory($this->app_root.'/config');
     $this->directory($this->app_root.'/config/environments');
     $this->directory($this->app_root.'/lib');
+    $this->directory($this->app_root.'/lib/tasks');
     $this->directory($this->app_root.'/logs');
     $this->directory($this->app_root.'/db');
     $this->directory($this->app_root.'/db/migrate');

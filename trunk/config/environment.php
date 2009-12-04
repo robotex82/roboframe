@@ -1,5 +1,6 @@
 <?php
 // include environment specific settings
+/*
 if(!defined('APP_ENV')) {
   switch(getenv('ROBOFRAME_ENV')) {
      default:
@@ -21,7 +22,7 @@ if(!defined('APP_ENV')) {
      break;
   }
 }
-
-include(APP_BASE.'/config/environments/'.APP_ENV.'.php');
+*/
+include(APP_BASE.'/config/environments/'.getenv('ROBOFRAME_ENV').'.php');
 
 // add your global environment settings here
