@@ -1,7 +1,7 @@
 <?php
 abstract class DatabaseAdapter {
   public function connection() {
-    return Database::get_connection(APP_ENV);
+    return Database::get_connection(getenv('ROBOFRAME_ENV'));
   }
 
   public function empty_insert_statement($table_name) {

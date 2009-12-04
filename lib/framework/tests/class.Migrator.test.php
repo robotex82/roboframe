@@ -19,7 +19,7 @@ class TestOfMigratorClass extends UnitTestCase {
       'classname'  => 'CreateUserTable'      
     ));
     
-    $m = new Migrator(APP_ENV, $migration_root);
+    $m = new Migrator(getenv('ROBOFRAME_ENV'), $migration_root);
     $migration_list = $m->list_filesystem_migrations();
     $this->assertEqual($expected, $migration_list, 'Expected migration list ['.serialize($expected).'] does not fit to the listed migrations ['.serialize($migration_list).']');
   }
@@ -30,7 +30,7 @@ class TestOfMigratorClass extends UnitTestCase {
       Database::drop_table('schema_info');  
     }
 
-    $m = new Migrator(APP_ENV);
+    $m = new Migrator(getenv('ROBOFRAME_ENV'));
     $migration_list = $m->list_executed_migrations();
     
     $this->assertTrue(Database::table_exists('schema_info'), 'Table [schema_info] should exist after calling schema_info_list_migrations()!');
@@ -40,7 +40,7 @@ class TestOfMigratorClass extends UnitTestCase {
   
   function test_migrate_up_and_down() {
     $migration_root = dirname(__FILE__).'/../test_assets/Migration';
-    $m = new Migrator(APP_ENV, $migration_root);
+    $m = new Migrator(getenv('ROBOFRAME_ENV'), $migration_root);
     $m->migrate('up');
     $this->assertTrue(Database::table_exists('tbl_users'), 'User Table should exist after migrating!');
     
@@ -50,7 +50,7 @@ class TestOfMigratorClass extends UnitTestCase {
   
   function test_migrate_fails_on_duplicate_identifiers() {
     $migration_root = dirname(__FILE__).'/../test_assets/Migrator/wrong/up';
-    $m = new Migrator(APP_ENV, $migration_root);
+    $m = new Migrator(getenv('ROBOFRAME_ENV'), $migration_root);
     
     $this->expectException('Exception', 'Attempting to migrate with double identifiers in the migration root should fail.');  
     $m->migrate('up');

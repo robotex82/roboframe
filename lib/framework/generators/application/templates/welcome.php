@@ -13,7 +13,7 @@
     <h1>Framework Settings</h1>
     <hr />
     <h2>Environment</h2>
-    <b>APP_ENV:</b> <?= APP_ENV ?>
+    <b>Roboframe:</b> <?= getenv('ROBOFRAME_ENV') ?>
     <hr />
     <h2>Constants</h2>
     <table>
@@ -51,12 +51,7 @@
         <td>PAGE_ROOT</td>
         <td><?= PAGE_ROOT ?></td>
         <td>config/bootstrap.php</td>
-      </tr>
-      <tr>        
-        <td>APP_ENV</td>
-        <td><?= APP_ENV ?></td>
-        <td>config/environment.php</td>
-      </tr>      
+      </tr>    
     </table>
   </div>
 </body>

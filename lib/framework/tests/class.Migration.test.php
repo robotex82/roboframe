@@ -17,18 +17,18 @@ class TestOfMigrationClass extends UnitTestCase {
      
     require_once(dirname(__FILE__).'/../test_assets/Migration/001_create_user_table.php');
     
-    $m = new CreateUserTable(APP_ENV);
+    $m = new CreateUserTable(getenv('ROBOFRAME_ENV'));
     $m->migrate('up');
     $this->assertTrue(Database::table_exists('tbl_users'), 'Table [tbl_users] should exist after migrating up!');
     
     // Check Schema Info
     
-    $m = new CreateUserTable(APP_ENV);
+    $m = new CreateUserTable(getenv('ROBOFRAME_ENV'));
     $m->migrate('down');
     $this->assertFalse(Database::table_exists('tbl_users'), 'Table [tbl_users] should not exist after migrating down!');
     
     /*
-    $m = new Migration(APP_ENV);
+    $m = new Migration(getenv('ROBOFRAME_ENV'));
     $m->migrate('up');
     $this->assertTrue(Database::table_exists('tbl_users'), 'Table [tbl_users] should exist after migrating up!');
     */

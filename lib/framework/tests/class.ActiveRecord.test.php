@@ -25,7 +25,7 @@ class TestOfActiveRecordClass extends UnitTestCase {
 
 
     require_once(dirname(__FILE__).'/../test_assets/ActiveRecord/migrations/001_create_customer_table.php');
-    $m = new CreateCustomerTable(APP_ENV);
+    $m = new CreateCustomerTable(getenv('ROBOFRAME_ENV'));
     $m->migrate('up');
     $this->assertTrue(Database::table_exists($table_name), 'Table ['.$table_name.'] should exist after migrating up!');
 
@@ -80,7 +80,7 @@ class TestOfActiveRecordClass extends UnitTestCase {
 
 
     require_once(dirname(__FILE__).'/../test_assets/ActiveRecord/migrations/001_create_customer_table.php');
-    $m = new CreateCustomerTable(APP_ENV);
+    $m = new CreateCustomerTable(getenv('ROBOFRAME_ENV'));
     $m->migrate('up');
     $this->assertTrue(Database::table_exists($table_name), 'Table ['.$table_name.'] should exist after migrating up!');
 

@@ -20,7 +20,7 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FRAMEWORK_PAT
 require_once(FRAMEWORK_PATH.'/classes/class.Roboframe.php');
 Roboframe::check_requirements();
 
-$modules = 'Inflector Registry Logger PluginManager Flash Generator Model Mailer Migration Migrator Router Route';
+$modules = 'Inflector Registry Logger PluginManager Flash Generator Model Mailer Migration Migrator Router Route TaskGroup';
 foreach(explode(' ', $modules) as $module) {
   Roboframe::enable_module($module);
 }
