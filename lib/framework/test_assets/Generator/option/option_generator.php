@@ -6,6 +6,6 @@ class OptionGenerator extends Generator {
     $this->file($source, $target);
   }
   
-  public $option_mappings = array(0 => 'app_name');
+  public $option_mappings = array(0 => 'path');
 }
 ?>

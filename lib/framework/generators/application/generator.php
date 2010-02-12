@@ -76,6 +76,9 @@ class ApplicationGenerator extends Generator {
                 
     $this->file($this->template_root.'/generate.php',
                 $this->app_root.     '/scripts/generate.php');
+                
+    $this->file($this->template_root.'/task.php',
+                $this->app_root.     '/scripts/task.php');
   }
 }
 ?>
