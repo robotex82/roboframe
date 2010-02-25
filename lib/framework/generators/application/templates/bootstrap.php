@@ -1,8 +1,7 @@
 <|?php
 define('APP_BASE',         realpath(dirname(__FILE__).'/..'));
-// define('DATA_BASE',        realpath(dirname(__FILE__).'/../data'));
+define('DATA_BASE',        realpath(dirname(__FILE__).'/../../roboframe_data'));
 define('LIBRARY_PATH',     '<?= $library_path ?>');
-// TODO: Find a way to get the fw-path dynamically 
 define('FRAMEWORK_PATH',   LIBRARY_PATH.'/framework');
 
 define('APPLICATION_ROOT', APP_BASE.'/application');
@@ -17,30 +16,26 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . PAGE_ROOT);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . LIBRARY_PATH);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FRAMEWORK_PATH);
 
-require_once(FRAMEWORK_PATH.'/classes/class.Roboframe.php');
-Roboframe::check_requirements();
+require_once(FRAMEWORK_PATH.'/classes/Roboframe/class.Base.php');
 
-$modules = 'Inflector Registry Logger PluginManager Flash Generator Model Mailer Migration Migrator Router Route TaskGroup';
-foreach(explode(' ', $modules) as $module) {
-  Roboframe::enable_module($module);
-}
+Roboframe\Base::check_requirements();
+
+Roboframe\Base::enable_modules('Inflector Registry Logger PluginManager Flash Generator Model Mailer Migration Migrator Router Route TaskGroup');
+
+Roboframe\Base::set_environment(getenv('ROBOFRAME_ENV'));
 
 require_once(APP_BASE.'/config/environment.php');
 
+//Roboframe::enable_database();
+Roboframe\Base::enable_sessions();
 
-Roboframe::enable_database();
-Roboframe::enable_sessions();
-
-PluginManager::initialize_all();
+PluginManager\Base::initialize_all();
 
 // @TODO: Find better way to autoload models
 function __autoload($class_name) {
-    //$filename = strtolower($class_name) . '.class.php';
-    $filename = strtolower(preg_replace('/([^\s])([A-Z])/', '\1_\2', $class_name)).'.php';
-    $file = MODEL_ROOT.'/' . $filename;
-    if (file_exists($file) == false)
-    {
-        return false;
-    }
-  include ($file);
+  $filename = strtolower(preg_replace('/([^\s])([A-Z])/', '\1_\2', $class_name)).'.php';
+  $file = MODEL_ROOT.'/' . $filename;
+  if(!file_exists($file)) { return false; }
+  require_once($file);
 }
+?>

@@ -1,7 +1,8 @@
 <?php
-abstract class DatabaseAdapter {
+namespace DatabaseAdapter;
+abstract class Base {
   public function connection() {
-    return Database::get_connection(getenv('ROBOFRAME_ENV'));
+    return \Database\Base::get_connection(\Roboframe\Base::environment());
   }
 
   public function empty_insert_statement($table_name) {

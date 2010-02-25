@@ -15,7 +15,7 @@ class Mailer {
    * Loads settings from APP_BASE/config/mailer.ini
    */
   public static function load_settings($filename = false) {
-    $environment_name = getenv('ROBOFRAME_ENV');
+    $environment_name = \Roboframe\Base::environment();
    
     if(!$filename) {
       $filename = APP_BASE.'/config/mailer.ini';
@@ -185,7 +185,7 @@ class Mailer {
   }
   
   private function render_with_template($action_name) {
-    $controller_name = Roboframe::camel_case_to_underscore(get_class($this));
+    $controller_name = Roboframe\Base::camel_case_to_underscore(get_class($this));
     
     $this->$action_name();
 //    $view_data = array();

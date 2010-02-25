@@ -9,6 +9,7 @@ abstract class Model {
   protected $data = array();
   protected $validators = array();
   protected $errors = array();
+  protected $_connection_name = false;
   
   //public $database_connection = null;
   
@@ -24,8 +25,13 @@ abstract class Model {
     }
   }
   
-  public function database_connection($connection_name = false) {
-    return Database::get_connection($connection_name);
+  public function database_connection() {
+    return Database::get_connection($this->_connection_name);
+  }
+  
+  public function set_database_connection($connection_name) {
+    $this->_connection_name = $connection_name;
+    
   }
   
   public function __set($key, $value)  {

@@ -126,7 +126,7 @@ class Base {
 
   private static function find_all($options) {
 
-    $options = \Roboframe::dissect_args($options, 1);
+    $options = \Roboframe\Base::dissect_args($options, 1);
     $called_class = get_called_class();
     $table_name = $called_class::table_name();
     $raw_sql = "SELECT *"
@@ -157,7 +157,7 @@ class Base {
   protected $errors = array();
 */
   public function __construct($attributes = array()) {
-    $this->database_connection = \Database::get_connection(getenv('ROBOFRAME_ENV'));
+    $this->database_connection = \Database::get_connection(\Roboframe\Base::environment());
     $this->database_adapter    = \Database::adapter();
 
     // init fields

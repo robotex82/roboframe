@@ -1,10 +1,11 @@
 <?php
-class PluginManager {
+namespace PluginManager;
+class Base {
   /*
    * Initializes all Plugins by calling their init.php script
    */
   static public function initialize_all() {
-    $plugins = PluginManager::find_all();
+    $plugins = \PluginManager\Base::find_all();
     foreach($plugins as $plugin) {
       require_once($plugin.'/init.php');
     }

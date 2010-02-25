@@ -1,7 +1,8 @@
 <?php
-require_once(FRAMEWORK_PATH.'/classes/class.DatabaseAdapter.php');
+namespace DatabaseAdapter;
+require_once(FRAMEWORK_PATH.'/classes/DatabaseAdapter/class.Base.php');
 
-class OracleAdapter extends DatabaseAdapter {
+class OracleAdapter extends Base {
   private static $datatypes = array(
     'primary_key' => 'number NOT NULL',
     'string'      => 'varchar2',
@@ -19,16 +20,16 @@ class OracleAdapter extends DatabaseAdapter {
   );
 
   public static function get_associated_datatype($datatype) {
-    return OracleAdapter::$datatypes[$datatype];
+    return self::$datatypes[$datatype];
   }
 
   public static function connect($settings) {
     if(!array_key_exists('adapter', $settings)) {
-      throw new Exception('Missing adapter directive in database settings');
+      throw new \Exception('Missing adapter directive in database settings');
     }
 
     if(!array_key_exists('username', $settings)) {
-      throw new Exception('Missing username directive in database settings');
+      throw new \Exception('Missing username directive in database settings');
     }
 
     $connection = ADONewConnection($settings['adapter']);
@@ -47,7 +48,7 @@ class OracleAdapter extends DatabaseAdapter {
 
 
     if(!($connection->PConnect($settings['tns_name'], $settings['username'], $settings['password']))) {
-        throw new Exception('Connection to database failed!');
+        throw new \Exception('Connection to database failed!');
     }
 
     return $connection;
@@ -96,7 +97,7 @@ class OracleAdapter extends DatabaseAdapter {
 
   static function next_sequence_value($sequence_name) {
     $sql = "SELECT ${sequence_name}.nextval id FROM dual";
-    return Database::get_connection(getenv('ROBOFRAME_ENV'))->getone($sql);
+    return Database::get_connection(\Roboframe\Base::environment())->getone($sql);
   }
 
   static function table_fields($table_name) {
@@ -104,7 +105,7 @@ class OracleAdapter extends DatabaseAdapter {
     $sql = "SELECT lower(COLUMN_NAME) AS fields "
           ."FROM USER_TAB_COLUMNS "
           ."WHERE table_name = '".strtoupper($table_name)."'";
-    return Database::get_connection(getenv('ROBOFRAME_ENV'))->getcol($sql);
+    return Database::get_connection(\Roboframe\Base::environment())->getcol($sql);
   }
 
   static function sequence_name($table_name) {
@@ -113,12 +114,12 @@ class OracleAdapter extends DatabaseAdapter {
 
   static function create_sequence($sequence_name) {
     $sql = "CREATE SEQUENCE {$sequence_name} START WITH 1 NOCACHE";
-    Database::get_connection(getenv('ROBOFRAME_ENV'))->execute($sql);
+    Database::get_connection(\Roboframe\Base::environment())->execute($sql);
   }
 
   static function drop_sequence($sequence_name) {
     $sql = "DROP SEQUENCE {$sequence_name}";
-    Database::get_connection(getenv('ROBOFRAME_ENV'))->execute($sql);
+    Database::get_connection(\Roboframe\Base::environment())->execute($sql);
   }
 
   public function upcase_table_name() {
