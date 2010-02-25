@@ -1,28 +1,29 @@
 <?php
-class Logger {
+namespace Logger;
+class Base {
   public static function init() {
     $registry = Registry::instance();
     $registry->set_entry('logger', new Logger());
   }
   
   public function log($message) {
-    Logger::write($message);
+    self::write($message);
   }
   
   public function debug($message) {
-    Logger::write($message);
+    self::write($message);
   }
   
   public function info($message) {
-    Logger::write($message);
+    self::write($message);
   }
   
   public function warn($message) {
-    Logger::write($message);
+    self::write($message);
   }
   
   public function error($message) {
-    Logger::write($message);
+    self::write($message);
   }
   
   public static function write($message, $filename = false) {
@@ -30,7 +31,7 @@ class Logger {
       $filename = APP_BASE.'/logs/'.date("Y-m-d").'.log';
     }
     if(!is_dir(dirname($filename))) {
-      throw new Exception('Could not write log! Directory ['.dirname($filename).'] is missing!');
+      throw new \Exception('Could not write log! Directory ['.dirname($filename).'] is missing!');
     }
     $now = date("Y-m-d H:i:s");
     $ip_address = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : null.' ';

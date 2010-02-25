@@ -15,20 +15,20 @@ class Database {
     
     switch ($settings['adapter']) {
     case 'oci8':
-        require_once(FRAMEWORK_PATH.'/classes/class.OracleAdapter.php');
+        require_once(FRAMEWORK_PATH.'/classes/DatabaseAdapter/class.OracleAdapter.php');
         return 'OracleAdapter';
     case 'oci8po':
-        require_once(FRAMEWORK_PATH.'/classes/class.OracleAdapter.php');
+        require_once(FRAMEWORK_PATH.'/classes/DatabaseAdapter/class.OracleAdapter.php');
         return 'OracleAdapter';
     case 'mysql':
-        require_once(FRAMEWORK_PATH.'/classes/class.MysqlAdapter.php');
+        require_once(FRAMEWORK_PATH.'/classes/DatabaseAdapter/class.MysqlAdapter.php');
         return 'MysqlAdapter';
     } 
   }
   
   public static function get_connection($connection_name = false) {
     $settings = Database::load_settings($connection_name);
-    $adapter_class = Database::get_adapter_class($connection_name);
+    $adapter_class = 'DatabaseAdapter\\'.Database::get_adapter_class($connection_name);
     return $adapter_class::connect($settings);
     /*
     $settings = Database::load_settings($connection_name);
@@ -48,7 +48,7 @@ class Database {
    * Loads settings from APP_BASE/config/database.ini
    */
   public static function load_settings($connection_name = false, $filename = false) {
-    $connection_name = ($connection_name) ? $connection_name : getenv('ROBOFRAME_ENV');
+    $connection_name = ($connection_name) ? $connection_name : \Roboframe\Base::environment();
    
     if($filename === false) {
       $filename = APP_BASE.'/config/database.ini';

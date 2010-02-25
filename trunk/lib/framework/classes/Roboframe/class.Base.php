@@ -1,8 +1,20 @@
 <?php
-class Roboframe {
+namespace Roboframe;
+class Base {
+  protected static $environment;
+
+  static public function set_environment($e) {
+    self::$environment = $e;
+  }
+  
+  
+  static public function environment() {
+    return self::$environment;
+  }
+  
   public static function list_application_controllers() {
     $controllers = array();
-    foreach(Roboframe::list_application_controller_files() as $controller_dir_entry) {
+    foreach(Base::list_application_controller_files() as $controller_dir_entry) {
       $controller_name = str_replace('_controller.php', '', $controller_dir_entry);
       $camelized_controller_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $controller_name)));
       $controllers[] = $camelized_controller_name;
@@ -54,7 +66,7 @@ class Roboframe {
   }
 
   public static function check_requirements() {
-    Roboframe::check_needed_libs();
+    \Roboframe\Base::check_needed_libs();
   }
 
   public static function check_needed_libs() {
@@ -97,20 +109,28 @@ class Roboframe {
   }
 
   public static function enable_database() {
-    Roboframe::enable_module('Database');
-    /*
-    $registry = Registry::instance();
-    $registry->set_entry('database_connection', Database::get_connection());
-    */
+    \Roboframe\Base::enable_module('Database');
   }
 
   public static function disable_database() {
-    $registry = Registry::instance();
+    $registry = \Registry::instance();
     $registry->remove_entry('database_connection');
+  }
+  
+  public static function enable_modules($modules_names) {
+    foreach(explode(' ', $modules_names) as $module) {
+      self::enable_module($module);
+    }
   }
 
   public static function enable_module($module_name) {
-    require_once(FRAMEWORK_PATH.'/classes/class.'.$module_name.'.php');
+    // TODO:: Get rid of the namespace hack
+    if(file_exists(FRAMEWORK_PATH.'/classes/class.'.$module_name.'.php')) {
+      require_once(FRAMEWORK_PATH.'/classes/class.'.$module_name.'.php');
+    } elseif(file_exists(FRAMEWORK_PATH.'/classes/'.$module_name.'/class.Base.php')) {
+      require_once(FRAMEWORK_PATH.'/classes/'.$module_name.'/class.Base.php');
+    }
+    
     if(method_exists($module_name, 'init')) {
       $module_name::init();
     }

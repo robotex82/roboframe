@@ -15,7 +15,8 @@ class TestOfRouteClass extends UnitTestCase {
   
   function test_empty_request_url() {
     $url = '';
-    $route_template = '/';
+    //$route_template = '/';
+    $route_template = '';
     $route_defaults = array('controller' => 'home', 'action' => 'index');
     
     $r = new Route($route_template, $route_defaults);

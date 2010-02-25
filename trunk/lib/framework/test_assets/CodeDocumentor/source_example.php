@@ -36,13 +36,13 @@ Class Example {
     // Check whether you are good or not
     if(in_array($name, $good)) {
       // If yes, return "good"
-      $return "good";
+      return "good";
     }
     
     // Check whether you are evil or not
     if(in_array($name, $evil)) {
     // If yes, return "evil"
-      $return "evil";
+      return "evil";
     }
     
     // Return false, as the name was not found either in good or evil

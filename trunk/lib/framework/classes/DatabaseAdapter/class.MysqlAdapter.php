@@ -1,7 +1,8 @@
 <?php
-require_once(FRAMEWORK_PATH.'/classes/class.DatabaseAdapter.php');
+namespace DatabaseAdapter;
+require_once(FRAMEWORK_PATH.'/classes/DatabaseAdapter/class.Base.php');
 
-class MysqlAdapter extends DatabaseAdapter {
+class MysqlAdapter extends Base {
   private static $datatypes = array(
      'primary_key' => 'int(11) DEFAULT NULL auto_increment PRIMARY KEY'
     ,'string'      => 'varchar'
@@ -20,14 +21,14 @@ class MysqlAdapter extends DatabaseAdapter {
   );
 
   public static function get_associated_datatype($datatype) {
-    return MysqlAdapter::$datatypes[$datatype];
+    return self::$datatypes[$datatype];
   }
   
   public static function connect($settings) {
     
 /*
     if(!($connection->PConnect($settings['host'], $settings['username'], $settings['password'], $settings['database']))) {
-      throw new Exception('Connection to database failed!');
+      throw new \Exception('Connection to database failed!');
     }
 */
 
@@ -74,7 +75,7 @@ class MysqlAdapter extends DatabaseAdapter {
   
   static function table_fields($table_name) {
     $sql = "SHOW columns FROM {$table_name}";
-    $result = Database::get_connection(getenv('ROBOFRAME_ENV'))->getarray($sql);
+    $result = Database::get_connection(\Roboframe\Base::environment())->getarray($sql);
     $return = array();
     foreach($result as $row) {
       $return[] = $row['Field'];

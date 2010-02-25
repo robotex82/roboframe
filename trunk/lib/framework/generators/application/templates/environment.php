@@ -26,5 +26,5 @@ if(!defined('APP_ENV')) {
 include(APP_BASE.'/config/environments/'.getenv('ROBOFRAME_ENV').'.php');
 
 // add your global environment settings here
-Roboframe::timezone("Europe/Berlin");
+Roboframe\Base::timezone("Europe/Berlin");
 ?>
