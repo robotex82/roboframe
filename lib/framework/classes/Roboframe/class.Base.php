@@ -2,15 +2,23 @@
 namespace Roboframe;
 class Base {
   protected static $environment;
+  protected static $http_proxy;
 
   static public function set_environment($e) {
     self::$environment = $e;
   }
   
-  
   static public function environment() {
     return self::$environment;
   }
+
+  static public function set_http_proxy($hp) {
+    self::$http_proxy = $hp;
+  }
+  
+  static public function http_proxy() {
+    return self::$http_proxy;
+  }  
   
   public static function list_application_controllers() {
     $controllers = array();

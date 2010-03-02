@@ -141,6 +141,10 @@ class Generator {
     return $this->ask_user("[{$target}] has been modified. Delete?");  
   }
   
+  private function ask_delete_downloaded($target) {
+    return $this->ask_user("[{$target}] has been downloaded and might have been modified. Delete?");  
+  }
+  
   private function ask_delete_not_empty($target) {
     return $this->ask_user("[{$target}] is not empty. Delete?");  
   }
@@ -263,6 +267,7 @@ class Generator {
       }
     } else {
       // check if source and target file are the same
+      /*
       if(sha1_file($source) == sha1_file($target)) {
         // if yes, remove target file
         if(unlink($target)) {
@@ -270,9 +275,10 @@ class Generator {
         } else {
           throw new Exception("Could not remove file [{$target}]");
         }
-      } else {  
+      } else {
+      */  
         // if not, ask user to decide
-        if($this->ask_delete_modified($target)) {
+        if($this->ask_delete_downloaded($target)) {
           // if yes, remove
           if(unlink($target)) {
             $this->say("-  {$target}");
@@ -281,7 +287,7 @@ class Generator {
           }
         }  
         // else keep it
-      }    
+      //}    
     }
 
   }
@@ -334,6 +340,8 @@ class Generator {
     curl_setopt($curl, CURLOPT_HEADER, 0);
     // tell cURL to return the result.
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    // Set HTTP Proxy Server
+    curl_setopt($curl, CURLOPT_PROXY, Roboframe\Base::http_proxy());
 
     // exec cURL command and get result into $response
     $response = curl_exec($curl);
@@ -349,6 +357,10 @@ class Generator {
     
     // if the content-server http response code begins with "2", the request
     // was successful.
+    if(substr($response_code, 0, 1) == '0') {
+      throw new Exception('Curl request failed! HTTP response code ['.$response_code.'] for URI ['.$uri.']. You might need a Proxy server!');
+    }
+    
     if(substr($response_code, 0, 1) != '2') {
       throw new Exception('Curl request failed! HTTP response code ['.$response_code.'] for URI ['.$uri.']');
     }

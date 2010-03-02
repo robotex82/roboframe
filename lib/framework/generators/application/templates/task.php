@@ -13,6 +13,7 @@ $task_path     = $argv[1];
 $exploded_args = explode('::', $task_path);
 $task_group    = $exploded_args[0];
 $task_name     = $exploded_args[1];
+$task_options = (isset($argv[2])) ? array($argv[2]) : array();
 
 echo "\r\nInvoking task [".$task_path."]...";
 // Check if task exists
@@ -28,7 +29,7 @@ $task_group_class = Inflector::camelize($task_group).'Tasks';
 //$tg = new $task_group_class();
 //$g->map_options(Generator::extract_generator_options_from_cli($argv));
 try{
-  $task_group_class::run($task_name);
+  $task_group_class::run($task_name, $task_options);
 } catch(exception $e) {
   echo "An exception has occurred: ".$e->getmessage()."\r\n";
   echo "Available tasks in [{$task_group}] are:\r\n";
@@ -38,5 +39,4 @@ try{
 }
 
 echo "\r\ndone";
-
 ?>
