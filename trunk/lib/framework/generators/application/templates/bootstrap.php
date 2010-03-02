@@ -23,6 +23,8 @@ Roboframe\Base::check_requirements();
 Roboframe\Base::enable_modules('Inflector Registry Logger PluginManager Flash Generator Model Mailer Migration Migrator Router Route TaskGroup');
 
 Roboframe\Base::set_environment(getenv('ROBOFRAME_ENV'));
+Roboframe\Base::set_http_proxy(getenv('HTTP_PROXY'));
+
 
 require_once(APP_BASE.'/config/environment.php');
 
