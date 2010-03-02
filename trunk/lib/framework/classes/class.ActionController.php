@@ -1,7 +1,7 @@
 <?php
 require_once('classes/class.View.php');
 abstract class ActionController extends Controller {
-  protected $name;
+  protected $_name;
   protected $viewData      = array();
   public    $layout; //        = 'default';
   public    $output_format = 'xhtml';
@@ -29,10 +29,10 @@ abstract class ActionController extends Controller {
   }
   
   public function setName($name) {
-    $this->name = $name;
+    $this->_name = $name;
   }
   public function getName() {
-    return $this->name;
+    return $this->_name;
   }
   
   public function setVar($key, $value) {
