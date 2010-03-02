@@ -230,6 +230,62 @@ class Generator {
 
   }
   
+  public function download($source, $target) {
+    // check whether the revert flag is set
+    if(!$this->revert) {
+      // if not begin copying file
+      // check if the source file exists
+      /*
+      if(!$data = self::curl($source)) {
+        // if not, throw an exeption
+        throw new Exception("Could not download source file from [{$source}]!");
+      }
+      */
+      // check if target file exists
+      if(!file_exists($target)) {
+        if(self::curl($source, $target)) {
+          $this->say("+  {$target}");
+        } else {
+          // throw an Exception if copying fails
+          throw new Exception("Could not download file to [{$target}]!");
+        }
+      } else {
+        // target file exists, ask the user to confirm overwriting the file
+        if($this->ask_overwrite($target)) {
+          // if user confirms, try to overwrite the file
+          if(self::curl($source, $target)) {
+            $this->say("+  {$target}");
+          } else {
+            // throw an Exception if copying fails
+            throw new Exception("Could not download file to [{$target}]!");
+          }
+        }
+      }
+    } else {
+      // check if source and target file are the same
+      if(sha1_file($source) == sha1_file($target)) {
+        // if yes, remove target file
+        if(unlink($target)) {
+          $this->say("-  {$target}");
+        } else {
+          throw new Exception("Could not remove file [{$target}]");
+        }
+      } else {  
+        // if not, ask user to decide
+        if($this->ask_delete_modified($target)) {
+          // if yes, remove
+          if(unlink($target)) {
+            $this->say("-  {$target}");
+          } else {
+            throw new Exception("Could not remove file [{$target}]");
+          }
+        }  
+        // else keep it
+      }    
+    }
+
+  }
+  
   public function __set($key, $value)  {
     $this->set_var($key, $value);
   }
@@ -266,6 +322,41 @@ class Generator {
   
   static public function directory_is_empty($dir) {
     return (($files = @scandir($dir)) && count($files) <= 2); 
+  }
+  
+  static public function curl($uri, $target) {
+    // initalize cURL handle.
+    $curl = curl_init($uri);
+    
+    // set cURL verbosity
+    curl_setopt($curl, CURLOPT_VERBOSE, 0);
+    // tell cURL to get headers.
+    curl_setopt($curl, CURLOPT_HEADER, 0);
+    // tell cURL to return the result.
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+    // exec cURL command and get result into $response
+    $response = curl_exec($curl);
+
+    // get content-server http response headers
+    $response_headers = curl_getinfo($curl);
+    
+    // get response code from the headers 
+    $response_code = (string) $response_headers['http_code'];
+
+    // close cURL session
+    curl_close($curl);
+    
+    // if the content-server http response code begins with "2", the request
+    // was successful.
+    if(substr($response_code, 0, 1) != '2') {
+      throw new Exception('Curl request failed! HTTP response code ['.$response_code.'] for URI ['.$uri.']');
+    }
+    if(!file_put_contents($target, $response)) {
+      throw new Exception('Could not write to file ['.$target.']');
+    }
+    return true;
+  	
   }
 }
 ?>

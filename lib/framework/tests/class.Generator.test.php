@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__).'/../test_assets/Generator/test/test_generator.php');
 require_once(dirname(__FILE__).'/../test_assets/Generator/template/template_generator.php');
 require_once(dirname(__FILE__).'/../test_assets/Generator/option/option_generator.php');
+require_once(dirname(__FILE__).'/../test_assets/Generator/download/download_generator.php');
 class TestOfGeneratorClass extends UnitTestCase {
   function __construct() {
     $this->UnitTestCase('Generator Class Test');
@@ -108,6 +109,25 @@ class TestOfGeneratorClass extends UnitTestCase {
     $g->run();
     
     $this->assertFalse(file_exists($filename), 'File ['.$filename.'] should not exist after reverting the Option Generator!');
+  }
+  
+  function test_download_file() {
+    $target = dirname(__FILE__).'/../test_assets/Generator/target/testdownload.txt';
+    @unlink($filename);
+
+
+    $g = new DownloadGenerator();
+    $g->run();
+    
+    $this->assertTrue(file_exists($target), 'File ['.$target.'] should exist after running the Download Generator!');
+    
+    $pattern = "/>Example Web Page/";
+    $this->assertPattern($pattern, file_get_contents($target), 'File ['.$target.'] should match pattern ['.$pattern.']!');
+    
+    $g->revert(true);
+    $g->run();
+    
+    $this->assertFalse(file_exists($target), 'File ['.$target.'] should not exist after reverting the Download Generator!');
   }
 }  
 ?>
