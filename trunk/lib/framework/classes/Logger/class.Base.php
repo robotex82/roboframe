@@ -1,41 +1,12 @@
 <?php
 namespace Logger;
-class Base {
-  public static function init() {
-    $registry = Registry::instance();
-    $registry->set_entry('logger', new Logger());
-  }
-  
-  public function log($message) {
-    self::write($message);
-  }
-  
-  public function debug($message) {
-    self::write($message);
-  }
-  
-  public function info($message) {
-    self::write($message);
-  }
-  
-  public function warn($message) {
-    self::write($message);
-  }
-  
-  public function error($message) {
-    self::write($message);
-  }
-  
-  public static function write($message, $filename = false) {
-    if(!$filename) {
-      $filename = APP_BASE.'/logs/'.date("Y-m-d").'.log';
-    }
-    if(!is_dir(dirname($filename))) {
-      throw new \Exception('Could not write log! Directory ['.dirname($filename).'] is missing!');
-    }
-    $now = date("Y-m-d H:i:s");
-    $ip_address = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : null.' ';
-    error_log ('['.$ip_address.$now.' '.$_SERVER['SCRIPT_NAME'].'] '.$message."\r\n", 3, $filename);
-  }
+require_once('class.Text.php');
+abstract class Base {
+  abstract public function log($message);
+  abstract public function debug($message);
+  abstract public function info($message);
+  abstract public function warn($message);
+  abstract public function error($message);
+  abstract public function write($message);
 }    
 ?>

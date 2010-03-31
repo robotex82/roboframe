@@ -3,6 +3,7 @@ require_once(dirname(__FILE__).'/../test_assets/Generator/test/test_generator.ph
 require_once(dirname(__FILE__).'/../test_assets/Generator/template/template_generator.php');
 require_once(dirname(__FILE__).'/../test_assets/Generator/option/option_generator.php');
 require_once(dirname(__FILE__).'/../test_assets/Generator/download/download_generator.php');
+require_once(dirname(__FILE__).'/../test_assets/Generator/file/file_generator.php');
 class TestOfGeneratorClass extends UnitTestCase {
   function __construct() {
     $this->UnitTestCase('Generator Class Test');
@@ -129,5 +130,23 @@ class TestOfGeneratorClass extends UnitTestCase {
     
     $this->assertFalse(file_exists($target), 'File ['.$target.'] should not exist after reverting the Download Generator!');
   }
+  
+  function test_empty_path_throws_exeption() {
+    $this->expectException("Template generator with empty target path should throw an exception");
+    $g = new FileGenerator();
+    $g->run();    
+  }
+  /*
+  function test_overwrite_flag() {
+    $file = dirname(__FILE__).'/../test_assets/Generator/overwrite/file.txt';
+    @touch($file);
+    $this->assertTrue(file_exists($file), "File [{$file}] should exist!");
+    
+    $g = new OverwriteGenerator();
+    $g->map_options(array(0 => $file));
+    $g->run();
+
+  }
+  */
 }  
 ?>

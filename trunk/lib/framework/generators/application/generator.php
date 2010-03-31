@@ -36,6 +36,8 @@ class ApplicationGenerator extends Generator {
     $this->file($this->template_root.'/application_helpers.php',
                 $this->app_root.     '/application/helpers/application_helpers.php');
 
+    $this->file($this->template_root.'/application.php',
+                $this->app_root.     '/application/layouts/application.php');
                 
     $this->template($this->template_root.'/bootstrap.php',
                     $this->app_root.     '/config/bootstrap.php',
@@ -79,6 +81,9 @@ class ApplicationGenerator extends Generator {
                 
     $this->file($this->template_root.'/task.php',
                 $this->app_root.     '/scripts/task.php');
+
+    $this->file($this->template_root.'/test.php',
+                $this->app_root.     '/scripts/test.php');  
   }
 }
 ?>
