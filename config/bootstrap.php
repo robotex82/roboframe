@@ -24,6 +24,7 @@ Roboframe\Base::enable_modules('Inflector Registry Logger PluginManager Flash Ge
 
 Roboframe\Base::set_environment(getenv('ROBOFRAME_ENV'));
 Roboframe\Base::set_http_proxy(getenv('HTTP_PROXY'));
+Roboframe\Base::set_logger(new Logger\Text());
 
 require_once(APP_BASE.'/config/environment.php');
 

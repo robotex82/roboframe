@@ -3,8 +3,20 @@ namespace Roboframe;
 class Base {
   protected static $environment;
   protected static $http_proxy;
+  protected static $logger;
+  
+  static public function set_logger($l) {
+    self::$logger = $l;
+  }
+  
+  static public function logger() {
+    return self::$logger;
+  }
 
   static public function set_environment($e) {
+  	if(empty($e)) {
+  	  throw new \Exception("Cannot set empty environment! Set 'ROBOFRAME_ENV' in the environment!");
+  	}
     self::$environment = $e;
   }
   

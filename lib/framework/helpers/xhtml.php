@@ -3,6 +3,10 @@ function stylesheet_link_tag($name) {
   return '<link href="'.Router::base_url().'/stylesheets/'.$name.'.css" media="screen" rel="stylesheet" type="text/css" />';
 }
 
+function javascript_link_tag($name) {
+  return '<script type="text/javascript" src="'.Router::base_url().'/'.$name.'.js"></script>';
+}
+
 function back_url() {
   return $_SERVER['HTTP_REFERER'];
 }
