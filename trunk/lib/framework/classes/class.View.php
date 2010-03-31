@@ -11,6 +11,19 @@ class View {
   protected $view_root;
   protected $controller_name;
   protected $action_name;  
+  static protected $helpers = array();
+  
+  static function register_helper($helper_path) {
+  	if(!is_readable($helper_path)) {
+  		throw new Exception("Could not register helper. Can't read [$helper_path]");
+  	}
+  	array_push(self::$helpers, $helper_path);
+  }
+  
+  static function registered_helpers() {
+  	return self::$helpers;
+  	
+  }
   
   public function __construct($controller_name, $action_name, $view_data, $output_format, $layout) {
     $this->set_view_root(VIEW_ROOT);
@@ -23,6 +36,9 @@ class View {
     //$om->initialize();
     $this->output_manager->set_layout($layout);
     $this->set_layout_path($this->output_manager->get_layout_path());
+    
+    self::register_helper(FRAMEWORK_PATH.'/helpers/xhtml.php');
+    self::register_helper(APPLICATION_ROOT.'/helpers/application_helpers.php');
   }
 /*  
   public function set_view_path($view_path) {
@@ -103,12 +119,20 @@ class View {
   } 
   
   public function render($return_content = false) {
+  	/*
     require_once(FRAMEWORK_PATH.'/helpers/xhtml.php');
     require_once(APPLICATION_ROOT.'/helpers/application_helpers.php'); 
     $controller_helper = APPLICATION_ROOT.'/helpers/'.$this->get_controller_name().'_helpers.php';
     if(is_readable($controller_helper)) {
       require_once($controller_helper);
-    }   
+    } 
+    */  
+  	self::register_helper(APPLICATION_ROOT.'/helpers/'.$this->get_controller_name().'_helpers.php');
+  	
+  	foreach(self::registered_helpers() as $h) {
+  		require_once($h);
+  	}
+  	
     //$view = VIEW_ROOT . "/" . $this->getName() . "/" . $action . ".php";
     $content = $this->get_view_path();
     //$content = $this->get_view_root().$this->get_view_path();
