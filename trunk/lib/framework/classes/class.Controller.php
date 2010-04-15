@@ -14,6 +14,11 @@ abstract class Controller {
   private function get_request_data() {
     return $this->request->get_data();
   }
+  /*
+  public function params() {
+    return $this->get_request_data();
+  }
+  */
 /*  
   public function getRequest() {
   }

@@ -7,7 +7,7 @@ class ControllerGenerator extends Generator {
     $this->template_root       = dirname(__FILE__).'/templates';
     $this->library_path        = realpath(dirname(__FILE__).'/../../../');
     $this->app_root            = getcwd();
-    $this->helper_path         = $this->app_root.'/helpers/controllers';    
+    $this->helper_path         = $this->app_root.'/application/helpers';    
     $this->controller_path     = $this->app_root.'/application/controllers';
     $this->controller_filename = Inflector::underscore($this->class_name).'_controller.php';
     $this->helper_filename     = Inflector::underscore($this->class_name).'_helpers.php';
