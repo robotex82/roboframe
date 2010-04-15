@@ -117,3 +117,18 @@ function checkbox($args) {
 //  print_r($options);
   ?><input type="checkbox" name="<?= $options['name'] ?>" id="<?= $options['id'] ?>" value="<?= $options['value'] ?>" /><?
 }
+
+function link_to($label, $options) {
+  if(is_array($options)) {
+    $output = "<a href=\"".Router::base_url()."/{$options['controller']}/{$options['action']}";
+    if(isset($options['id'])) {
+      $output.= "/{$options['id']}";
+    }
+    $output.= "\">{$label}</a>";
+    echo $output;
+  }
+  if(is_string($options)) {
+    echo "<a href=\"{$options}\">{$label}</a>";
+  }
+
+}

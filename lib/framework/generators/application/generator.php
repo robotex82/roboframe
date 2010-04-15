@@ -3,6 +3,12 @@ class ApplicationGenerator extends Generator {
   public $option_mappings = array(0 => 'app_name');
   
   public function commands() {
+  	/*
+  	if(empty($this->app_name)) {
+  	  throw new Exception("Cannot generate application without application name! Please pass the application name as first generator parameter!");	
+  	}
+  	*/
+  	
     $this->app_root      = getcwd()."/{$this->app_name}";
     $this->template_root = dirname(__FILE__).'/templates';
     $this->library_path  = realpath(dirname(__FILE__).'/../../../');
@@ -26,6 +32,7 @@ class ApplicationGenerator extends Generator {
     $this->directory($this->app_root.'/public/stylesheets');
     $this->directory($this->app_root.'/scripts');
     $this->directory($this->app_root.'/tests');
+    $this->directory($this->app_root.'/tests/assets');
     $this->directory($this->app_root.'/tests/fixtures');
     $this->directory($this->app_root.'/tests/models');
 
@@ -53,13 +60,13 @@ class ApplicationGenerator extends Generator {
     $this->file($this->template_root.'/routes.ini',
                 $this->app_root.     '/config/routes.ini');
                 
-    $this->file($this->template_root.'/development.php',
+    $this->file($this->template_root.'/environments/development.php',
                 $this->app_root.     '/config/environments/development.php');
                 
-    $this->file($this->template_root.'/test.php',
+    $this->file($this->template_root.'/environments/test.php',
                 $this->app_root.     '/config/environments/test.php');
                 
-    $this->file($this->template_root.'/production.php',
+    $this->file($this->template_root.'/environments/production.php',
                 $this->app_root.     '/config/environments/production.php');
                 
     $this->template($this->template_root.'/.htaccess',

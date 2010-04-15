@@ -4,6 +4,8 @@ class Request {
   
   function __construct($request_data) {
     $this->data = $request_data;
+    // @TODO: Test this!
+    array_merge($this->data, $_POST, $_GET, $_FILES);
   }
 /*  
   public function __set($key, $value)  {
@@ -28,8 +30,12 @@ class Request {
     return $this->data;
   }
   
-  public function params() {
-    return $this->get_data();
+  public function params($var = null) {
+    if($var === null) {
+      return $this->get_data();
+    }
+    return $this->$var;
+    
   }
 }
 ?>

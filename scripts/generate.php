@@ -27,8 +27,13 @@ $generator_class = Inflector::camelize($generator_name).'Generator';
 
 $g = new $generator_class();
 $g->map_options(Generator::extract_generator_options_from_cli($argv));
+try {
+  $g->run();	
+} catch(Exception $e) {
+	echo $e->getMessage();
+	exit(1);
+}
 
-$g->run();
 
 echo "\r\n[done]";
 

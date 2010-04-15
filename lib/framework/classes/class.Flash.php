@@ -39,5 +39,10 @@ class Flash {
       $this->add_data($method, $args[0]);
     }
   }
+  
+  public function notice($n) {
+    $this->add_data('notice', $n);
+    
+  }
 }
 ?>

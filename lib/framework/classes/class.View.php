@@ -30,6 +30,7 @@ class View {
     //$this->set_view_path($view_path);
     $this->set_controller_name($controller_name);
     $this->set_action_name($action_name);
+    //var_dump($view_data);
     $this->set_view_data($view_data);
     $this->set_output_format($output_format);
     $this->output_manager = OutputManager::get_output_manager_for($output_format);
@@ -174,6 +175,14 @@ class View {
     if($return_content) {
       return $rendered_content;
     } 
+  }
+  
+  public function render_partial($name, $local_vars = array()) {
+    foreach($local_vars as $var => $value) {
+      $$var = $value;
+    }
+    include($this->get_view_root() . '/' . $this->get_controller_name() . '/_' . $name . ".php");
+    
   }
 }
 ?>
