@@ -1,7 +1,7 @@
 <?php
 define('APP_BASE',         realpath(dirname(__FILE__).'/..'));
 define('DATA_BASE',        realpath(dirname(__FILE__).'/../../roboframe_data'));
-define('LIBRARY_PATH',     'C:\Development\xampplite\php\roboframe\lib');
+define('LIBRARY_PATH',     'C:\Users\Robo\Documents\php\Roboframe\lib');
 define('FRAMEWORK_PATH',   LIBRARY_PATH.'/framework');
 
 define('APPLICATION_ROOT', APP_BASE.'/application');
@@ -30,6 +30,7 @@ Roboframe\Base::enable_module('Logger\Base');
 Roboframe\Base::enable_module('Logger\Text');
 
 // Tool Modules
+Roboframe\Base::enable_module('Generator\Manager\Base');
 Roboframe\Base::enable_module('Generator\Base');
 Roboframe\Base::enable_module('TaskGroup\Base');
 

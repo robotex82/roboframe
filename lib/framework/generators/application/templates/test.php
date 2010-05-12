@@ -14,14 +14,14 @@ $task_path     = $task_group.'::'.$task_name;
 
 echo "\r\nInvoking task [".$task_path."]...";
 // Check if task exists
-if(!$task_group_filename = TaskGroup::search($task_group)) {
+if(!$task_group_filename = \TaskGroup\Base::search($task_group)) {
   // If not, echo error message and abort
   echo("did not find task group!");
   exit(1);
 }
 echo "[passed]\r\n";
 
-$task_group_class = Inflector\Base::camelize($task_group).'Tasks';
+$task_group_class = \Inflector\Base::camelize($task_group).'Tasks';
 
 //$tg = new $task_group_class();
 //$g->map_options(Generator::extract_generator_options_from_cli($argv));
