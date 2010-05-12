@@ -3,7 +3,7 @@ namespace TaskGroup;
 class Base {
   public static function run($taskname, $options = array(), $prerequisites_options_chain = array()) {
     if(!method_exists(get_called_class(), $taskname)) {
-      throw new exception('Can not run unknown task ['.$taskname.']');
+      throw new \exception('Can not run unknown task ['.$taskname.']');
     }
     if(method_exists(get_called_class(), static::$tasks[$taskname])) {
       $prerequisite = static::$tasks[$taskname];
