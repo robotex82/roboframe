@@ -4,7 +4,7 @@ define('SIMPLE_TEST_PATH', LIBRARY_PATH . '/simpletest');
 require_once(SIMPLE_TEST_PATH.'/unit_tester.php');
 require_once(SIMPLE_TEST_PATH.'/reporter.php');
 
-class TestTasks extends TaskGroup {
+class TestTasks extends \TaskGroup\Base {
   protected static $tasks = array('framework' =>''
                                  ,'models'    =>''
                                  ,'plugins'   =>'');
