@@ -1,12 +1,13 @@
 <?php
-class PluginGenerator extends Generator {
+namespace Generator;
+class Plugin extends Base {
   public $option_mappings = array(0 => 'plugin_name');
   
   public function commands() {
     $this->template_root       = dirname(__FILE__).'/templates';
     $this->library_path        = realpath(dirname(__FILE__).'/../../../');
     $this->app_root            = getcwd();
-    $this->plugin_path         = $this->app_root.'/plugins/'.Inflector::underscore($this->plugin_name);
+    $this->plugin_path         = $this->app_root.'/plugins/'.\Inflector\Base::underscore($this->plugin_name);
     $this->init_filename       = 'init.php';
     $this->install_filename    = 'install.php';
     $this->main_class_filename = 'class.'.$this->plugin_name.'.php';

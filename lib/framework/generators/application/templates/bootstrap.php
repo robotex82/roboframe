@@ -16,11 +16,44 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . PAGE_ROOT);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . LIBRARY_PATH);
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . FRAMEWORK_PATH);
 
-require_once(FRAMEWORK_PATH.'/classes/Roboframe/class.Base.php');
+require_once(FRAMEWORK_PATH.'/classes/Roboframe/Base.php');
 
 Roboframe\Base::check_requirements();
 
-Roboframe\Base::enable_modules('Inflector Registry Logger PluginManager Flash Generator Model Mailer Migration Migrator Router Route TaskGroup');
+// Core Modules
+Roboframe\Base::enable_module('Inflector\Base');
+Roboframe\Base::enable_module('PluginManager\Base');
+Roboframe\Base::enable_module('Registry\Base');
+
+// Logging Modules
+Roboframe\Base::enable_module('Logger\Base');
+Roboframe\Base::enable_module('Logger\Text');
+
+// Tool Modules
+Roboframe\Base::enable_module('Generator\Base');
+Roboframe\Base::enable_module('TaskGroup\Base');
+
+// Mailer Modules
+Roboframe\Base::enable_module('Mailer\Base');
+
+// Web Modules
+Roboframe\Base::enable_module('Request\Base');
+Roboframe\Base::enable_module('Router\Base');
+Roboframe\Base::enable_module('Route\Base');
+Roboframe\Base::enable_module('View\Base');
+Roboframe\Base::enable_module('Flash\Base');
+Roboframe\Base::enable_module('Output\Manager\Base');
+
+// Database Modules
+Roboframe\Base::enable_module('Migration\Base');
+Roboframe\Base::enable_module('Migrator\Base');
+
+// Model Modules
+Roboframe\Base::enable_module('Model\Base');
+Roboframe\Base::enable_module('Validators\PresenceOfValidator');
+Roboframe\Base::enable_module('Validators\LengthOfValidator');
+Roboframe\Base::enable_module('Validators\InclusionOfValidator');
+Roboframe\Base::enable_module('Validators\FormatOfValidator');
 
 Roboframe\Base::set_environment(getenv('ROBOFRAME_ENV'));
 Roboframe\Base::set_http_proxy(getenv('HTTP_PROXY'));
@@ -34,10 +67,12 @@ Roboframe\Base::enable_sessions();
 PluginManager\Base::initialize_all();
 
 // @TODO: Find better way to autoload models
+/*
 function __autoload($class_name) {
   $filename = strtolower(preg_replace('/([^\s])([A-Z])/', '\1_\2', $class_name)).'.php';
   $file = MODEL_ROOT.'/' . $filename;
   if(!file_exists($file)) { return false; }
   require_once($file);
 }
+*/
 ?>
