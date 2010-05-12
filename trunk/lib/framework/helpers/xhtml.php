@@ -1,10 +1,10 @@
 <?php
 function stylesheet_link_tag($name) {
-  return '<link href="'.Router::base_url().'/stylesheets/'.$name.'.css" media="screen" rel="stylesheet" type="text/css" />';
+  return '<link href="'.Router\Base::base_url().'/stylesheets/'.$name.'.css" media="screen" rel="stylesheet" type="text/css" />';
 }
 
 function javascript_link_tag($name) {
-  return '<script type="text/javascript" src="'.Router::base_url().'/'.$name.'.js"></script>';
+  return '<script type="text/javascript" src="'.Router\Base::base_url().'/'.$name.'.js"></script>';
 }
 
 function back_url() {
@@ -120,7 +120,7 @@ function checkbox($args) {
 
 function link_to($label, $options) {
   if(is_array($options)) {
-    $output = "<a href=\"".Router::base_url()."/{$options['controller']}/{$options['action']}";
+    $output = "<a href=\"".Router\Base::base_url()."/{$options['controller']}/{$options['action']}";
     if(isset($options['id'])) {
       $output.= "/{$options['id']}";
     }

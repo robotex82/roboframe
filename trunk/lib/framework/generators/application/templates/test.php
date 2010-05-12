@@ -21,7 +21,7 @@ if(!$task_group_filename = TaskGroup::search($task_group)) {
 }
 echo "[passed]\r\n";
 
-$task_group_class = Inflector::camelize($task_group).'Tasks';
+$task_group_class = Inflector\Base::camelize($task_group).'Tasks';
 
 //$tg = new $task_group_class();
 //$g->map_options(Generator::extract_generator_options_from_cli($argv));

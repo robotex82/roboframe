@@ -1,13 +1,14 @@
 <?php
-class ApplicationGenerator extends Generator {
+namespace Generator;
+class Application extends Base {
   public $option_mappings = array(0 => 'app_name');
   
   public function commands() {
-  	/*
-  	if(empty($this->app_name)) {
+
+  	if($this->app_name == '') {
   	  throw new Exception("Cannot generate application without application name! Please pass the application name as first generator parameter!");	
   	}
-  	*/
+
   	
     $this->app_root      = getcwd()."/{$this->app_name}";
     $this->template_root = dirname(__FILE__).'/templates';
