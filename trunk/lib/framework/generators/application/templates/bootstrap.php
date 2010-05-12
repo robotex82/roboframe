@@ -30,6 +30,7 @@ Roboframe\Base::enable_module('Logger\Base');
 Roboframe\Base::enable_module('Logger\Text');
 
 // Tool Modules
+Roboframe\Base::enable_module('Generator\Manager\Base');
 Roboframe\Base::enable_module('Generator\Base');
 Roboframe\Base::enable_module('TaskGroup\Base');
 
