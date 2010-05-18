@@ -44,17 +44,22 @@ Roboframe\Base::enable_module('Route\Base');
 Roboframe\Base::enable_module('View\Base');
 Roboframe\Base::enable_module('Flash\Base');
 Roboframe\Base::enable_module('Output\Manager\Base');
+Roboframe\Base::enable_module('Controller\Base');
+Roboframe\Base::enable_module('Controller\Front');
+Roboframe\Base::enable_module('Controller\Action');
 
 // Database Modules
 Roboframe\Base::enable_module('Migration\Base');
 Roboframe\Base::enable_module('Migrator\Base');
 
 // Model Modules
+/*
 Roboframe\Base::enable_module('Model\Base');
 Roboframe\Base::enable_module('Validators\PresenceOfValidator');
 Roboframe\Base::enable_module('Validators\LengthOfValidator');
 Roboframe\Base::enable_module('Validators\InclusionOfValidator');
 Roboframe\Base::enable_module('Validators\FormatOfValidator');
+*/
 
 Roboframe\Base::set_environment(getenv('ROBOFRAME_ENV'));
 Roboframe\Base::set_http_proxy(getenv('HTTP_PROXY'));
