@@ -17,8 +17,8 @@ abstract class Base {
   
   public function __construct() {
     //$this->database_connection = Database::get_connection();
-    if(method_exists($this, 'init')) {
-      $this->init();
+    if(method_exists($this, 'initialize')) {
+      $this->initialize();
     }
     
     $args = func_get_args();
@@ -122,5 +122,21 @@ abstract class Base {
       return $this->errors[$fieldname];
     }
   }
+  
+  public function init() {
+
+    spl_autoload_extensions('.php');
+    spl_autoload_register('self::class_loader');
+    
+  }
+  
+  public static function class_loader($class) {
+    $file = APPLICATION_ROOT.'/models/'.\Inflector\Base::underscore($class).'.php';
+    if (!is_readable($file)) {
+      return false;
+    }
+    include $file; 
+  }
+
 }
 ?>

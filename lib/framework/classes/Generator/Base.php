@@ -1,5 +1,60 @@
 <?php
 namespace Generator;
+/**
+ * 
+ * @author Roberto Vasquez Angel
+ * 
+ *  Usage:
+ * 
+ *  <p>Create a file called generator.php in a new folder. This class contains the Generator class that 
+ *  extends the Generator\Base class and implements the commands method.</p>
+ * 
+ *  Example generator.php:
+ *  <code>
+ *  namespace Generator;
+ *  class Authentication extends Base {
+ *    public function commands() {
+ *    }
+ *  }
+ *  </code>
+ * 
+ *  <p>The commands() method gets called by the Generator runner, when the generator is invoked. It should
+ *  contain all actions that the generator has to perform.</p>
+ * 
+ *  <p>It is a good idea to define a tempalte root, where you store all templates and sourcefiles for the generator:</p>
+ *  
+ *  <code>
+ *  $this->template_root = dirname(__FILE__).'/templates';
+ *  </code>
+ *  
+ *  Passing options to the generator
+ *  
+ *  <p>It you define the options array in your generator, you can map passed options to names instead of numbers</p>
+ *  
+ *  <p>Example:</p>
+ *  
+ *  <code>
+ *  public $option_mappings = array(0 => 'app_name');
+ *  </code>
+ *  
+ *  Registering a generator
+ *  
+ *  <p>You can register a generator by passing the name and path to the register method of the Generator Manager</p>
+ *  
+ *  Example:
+ *  
+ *  <code>\Generator\Manager\Base::register_generator('<GENERATOR_NAME>', '<PATH_TO_THE_GENERATOR>');</code>
+ *  
+ *  
+ *  Comands
+ *  
+ *  <ul>
+ *    <li>directory(string $path)</li>
+ *    <li>file(string $source, string $target)</li>
+ *    <li>template(string $source, string $target, array $options)</li>
+ *  </ul>  
+ *    
+ */
 class Base {
   private $_options = array();
   private $revert;
@@ -30,6 +85,11 @@ class Base {
     $this->revert = $revert;
   }
   
+  /**
+   * Generates a directory at the given target
+   * 
+   * @param $target
+   */
   public function directory($target) {
     // check whether the revert flag is set
     if(!$this->revert) {
@@ -80,6 +140,12 @@ class Base {
     }
   }
   
+  /**
+   * Copies a file from the source to the target
+   * 
+   * @param unknown_type $source
+   * @param unknown_type $target
+   */
   public function file($source, $target) {
     // check whether the revert flag is set
     if(!$this->revert) {
@@ -189,6 +255,13 @@ class Base {
     $this->write($output);
   }
   
+  /**
+   * Generates a new file on the target from a source template and the passed options
+   * 
+   * @param unknown_type $source
+   * @param unknown_type $target
+   * @param array $options
+   */
   public function template($source, $target, array $options) {
       // check whether the revert flag is set
     if(!$this->revert) {
