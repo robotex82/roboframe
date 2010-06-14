@@ -1,5 +1,19 @@
 <?php
 namespace TaskGroup;
+/**
+ * TaskGroup Baseclass. All TaskGroups extend this class
+ * 
+ * A TaskGroup is a collection of methods, that run different tasks in a defined domain.
+ * 
+ * Tasks may have prerequistes (ohter tasks)
+ * 
+ * Create a new TaskGroup by typing:
+ * 
+ * php scripts/generate.php task_group <CamelCasedName>
+ * 
+ * @author vasquezr
+ *
+ */
 class Base {
   public static function run($taskname, $options = array(), $prerequisites_options_chain = array()) {
     if(!method_exists(get_called_class(), $taskname)) {
@@ -19,17 +33,5 @@ class Base {
   
   public static function available() {
     return array_keys(static::$tasks);
-  }
-  
-  static public function search($name) {
-    if(is_readable(APP_BASE.'/lib/tasks/'.$name.'_tasks.php')) {
-      require_once APP_BASE.'/lib/tasks/'.$name.'_tasks.php';
-      return APP_BASE.'/lib/tasks/'.$name.'_tasks.php';
-    }
-
-  if(is_readable(FRAMEWORK_PATH.'/tasks/'.$name.'_tasks.php')) {
-      require_once(FRAMEWORK_PATH.'/tasks/'.$name.'_tasks.php');
-      return FRAMEWORK_PATH.'/tasks/'.$name.'_tasks.php';
-    }
   }
 }

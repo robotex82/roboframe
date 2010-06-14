@@ -133,5 +133,10 @@ class Base {
     }
     return $return;
   }
+  
+  public static function humanize($string) {
+    return ucwords(implode(' ', explode('_', $string)));
+    
+  }
 }
 ?>

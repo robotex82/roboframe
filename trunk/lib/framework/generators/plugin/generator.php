@@ -10,15 +10,15 @@ class Plugin extends Base {
     $this->plugin_path         = $this->app_root.'/plugins/'.\Inflector\Base::underscore($this->plugin_name);
     $this->init_filename       = 'init.php';
     $this->install_filename    = 'install.php';
-    $this->main_class_filename = 'class.'.$this->plugin_name.'.php';
-    $this->test_class_filename = 'class.'.$this->plugin_name.'.test.php';
+    $this->main_class_filename = $this->plugin_name.'.php';
+    $this->test_class_filename = $this->plugin_name.'.test.php';
 
     $this->directory($this->plugin_path);
     $this->directory($this->plugin_path.'/doc');
     $this->directory($this->plugin_path.'/lib');
     $this->directory($this->plugin_path.'/tests');
     $this->directory($this->plugin_path.'/test_assets');
-    
+    $this->directory($this->plugin_path.'/vendor');    
 
     $this->template($this->template_root.'/init.php',
                     $this->plugin_path.'/'.$this->init_filename,
