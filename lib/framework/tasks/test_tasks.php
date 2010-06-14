@@ -1,10 +1,14 @@
 <?php
+namespace TaskGroup;
+use \TestSuite;
+use \PluginManager;
+use \TextReporter;
 define('SIMPLE_TEST_PATH', LIBRARY_PATH . '/simpletest');
 
 require_once(SIMPLE_TEST_PATH.'/unit_tester.php');
 require_once(SIMPLE_TEST_PATH.'/reporter.php');
 
-class TestTasks extends \TaskGroup\Base {
+class TestTasks extends Base {
   protected static $tasks = array('framework' =>''
                                  ,'models'    =>''
                                  ,'plugins'   =>'');

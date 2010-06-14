@@ -1,5 +1,6 @@
 <?php
-class DBTasks extends TaskGroup {
+namespace TaskGroup;
+class DBTasks extends Base {
   protected static $tasks = array('initialize' =>'');
   
   public function initialize() {

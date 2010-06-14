@@ -2,9 +2,15 @@
 require_once(dirname(__FILE__).'/../config/bootstrap.php');
 echo "Checking commandline arguments...";
 
+\TaskGroup\Manager\Base::auto_register_framework_task_groups();
+
 echo "\r\nTask...";
 if(!isset($argv[1])) {
   echo('Missing first argument [task]');
+  echo("Available Tasks:\r\n");
+  foreach(\TaskGroup\Manager\Base::task_groups() as $name => $path) {
+    echo "  {$name} => {$path}\r\n";
+  }
   exit(1);
 }
 echo "[passed]";
@@ -17,14 +23,14 @@ $task_options = (isset($argv[2])) ? array($argv[2]) : array();
 
 echo "\r\nInvoking task [".$task_path."]...";
 // Check if task exists
-if(!$task_group_filename = \TaskGroup\Base::search($task_group)) {
+if(!$task_group_class = \TaskGroup\Manager\Base::find_and_load($task_group)) {
   // If not, echo error message and abort
   echo("did not find task group!");
   exit(1);
 }
 echo "[passed]\r\n";
 
-$task_group_class = "\\TaskGroup\\".\Inflector\Base::camelize($task_group).'Tasks';
+//$task_group_class = "\\TaskGroup\\".\Inflector\Base::camelize($task_group).'Tasks';
 
 //$tg = new $task_group_class();
 //$g->map_options(Generator::extract_generator_options_from_cli($argv));

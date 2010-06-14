@@ -1,5 +1,6 @@
 <?php
-class PluginTasks extends TaskGroup {
+namespace TaskGroup;
+class PluginTasks extends Base {
   protected static $tasks = array('install' => '');
 
   public function install($options) {
