@@ -1,5 +1,6 @@
 <?php
-class ControllerGenerator extends Generator {
+namespace Generator;
+class Controller extends Base {
   public $option_mappings = array(0 => 'class_name'
                                  ,1 => 'methods');
   
@@ -9,8 +10,8 @@ class ControllerGenerator extends Generator {
     $this->app_root            = getcwd();
     $this->helper_path         = $this->app_root.'/application/helpers';    
     $this->controller_path     = $this->app_root.'/application/controllers';
-    $this->controller_filename = Inflector::underscore($this->class_name).'_controller.php';
-    $this->helper_filename     = Inflector::underscore($this->class_name).'_helpers.php';
+    $this->controller_filename = \Inflector\Base::underscore($this->class_name).'_controller.php';
+    $this->helper_filename     = \Inflector\Base::underscore($this->class_name).'_helpers.php';
 
     $this->template($this->template_root.'/controller.php',
                     $this->controller_path.'/'.$this->controller_filename,
