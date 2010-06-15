@@ -27,6 +27,7 @@ class Base {
   }
   
   public function __construct($controller_name, $action_name, $view_data, $output_format, $layout) {
+    \Output\Manager\Base::auto_register_framework_output_handlers();
     $this->set_view_root(VIEW_ROOT);
     //$this->set_view_path($view_path);
     $this->set_controller_name($controller_name);
@@ -142,7 +143,7 @@ class Base {
 
     //if (!is_file($view)) {
     //if (!is_file($content)) {
-    if (!is_file($content)) {
+    if ($this->output_manager->render_view() && !is_file($content)) {
       //exit("View [".$view."] not found");
       exit('View ['.$content.'] not found in ['.$this->get_view_root().']');
     }
@@ -150,24 +151,27 @@ class Base {
     if(method_exists($this->output_manager, 'before_render')) {
       $this->output_manager->before_render($this);
     }
-
-    //Create variables for the template
-    foreach ($this->get_view_data() as $key => $value) {
-      $$key = $value;
+    
+    if($this->output_manager->render_view()) {
+      //Create variables for the template
+      foreach ($this->get_view_data() as $key => $value) {
+        $$key = $value;
+      }
+  
+      ob_start();
+      // support for templates
+      if(is_file($layout)) {
+        include($layout);
+      } else {
+        include($content);
+      }
+      if($return_content) {
+        $rendered_content = ob_get_clean();
+      } else {
+        ob_end_flush();
+      }   
     }
 
-    ob_start();
-    // support for templates
-    if(is_file($layout)) {
-      include($layout);
-    } else {
-      include($content);
-    }
-    if($return_content) {
-      $rendered_content = ob_get_clean();
-    } else {
-      ob_end_flush();
-    }   
 
     if(method_exists($this->output_manager, 'after_render')) {
       $this->output_manager->after_render($this);
