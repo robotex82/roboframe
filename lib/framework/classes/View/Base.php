@@ -130,6 +130,7 @@ class Base {
       require_once($controller_helper);
     } 
     */  
+
   	self::register_helper(APPLICATION_ROOT.'/helpers/'.$this->get_controller_name().'_helpers.php');
   	
   	foreach(self::registered_helpers() as $h) {
@@ -157,7 +158,7 @@ class Base {
       foreach ($this->get_view_data() as $key => $value) {
         $$key = $value;
       }
-  
+
       ob_start();
       // support for templates
       if(is_file($layout)) {
@@ -171,7 +172,6 @@ class Base {
         ob_end_flush();
       }   
     }
-
 
     if(method_exists($this->output_manager, 'after_render')) {
       $this->output_manager->after_render($this);
