@@ -143,6 +143,16 @@ class Base {
     }
   }
 
+  /**
+   * Enalbes a module inside the roboframe framework
+   * 
+   * Usage:
+   * <code>
+   * Roboframe\Base::enable_module("Cli\Output");
+   * </code>
+   * 
+   * @param unknown_type $module_name
+   */
   public static function enable_module($module_name) {
     // TODO:: Get rid of the namespace hack
     //echo ">>> {$module_name}";
