@@ -1,5 +1,6 @@
 <?php
-class ViewGenerator extends Generator {
+namespace Generator;
+class View extends Base {
   public $option_mappings = array(0 => 'controller_name'
                                  ,1 => 'view_name'
                                  ,2 => 'view_format');
@@ -9,7 +10,7 @@ class ViewGenerator extends Generator {
     $this->library_path        = realpath(dirname(__FILE__).'/../../../');
     $this->app_root            = getcwd();
     
-    $this->view_path           = $this->app_root.'/application/views/'.\Inflector::underscore($this->controller_name);
+    $this->view_path           = $this->app_root.'/application/views/'.\Inflector\Base::underscore($this->controller_name);
     //$this->view_format         = 
     //$this->controller_path     = $this->app_root.'/application/controllers';
     //$this->controller_filename = Inflector::underscore($this->class_name).'_controller.php';

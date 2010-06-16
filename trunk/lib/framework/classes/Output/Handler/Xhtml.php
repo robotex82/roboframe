@@ -5,6 +5,7 @@ class Xhtml extends Base {
   
   public function __construct($options) {
     $this->options = $this->map_options($options);
+    $this->set_render_view(true);
     
   }
   
@@ -29,7 +30,7 @@ class Xhtml extends Base {
   }
   
   public function after_render($view) {
-    ob_flush();
+    ob_end_flush();
   }
 }
 ?>
