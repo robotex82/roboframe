@@ -3,6 +3,12 @@ namespace TaskGroup\Manager;
 /**
  * The TaskGroup Manager class stores all registered Taskgroups
  * 
+ * Registering a TaskGroup
+ * <code>
+ * \TaskGroup\Manager\Base::register_task_group('post', '/path/to/post_tasks.php');
+ * </code>
+ * 
+ * 
  * @author Roberto Vasquez Angel
  *
  */
