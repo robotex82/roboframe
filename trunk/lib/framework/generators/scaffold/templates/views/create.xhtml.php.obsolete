@@ -1,4 +1,0 @@
-# Controller: User
-# View: create
-# Format: xhtml 
-<?php print_r($u); ?>
