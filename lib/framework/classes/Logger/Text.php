@@ -32,19 +32,19 @@ class Text extends Base {
   }
   
   public function debug($message) {
-    $this->write($message);
+    $this->write('DEBUG: '.$message);
   }
   
   public function info($message) {
-    $this->write($message);
+    $this->write('INFO: '.$message);
   }
   
   public function warn($message) {
-    $this->write($message);
+    $this->write('WARNING: '.$message);
   }
   
   public function error($message) {
-    $this->write($message);
+    $this->write('ERROR: '.$message);
   }
   
   public function write($message) {
