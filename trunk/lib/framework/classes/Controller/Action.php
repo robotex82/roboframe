@@ -7,6 +7,41 @@ abstract class Action extends Base {
   public    $layout; //        = 'default';
   public    $output_format = 'xhtml';
   protected $flash;
+  protected $before_filters = array();
+  
+  /**
+   * registers a before_filter
+   * 
+   * The first param is the filter method that is called
+   * The second and third params define exceptions as except and only lists. 
+   * 
+   * Register filters in the init function of the controller.
+   * 
+   * Example:
+   * <code>
+   * protected function init() {
+   *   $this->before_filter('say_hello', null, 'enlist,add');
+   * }
+   * </code>
+   *
+   * @param $method
+   * @param $except
+   * @param $only
+   * @return unknown_type
+   */
+  public function before_filter($method, $except = null, $only = null) {
+    $this->before_filters[$method] = array();
+    if(!is_null($except)) {
+      $this->before_filters[$method]['except'] = explode(',', $except);
+    }
+    if(!is_null($only)) {
+      $this->before_filters[$method]['only'] = explode(',', $only);
+    }
+  }
+  
+  private function get_before_filters() {
+    return $this->before_filters;
+  }
   
   public function flash() {
     return $this->flash;
@@ -50,6 +85,37 @@ abstract class Action extends Base {
     $action_method = $action;
     if (!method_exists($this, $action_method)) {
       exit("Method [".$action_method."] does not exist in Controller [".$this->getName()."]");
+    }
+    $this->init();
+    //var_dump($this->get_before_filters());
+    foreach($this->get_before_filters() as $before_method => $exceptions) {
+      if(!isset($exceptions['except']) && !isset($exceptions['only'])) {
+        if (method_exists($this, $before_method)) {
+          #var_dump($exceptions);
+          if(!$this->$before_method()) {
+            echo 'Filter chain broken on method ['.$before_method.']!';
+            exit(0);
+          }
+        } 
+      }
+      if(isset($exceptions['except']) && !in_array($action_method, $exceptions['except'])) {
+        if (method_exists($this, $before_method)) {
+          #var_dump($exceptions);
+          if(!$this->$before_method()) {
+            echo 'Filter chain broken on method ['.$before_method.']!';
+            exit(0);
+          }
+        }   
+      }
+      if(isset($exceptions['only']) && in_array($action_method, $exceptions['only'])) {
+        if (method_exists($this, $before_method)) {
+          #var_dump($exceptions);
+          if(!$this->$before_method()) {
+            echo 'Filter chain broken on method ['.$before_method.']!';
+            exit(0);
+          }
+        }   
+      }
     }
     
     $before_method = 'before_'.$action_method;
