@@ -44,6 +44,15 @@ class Base {
       self::register_task_group($name, $path);
     }
   }
+  
+  static public function auto_register_application_task_groups() {
+    foreach(glob(realpath(APP_BASE.'/lib/tasks').'/*') as $path) {
+      //$name = end(explode('/', $path));
+      $name = basename($path, '_tasks.php');
+      //echo $name." => ".$path."\r\n";
+      self::register_task_group($name, $path);
+    }
+  }
 /*  
   static public function factory($task_group_name) {
     $task_group_path = self::task_group_path($task_group_name);
