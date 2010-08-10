@@ -86,7 +86,10 @@ abstract class Action extends Base {
     if (!method_exists($this, $action_method)) {
       exit("Method [".$action_method."] does not exist in Controller [".$this->getName()."]");
     }
-    $this->init();
+    if(method_exists($this, 'init')) {
+      $this->init();
+    }
+
     //var_dump($this->get_before_filters());
     foreach($this->get_before_filters() as $before_method => $exceptions) {
       if(!isset($exceptions['except']) && !isset($exceptions['only'])) {
