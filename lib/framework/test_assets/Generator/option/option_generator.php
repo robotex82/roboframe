@@ -1,5 +1,6 @@
 <?php
-class OptionGenerator extends Generator {
+namespace Generator;
+class OptionGenerator extends Base {
   public function commands() {
     $source = dirname(__FILE__).'/templates/testfile.txt'; 
     $target = $this->path.'testfile.txt'; 

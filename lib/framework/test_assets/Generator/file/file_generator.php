@@ -1,5 +1,6 @@
 <?php
-class FileGenerator extends \Generator {
+namespace Generator;
+class FileGenerator extends Base {
   public $option_mappings = array(0 => 'filename');
   
   public function commands() {

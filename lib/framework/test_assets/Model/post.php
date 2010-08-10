@@ -1,3 +1,4 @@
 <?php
-class Post extends Model {
+namespace Model;
+class Post extends Base {
 }

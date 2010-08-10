@@ -415,7 +415,7 @@ class Base {
     // tell cURL to return the result.
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     // Set HTTP Proxy Server
-    curl_setopt($curl, CURLOPT_PROXY, Roboframe\Base::http_proxy());
+    curl_setopt($curl, CURLOPT_PROXY, \Roboframe\Base::http_proxy());
 
     // exec cURL command and get result into $response
     $response = curl_exec($curl);

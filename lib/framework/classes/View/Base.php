@@ -1,6 +1,7 @@
 <?php
 namespace View;
-//require_once('class.OutputManager.php');
+use Exception;
+\Roboframe\Base::enable_module('Output\Manager\Base');
 class Base {
   //protected $output_format = 'xhtml';
   protected $view_data = array();
@@ -16,7 +17,9 @@ class Base {
   
   static function register_helper($helper_path) {
   	if(!is_readable($helper_path)) {
-  		throw new Exception("Could not register helper. Can't read [$helper_path]");
+      \Logger\Base::logger()->warn("Could not register helper. Can't read [$helper_path]");		
+  	  //throw new Exception("Could not register helper. Can't read [$helper_path]");
+  	  return false;
   	}
   	array_push(self::$helpers, $helper_path);
   }

@@ -1,5 +1,6 @@
 <?php
-class ChainTasks extends TaskGroup {
+namespace TaskGroup;
+class ChainTasks extends Base {
   protected static $tasks = array('buy_car' =>'withdraw_money'
                                 , 'withdraw_money' => 'get_salary'
                                 , 'get_salary' => 'go_to_work'

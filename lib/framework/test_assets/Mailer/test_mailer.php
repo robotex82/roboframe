@@ -1,5 +1,7 @@
 <?php
-class TestMailer extends Mailer {
+namespace Mailer;
+use Exception;
+class TestMailer extends Base {
   public function user_notification() {
     //$this->sender('robotex82@arcor.de');
     $this->recipients('roberto.vasquez-angel@hp.com');

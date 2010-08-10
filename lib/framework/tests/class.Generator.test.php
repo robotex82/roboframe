@@ -16,14 +16,14 @@ class TestOfGeneratorClass extends UnitTestCase {
   }
   
   function test_create_instance() {
-    $g = new TestGenerator();
+    $g = new \Generator\TestGenerator();
   }
   
   function test_copy_file() {
     $filename = dirname(__FILE__).'/../test_assets/Generator/target/testfile.txt';
     @unlink($filename);
 
-    $g = new TestGenerator();
+    $g = new \Generator\TestGenerator();
     $g->run();
     
     $this->assertTrue(file_exists($filename), 'File ['.$filename.'] should exist after running the Test Generator!');
@@ -38,7 +38,7 @@ class TestOfGeneratorClass extends UnitTestCase {
     $filename = dirname(__FILE__).'/../test_assets/Generator/target/testfile.txt';
     @unlink($filename);
 
-    $g = new TestGenerator();
+    $g = new \Generator\TestGenerator();
     $g->run();
     
     $this->assertTrue(file_exists($filename), 'File ['.$filename.'] should exist after running the Test Generator!');
@@ -61,7 +61,7 @@ class TestOfGeneratorClass extends UnitTestCase {
     $third_filename = dirname(__FILE__).'/../test_assets/Generator/target/third.css';
     @unlink($third_filename);      
       
-    $g = new TemplateGenerator();
+    $g = new \Generator\TemplateGenerator();
     $g->run();  
     $this->assertTrue(file_exists($first_filename), 'File ['.$first_filename.'] should exist after running the Template Generator!');
     $pattern = "/Hello Bill/";
@@ -82,7 +82,7 @@ class TestOfGeneratorClass extends UnitTestCase {
     $filename = dirname(__FILE__).'/../test_assets/Generator/target/testfile.txt';
     @unlink($filename);
 
-    $g = new OptionGenerator();
+    $g = new \Generator\OptionGenerator();
     $g->path = dirname(__FILE__).'/../test_assets/Generator/target/';
     $g->run();
     
@@ -99,7 +99,7 @@ class TestOfGeneratorClass extends UnitTestCase {
     @unlink($filename);
     $options = array(dirname(__FILE__).'/../test_assets/Generator/target/');
 
-    $g = new OptionGenerator();
+    $g = new \Generator\OptionGenerator();
     
     $g->map_options($options);
     $g->run();
@@ -117,7 +117,7 @@ class TestOfGeneratorClass extends UnitTestCase {
     @unlink($filename);
 
 
-    $g = new DownloadGenerator();
+    $g = new \Generator\DownloadGenerator();
     $g->run();
     
     $this->assertTrue(file_exists($target), 'File ['.$target.'] should exist after running the Download Generator!');
@@ -132,8 +132,8 @@ class TestOfGeneratorClass extends UnitTestCase {
   }
   
   function test_empty_path_throws_exeption() {
-    $this->expectException("Template generator with empty target path should throw an exception");
-    $g = new FileGenerator();
+    $this->expectException();
+    $g = new \Generator\FileGenerator();
     $g->run();    
   }
   /*

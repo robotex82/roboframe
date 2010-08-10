@@ -1,5 +1,6 @@
 <?php
 namespace Router;
+use Exception;
 class Base {
   private $url;
   private $request_params = array();

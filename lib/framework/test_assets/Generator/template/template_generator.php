@@ -1,5 +1,6 @@
 <?php
-class TemplateGenerator extends Generator {
+namespace Generator;
+class TemplateGenerator extends Base {
   public function commands() {
     $source = dirname(__FILE__).'/templates/first.php'; 
     $target = dirname(__FILE__).'/../target/first.php'; 
