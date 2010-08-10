@@ -1,5 +1,6 @@
 <?php
 namespace Route;
+use Exception;
 class Base {
   /*
    * Default action if no action provided

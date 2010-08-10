@@ -1,6 +1,7 @@
 <?php
+Roboframe\Base::enable_module('Route\Base');
 class TestOfRouteClass extends UnitTestCase {
-  function __contruct() {
+  function __construct() {
     $this->UnitTestCase('Route Class Test');
   }
   
@@ -19,9 +20,9 @@ class TestOfRouteClass extends UnitTestCase {
     $route_template = '';
     $route_defaults = array('controller' => 'home', 'action' => 'index');
     
-    $r = new Route($route_template, $route_defaults);
+    $r = new \Route\Base($route_template, $route_defaults);
     
-    $this->assertIsA($r, 'Route');
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertTrue($r->match_url($url), 'URL ['.$url.'] should match route template ['.$route_template.']');
     $this->assertEqual($r->get_controller_name(), 'home', 'Controller name from route object should take route defaults on empty route and home route definition.');
@@ -36,9 +37,9 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url_without_action_and_id = 'blog'; // Should match. Action should be 'index', params['id'] should be unset
     $test_empty_url = ''; // Should no match
     
-    $r = new Route($route_template, $route_defaults);
+    $r = new \Route\Base($route_template, $route_defaults);
     
-    $this->assertIsA($r, 'Route');
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertTrue($r->match_url($test_url), 'URL ['.$test_url.'] should match route template ['.$route_template.']');
     
@@ -55,9 +56,9 @@ class TestOfRouteClass extends UnitTestCase {
     $other_url = 'other/url/with/show'; // Should not match
     $too_long_url = 'admin/report/show/5/pdf/other/param'; // Should not match
     
-    $r = new Route($route_template, $route_defaults);
+    $r = new \Route\Base($route_template, $route_defaults);
     
-    $this->assertIsA($r, 'Route');
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertTrue($r->match_url($test_url), 'URL ['.$test_url.'] should match route template ['.$route_template.']');
     
@@ -76,8 +77,8 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url_1 = 'admin/report/show/5/pdf'; // Should match.
 
     
-    $r = new Route($route_template, $route_defaults);
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route\Base');
     $r->match_url($test_url_1);
     $request_params = $r->get_request_params();
 //    $this->assertEqual($request_params['controller'], 'report');
@@ -90,8 +91,8 @@ class TestOfRouteClass extends UnitTestCase {
     $route_defaults = array();
     $test_url_2 = 'blog/show/1'; // Should match.
     
-    $r = new Route($route_template, $route_defaults);
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route\Base');
     $r->match_url($test_url_2);
     $request_params = $r->get_request_params();
 //    $this->assertEqual($request_params['controller'], 'blog');
@@ -105,8 +106,8 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url_1 = 'admin/report/show/5/pdf'; // Should match.
 
     
-    $r = new Route($route_template, $route_defaults);
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route\Base');
     $r->match_url($test_url_1);
     $this->assertEqual($r->get_controller_name(), 'report', 'Controller name from route object should equal controller name from route details if given.');
     $this->assertEqual($r->get_action_name(), 'show', 'Action name from route object should equal action name from route details if given.');
@@ -120,8 +121,8 @@ class TestOfRouteClass extends UnitTestCase {
     $route_defaults = array();
     $test_url_2 = 'blog/show/1'; // Should match.
     
-    $r = new Route($route_template, $route_defaults);
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route\Base');
     $r->match_url($test_url_2);
     $request_params = $r->get_request_params();
     $this->assertEqual($r->get_controller_name(), 'blog', 'Controller name from request URL should equal controller name in route object if route matches.');
@@ -134,8 +135,8 @@ class TestOfRouteClass extends UnitTestCase {
     $route_defaults = array();
     $test_url_2 = 'blog/show/1'; // Should match.
     
-    $r = new Route($route_template, $route_defaults);
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);
+    $this->assertIsA($r, 'Route\Base');
     $r->match_url($test_url_2);
     $request_params = $r->get_request_params();
     $this->assertFalse(array_key_exists('controller', $request_params), 'Request params should not include [controller] field');
@@ -148,8 +149,8 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url = 'blog/show/1';
     $url_params = array( 'controller'=>'blog', 'action'=>'show', 'id'=>'1' );
     
-    $r = new Route($route_template, $route_defaults);  
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
     $url = $r->build_url();
@@ -158,8 +159,8 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url = 'blog/show';
     $url_params = array( 'controller'=>'blog', 'action'=>'show' );
     
-    $r = new Route($route_template, $route_defaults);  
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
     $url = $r->build_url();
@@ -171,8 +172,8 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url = 'admin/report/show/5/pdf'; // Should match.
     $url_params = array( 'id'=>'5', 'format'=>'pdf' );
     
-    $r = new Route($route_template, $route_defaults);  
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
     $url = $r->build_url();
@@ -183,8 +184,8 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url = 'admin/report/show/5/pdf/static'; // Should match.
     $url_params = array( 'id'=>'5', 'format'=>'pdf' );
     
-    $r = new Route($route_template, $route_defaults);  
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertTrue($r->match_params($url_params), 'Route ['.$route_template.'] should match params ['.join('|', $url_params).']');
     $url = $r->build_url();
@@ -197,8 +198,8 @@ class TestOfRouteClass extends UnitTestCase {
     $test_url = 'blog/show/1';
     $url_params = array( 'controller'=>'blog', 'id'=>'1' );
     
-    $r = new Route($route_template, $route_defaults);  
-    $this->assertIsA($r, 'Route');
+    $r = new \Route\Base($route_template, $route_defaults);  
+    $this->assertIsA($r, 'Route\Base');
     
     $this->assertFalse($r->match_params($url_params), 'Route ['.$route_template.'] should not match params ['.join('|', $url_params).']');
   }

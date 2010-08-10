@@ -1,9 +1,12 @@
 <?php
 //require_once('classes/class.View.php');
 namespace Mailer;
+use Exception;
+\Roboframe\Base::enable_module('View\Base');
 class Base {
   protected $view_data = array();
-  protected $view_root;
+  static protected $view_root;
+  static protected $configuration_file;
   protected $recipients;
   protected $subject;
   protected $body;
@@ -11,17 +14,34 @@ class Base {
   protected $settings = array();
   protected $output_format = 'xhtml';
   
+  static public function set_view_root($vr) {
+    self::$view_root = $vr;
+  }
+  
+  static public function view_root() {
+    return self::$view_root;
+  }
+  
+  static public function set_configuration_file($cf) {
+    self::$configuration_file = $cf;
+  }
+  
+  static public function configuration_file() {
+    return self::$configuration_file;
+  }
+  
   /*
    * Loads settings from APP_BASE/config/mailer.ini
    */
-  public static function load_settings($filename = false) {
+  public static function load_settings() {
     $environment_name = \Roboframe\Base::environment();
-   
+    /*
     if(!$filename) {
       $filename = APP_BASE.'/config/mailer.ini';
     }
+    */
     
-    if(!($settings = parse_ini_file($filename, true))) {
+    if(!($settings = parse_ini_file($filename = self::configuration_file(), true))) {
       throw new Exception('Could not read the Mailer configuration file. '.
                           'Please make sure that there is a proper mailer.ini file at ['.$filename.']!');
     }
@@ -42,8 +62,8 @@ class Base {
     return $env_settings;  
   }
   
-  public function __construct($filename = false) {
-    $this->settings = Mailer::load_settings($filename);
+  public function __construct() {
+    $this->settings = self::load_settings(self::configuration_file());
   }
   
   
@@ -176,24 +196,15 @@ class Base {
     $this->output_format = $of;
   }
   
-  public function set_view_root($view_root) {
-    $this->view_root = $view_root;
-  }
-  
-  public function get_view_root() {
-    return $this->view_root;
-  }
-  
   private function render_with_template($action_name) {
-    $controller_name = Roboframe\Base::camel_case_to_underscore(get_class($this));
-    
+    //$controller_name = \Inflector\Base::underscore(get_class($this));
+    $controller_name = \Inflector\Base::underscore(end(explode("\\", get_class($this))));
     $this->$action_name();
 //    $view_data = array();
     $layout = '';
-    $view = new View($controller_name, $action_name, $this->view_data, $this->output_format, $layout);
-    $view->set_view_root($this->get_view_root());
+    $view = new \View\Base($controller_name, $action_name, $this->view_data, $this->output_format, $layout);
+    $view->set_view_root(self::view_root());
     return $view->render(true);
   }
   
 }
-?>

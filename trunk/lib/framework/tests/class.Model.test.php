@@ -1,4 +1,5 @@
 <?php
+\Roboframe\Base::enable_module('Model\Base');
 require_once(dirname(__FILE__).'/../test_assets/Model/presence_test.php');
 require_once(dirname(__FILE__).'/../test_assets/Model/length_test.php');
 require_once(dirname(__FILE__).'/../test_assets/Model/inclusion_test.php');
@@ -16,7 +17,7 @@ class TestOfModelClass extends UnitTestCase {
   }
   
   function test_validates_presence_of() {
-    $t = new PresenceTest();
+    $t = new \Model\PresenceTest();
     $this->assertFalse($t->validate(), 'Test Model should not validate, if property [name] is empty');
     $this->assertTrue($t->error_message_for('name') == 'name should be set', 'Test Model should return the right error message for field [name], returned ['.$t->error_message_for('name').']');
     $t->name = 'foo';
@@ -26,7 +27,7 @@ class TestOfModelClass extends UnitTestCase {
   }
   
   function test_validates_length_of() {
-    $t = new LengthTest();
+    $t = new \Model\LengthTest();
     $this->assertFalse($t->validate(), 'Test Model should not validate, if property [name] is too short');
     $t->name = 'foobar';
     $t->password = '1';
@@ -36,7 +37,7 @@ class TestOfModelClass extends UnitTestCase {
   }
   
   function test_inclusion_of() {
-    $t = new InclusionTest();
+    $t = new \Model\InclusionTest();
     $t->name = 'george';
     $this->assertFalse($t->validate(), 'Test Model should not validate, if property [name] is not in [bob,tom,fred]');
     $t->name = 'bob';
@@ -44,7 +45,7 @@ class TestOfModelClass extends UnitTestCase {
   }
   
   function test_format_of() {
-    $t = new FormatTest();
+    $t = new \Model\FormatTest();
     $t->birthdate = '1982-05';
     $this->assertFalse($t->validate(), 'Test Model should not validate, if format of [birthdate] does not match');
     $this->assertTrue($t->error_message_for('birthdate') == 'birthdate should have the right format', 'Test Model should return the right error message for field [birthdate]');
@@ -55,7 +56,7 @@ class TestOfModelClass extends UnitTestCase {
   
   function test_contructor() {
     $params = array('body' => 'Post body', 'title' => 'Post title');
-    $post = new Post($params);
+    $post = new \Model\Post($params);
     $this->assertTrue($post->body == $params['body'], 'Post property [body] should equal params[body]');
     $this->assertTrue($post->title == $params['title'], 'Post property [title] should equal params[title]');
   }

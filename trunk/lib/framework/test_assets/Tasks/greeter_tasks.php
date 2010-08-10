@@ -1,5 +1,6 @@
 <?php
-class GreeterTasks extends TaskGroup {
+namespace TaskGroup;
+class GreeterTasks extends Base {
   protected static $tasks = array('hello' =>''
                                 , 'how_are_you' => 'hello');
 

@@ -1,6 +1,6 @@
 <?php
-require_once(FRAMEWORK_PATH.'/classes/CodeDocumentor/class.Base.php');
-require_once(FRAMEWORK_PATH.'/classes/CodeDocumentor/class.TextOutput.php');
+require_once(FRAMEWORK_PATH.'/classes/CodeDocumentor/Base.php');
+require_once(FRAMEWORK_PATH.'/classes/CodeDocumentor/TextOutput.php');
 //require_once();
 
 class TestOfCodeDocumentorClass extends UnitTestCase {

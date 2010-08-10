@@ -1,5 +1,6 @@
 <?php
-class DownloadGenerator extends Generator {
+namespace Generator;
+class DownloadGenerator extends Base {
   public function commands() {
     $source = 'http://www.example.com'; 
     $target = dirname(__FILE__).'/../target/testdownload.txt'; 

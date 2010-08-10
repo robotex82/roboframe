@@ -1,4 +1,5 @@
 <?php
+Roboframe\Base::enable_module('Router\Base');
 class TestOfRouterClass extends UnitTestCase {
 
   function __contruct() {
@@ -13,12 +14,12 @@ class TestOfRouterClass extends UnitTestCase {
   
   function test_load_routes_returns_array() {
     $filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
-    $this->assertTrue(is_array(Router::load_settings($filename)), 'Load Settings should return an array');
+    $this->assertTrue(is_array(\Router\Base::load_settings($filename)), 'Load Settings should return an array');
   }
    
   function test_settings_array_includes_needed_keys() {
     $filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
-    $routes = Router::load_settings($filename);
+    $routes = \Router\Base::load_settings($filename);
     foreach($routes as $route) {
       $this->assertTrue(array_key_exists('template', $route), 'Each route should include [url]');
     }
@@ -26,15 +27,15 @@ class TestOfRouterClass extends UnitTestCase {
   
   function test_loding_settings_throw_no_exception() {
     $routes_filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
-    $r = new Router('/', $routes_filename);
-    $this->assertIsA($r, 'router');
+    $r = new \Router\Base('/', $routes_filename);
+    $this->assertIsA($r, 'Router\Base');
   }
   
   function test_incomplete_settings_throw_exception() {
     $wrong_filename = dirname(__FILE__).'/../test_assets/Router/wrong_routes.ini';
 
     $this->expectException('Exception', 'Attempting to load wrong routes.ini file should throw an exception');    
-    $r = new Router('/', $wrong_filename);
+    $r = new \Router\Base('/', $wrong_filename);
 
   }
  
@@ -43,7 +44,7 @@ class TestOfRouterClass extends UnitTestCase {
     $url = 'blog/show/1';
     $url_parts = explode('/', $url);
     
-    $r = new Router($url, $routes_filename);
+    $r = new \Router\Base($url, $routes_filename);
     $this->assertTrue($r->match_all_routes(), 'Router should match route on routable URL ['.$url.']');
     $request_params = $r->get_request_params();
     $this->assertEqual($r->get_controller_name(), $url_parts[0], 
@@ -61,7 +62,7 @@ class TestOfRouterClass extends UnitTestCase {
     $url = 'blog';
     $url_parts = explode('/', $url);
     
-    $r = new Router($url, $routes_filename);
+    $r = new \Router\Base($url, $routes_filename);
     $this->assertTrue($r->match_all_routes(), 'Router should match route on routable URL ['.$url.']');
     $request_params = $r->get_request_params();
     $this->assertEqual($r->get_controller_name(), $url_parts[0], 
@@ -74,7 +75,7 @@ class TestOfRouterClass extends UnitTestCase {
     $routes_filename = dirname(__FILE__).'/../test_assets/Router/home_routes.ini';
     $url = '';
     
-    $r = new Router($url, $routes_filename);
+    $r = new \Router\Base($url, $routes_filename);
     $this->assertTrue($r->match_all_routes(), 'Router should match route on routable URL ['.$url.']');
     $request_params = $r->get_request_params();
     $this->assertEqual($r->get_controller_name(), 'home', 
@@ -87,7 +88,7 @@ class TestOfRouterClass extends UnitTestCase {
     $routes_filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
     $valid_url = 'blog/show/1';
     $url_params = array('controller' => 'blog', 'action' => 'show', 'id' => '1' );
-    $r = new Router(false, $routes_filename);
+    $r = new \Router\Base(false, $routes_filename);
     $this->assertEqual($r->url_for($url_params), $valid_url, 'Router with default route should create valid URL ['.$valid_url.'] from params ['.join('|', $url_params).']');
     
     $valid_url = 'blog/show';
@@ -100,7 +101,7 @@ class TestOfRouterClass extends UnitTestCase {
   function test_build_url_should_throw_exception_on_missing_middle_param() {
     $routes_filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
     $url_params = array('controller' => 'blog', 'id' => '1' );
-    $r = new Router(false, $routes_filename);
+    $r = new \Router\Base(false, $routes_filename);
     $this->expectException('Exception', 'Invoking url_for() with missing middle param should throw an Exception');        
     $r->url_for($url_params);
   }
@@ -109,7 +110,7 @@ class TestOfRouterClass extends UnitTestCase {
     $dispatcher_url = '/roboframe/dispatch.php';
     $dispatcher_filename = 'D:/roboframe/public/dispatch.php';
     
-    $this->assertEqual(Router::base_url($dispatcher_url, $dispatcher_filename), '/roboframe');
+    $this->assertEqual(\Router\Base::base_url($dispatcher_url, $dispatcher_filename), '/roboframe');
   }
 
 }

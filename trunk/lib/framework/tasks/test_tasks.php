@@ -16,12 +16,17 @@ class TestTasks extends Base {
   public function framework() {
     $ts = &new TestSuite('Roboframe Framework Tests');
     if(is_dir($roboframe_tests_dir = FRAMEWORK_PATH.'/tests')) {
+      /*
       if ($handle = opendir($roboframe_tests_dir)) {
         while (false !== ($roboframe_tests_dir_entry = readdir($handle))) {
           if (substr($roboframe_tests_dir_entry, 0, 1) != ".") {
             $ts->addFile($roboframe_tests_dir.'/'.$roboframe_tests_dir_entry);
           }
         }
+      }
+      */
+      foreach(glob($roboframe_tests_dir.'/class.*.test.php') as $test) {
+        $ts->addFile($test);
       }
     }
     $ts->run(new TextReporter());

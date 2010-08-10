@@ -22,7 +22,7 @@ class TestOfTaskGroupClass extends UnitTestCase {
     $options = array('name' => 'John');
 
     ob_start();
-    GreeterTasks::run('hello', $options);
+    \TaskGroup\GreeterTasks::run('hello', $options);
     $output = ob_get_clean();
 
     
@@ -30,7 +30,7 @@ class TestOfTaskGroupClass extends UnitTestCase {
     $this->assertPattern($pattern, $output, 'Output ['.$output.'] should match pattern ['.$pattern.']!');
 
     ob_start();
-    GreeterTasks::run('how_are_you', array(), array(0 => $options));
+    \TaskGroup\GreeterTasks::run('how_are_you', array(), array(0 => $options));
     $output = ob_get_clean();
     
     $pattern = "/Hello John/";
@@ -48,7 +48,7 @@ class TestOfTaskGroupClass extends UnitTestCase {
                         ,3 => array('name' => 'Bob'));
   
     ob_start();
-    ChainTasks::run('buy_car', $options, $pre_options);
+    \TaskGroup\ChainTasks::run('buy_car', $options, $pre_options);
     $output = ob_get_clean();
     
     $pattern = "/Bob stands up/";
@@ -69,7 +69,7 @@ class TestOfTaskGroupClass extends UnitTestCase {
   
   function test_unknown_task_throws_exception() {
     $this->expectException('Exception', 'Attempting to run an unknown task should throw an Exception.');  
-    GreeterTasks::run('invalid_taskname');
+    \TaskGroup\GreeterTasks::run('invalid_taskname');
   }
 }  
 ?>
