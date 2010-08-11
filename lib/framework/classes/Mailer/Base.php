@@ -207,4 +207,17 @@ class Base {
     return $view->render(true);
   }
   
+  public static function init() {
+    spl_autoload_extensions('.php');
+    spl_autoload_register('self::class_loader');    
+  }
+  
+  public static function class_loader($namespaced_class) {
+    $class = end(explode("\\", $namespaced_class));
+    $file = APPLICATION_ROOT.'/models/'.\Inflector\Base::underscore($class).'.php';
+    if (!is_readable($file)) {
+      return false;
+    }
+    include $file; 
+  }
 }

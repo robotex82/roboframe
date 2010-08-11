@@ -25,7 +25,7 @@ class TestTasks extends Base {
         }
       }
       */
-      foreach(glob($roboframe_tests_dir.'/class.*.test.php') as $test) {
+      foreach(glob($roboframe_tests_dir.'/*.test.php') as $test) {
         $ts->addFile($test);
       }
     }
@@ -36,6 +36,7 @@ class TestTasks extends Base {
     $ts = &new TestSuite('All plugin tests');
     foreach(PluginManager\Base::find_all() as $plugin) {
       if(is_dir($plugin_tests_dir = $plugin.'/tests')) {
+        /*
         if ($handle = opendir($plugin_tests_dir)) {
           while (false !== ($plugin_tests_dir_entry = readdir($handle))) {
             if (substr($plugin_tests_dir_entry, 0, 1) != ".") {
@@ -43,6 +44,10 @@ class TestTasks extends Base {
             }
           }
         }
+        */
+      foreach(glob($plugin_tests_dir.'/*.test.php') as $test) {
+        $ts->addFile($test);
+      }
       }
     }
     $ts->run(new TextReporter());
