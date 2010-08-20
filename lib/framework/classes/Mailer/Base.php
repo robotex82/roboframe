@@ -13,6 +13,44 @@ class Base {
   protected $sender = null;
   protected $settings = array();
   protected $output_format = 'xhtml';
+  private   $headers = array();
+  private $body_content_type = 'text/plain';
+  
+    /**
+    * Set the html_mail value
+    * @param type $html_mail
+    */
+    public function set_html_mail($html_mail) {
+      if($html_mail === true) {
+        $this->body_content_type = 'text/html';
+      } elseif($html_mail === false) {
+        $this->body_content_type = 'text/plain';
+      }
+    }
+  
+    /**
+    * Returns the body_content_type value.
+    * @return type
+    */
+    public function body_content_type() {
+      return $this->body_content_type;
+    }
+  
+    /**
+    * Set the headers value
+    * @param type $headers
+    */
+    public function add_header($header) {
+      $this->headers[] = $header;
+    }
+  
+    /**
+    * Returns the headers value.
+    * @return type
+    */
+    public function headers() {
+      return join("\n", $this->headers);
+    }
   
   static public function set_view_root($vr) {
     self::$view_root = $vr;
@@ -103,10 +141,12 @@ class Base {
     
     ini_set('SMTP', $this->settings['host']);
     //ini_set('sendmail_from', $this->settings['from_address']);
-    $mail_header = '';
-    $mail_header.= 'from: '.$this->settings['from_address']."\r\n";
-    
-    if (mail($this->recipients, $this->subject, $this->body, $mail_header)) {
+    //$mail_header = '';
+    //$mail_header.= 'from: '.$this->settings['from_address']."\r\n";
+    $this->add_header('from: '.$this->settings['from_address']);
+    $this->add_header('Content-Type: '.$this->body_content_type());
+    //if (mail($this->recipients, $this->subject, $this->body, $mail_header)) {
+    if (mail($this->recipients, $this->subject, $this->body, $this->headers())) {
       return true;
     } else {
       return false;
@@ -129,15 +169,16 @@ class Base {
     
     ini_set('SMTP', $this->settings['host']);
     //ini_set('sendmail_from', $this->settings['from_address']);
-    $mail_header = '';
-    $mail_header.= 'from: '.$this->settings['from_address']."\r\n";
+    //$mail_header = '';
+    //$mail_header.= 'from: '.$this->settings['from_address']."\r\n";
+    $this->add_header('from: '.$this->settings['from_address']);
     
     if(!is_array($files)) {
       throw new Exception('Could not send mail with attachments. No attachments passed!');
     }
     
     $boundary = strtoupper(md5(uniqid(time()))); 
-
+/*
     $mail_header .= "MIME-Version: 1.0";
     $mail_header .= "\nContent-Type: multipart/mixed; boundary=$boundary";
     $mail_header .= "\n\nThis is a multi-part message in MIME format  --  Dies ist eine mehrteilige Nachricht im MIME-Format";
@@ -145,8 +186,17 @@ class Base {
     $mail_header .= "\nContent-Type: text/plain";
     $mail_header .= "\nContent-Transfer-Encoding: 8bit";
     $mail_header .= "\n\n$this->body";
-
-    
+*/
+    $this->add_header('MIME-Version: 1.0');
+    $this->add_header('Content-Type: multipart/mixed; boundary='.$boundary);
+    $this->add_header('');
+    $this->add_header('This is a multi-part message in MIME format  --  Dies ist eine mehrteilige Nachricht im MIME-Format');
+    $this->add_header('--'.$boundary); 
+    $this->add_header('Content-Type: '.$this->body_content_type());
+    $this->add_header('Content-Transfer-Encoding: 8bit');
+    $this->add_header('');
+    $this->add_header($this->body);
+        
     foreach($files as $file) {
       if(!is_readable($file)) {
         throw new Exception('Could not add file ['.$file.'] as attachment. File is not readable!');
@@ -154,16 +204,17 @@ class Base {
         $filename = basename($file);
 //        $file_content = fread(fopen($file,"r"),filesize($file));
 //        $file_content = chunk_split(base64_encode($file_content));
-        $mail_header .= "\n--$boundary";
-        $mail_header .= "\nContent-Type: application/octetstream; name=\"$filename\"";
-        $mail_header .= "\nContent-Transfer-Encoding: base64";
-        $mail_header .= "\nContent-Disposition: attachment; filename=\"$filename\"";
+        $this->add_header('--'.$boundary);
+        $this->add_header('Content-Type: application/octetstream; name="'.$filename.'"');
+        $this->add_header('Content-Transfer-Encoding: base64');
+        $this->add_header('Content-Disposition: attachment; filename="'.$filename.'"');
 //        $mail_header .= "\n\n$file_content";
-        $mail_header .= "\n\n".chunk_split(base64_encode(file_get_contents($file)));
+        $this->add_header('');
+        $this->add_header(chunk_split(base64_encode(file_get_contents($file))));
       }
     }
     
-    $mail_header .= "\n--$boundary--";
+    $this->add_header('--'.$boundary.'--');
     
     if (mail($this->recipients, $this->subject, $this->body, $mail_header)) {
       return true;
