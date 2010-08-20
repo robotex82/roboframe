@@ -166,7 +166,7 @@ class Base {
     */
     //$module_path = str_replace("\\", "/", $module_name[0]);
     //$class_name = $module_name[count($module_name) - 1].".php";
-    $class_path = $module_name.'.php';
+    $class_path = str_replace("\\", "/", $module_name).'.php';
     
     require_once(FRAMEWORK_PATH.'/classes/'.$class_path);
     
