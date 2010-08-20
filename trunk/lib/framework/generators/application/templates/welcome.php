@@ -13,7 +13,7 @@
     <h1>Framework Settings</h1>
     <hr />
     <h2>Environment</h2>
-    <b>Roboframe:</b> <?= getenv('ROBOFRAME_ENV') ?>
+    <b>Roboframe:</b> <?= \Roboframe\Base::environment(); ?>
     <hr />
     <h2>Constants</h2>
     <table>
