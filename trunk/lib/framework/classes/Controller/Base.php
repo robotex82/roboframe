@@ -51,6 +51,11 @@ abstract class Base {
     //e.g. pages/home/HomeActions.php
     $file = CONTROLLER_ROOT . "/" . $file_class . ".php";
     if (!is_file($file)) {
+      if(\Roboframe\Base::environment() == 'production') {
+        //TODO: Implement dynamic error pages
+        $this->render('page:404.html', 'status:404');
+        exit(0);
+      }
       exit("Controller [".$file."] not found");
     }
     require_once $file;
@@ -70,12 +75,47 @@ abstract class Base {
       $params[$arg_parts[0]] = $arg_parts[1];
     }  
     $r = new \Router\Base();
+ /*
+     
+    if(isset($params['status'])) {
+      switch($params['status']) {
+        case '404':
+          //header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+          header('Location: '.\Router\Base::base_url().'/'.$r->url_for($params), true, 404); 
+          exit(0); 
+          break;
+        default:
+          break;  
+      }
+    }
+*/    
     header('Location: '.\Router\Base::base_url().'/'.$r->url_for($params));
   }
   
   public function __construct() {
     
     $this->set_logger(\Logger\Base::logger());
+  }
+  
+  public function render() {
+    $params = array();
+    foreach(func_get_args() as $arg) {
+      $arg_parts = explode(':', $arg);
+      $params[$arg_parts[0]] = $arg_parts[1];
+    }    
+    //var_dump($params);
+    if(isset($params['status'])) {
+      switch($params['status']) {
+        case '404':
+          header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+          break;
+        default:
+          break;  
+      }
+    }
+    if(isset($params['page'])) {
+      include(APP_BASE.'/public/'.$params['page']);
+    }
   }
 }
 ?>
