@@ -76,6 +76,9 @@ class Application extends Base {
                     
     $this->file($this->template_root.'/welcome.php',
                 $this->app_root.     '/public/welcome.php');
+				
+    $this->file($this->template_root.'/404.html',
+                $this->app_root.     '/public/404.html');
 
     $this->file($this->template_root.'/dispatch.php',
                 $this->app_root.     '/public/dispatch.php');
