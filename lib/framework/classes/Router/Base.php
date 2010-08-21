@@ -74,6 +74,9 @@ class Base {
   }
   
   public function url_for(array $url_params) {
+    if(isset($url_params['page'])) {
+      return $this->handle_static_route($url_params);
+    }
 //    $url_params = func_get_args();
 //print_r($url_params);
     foreach($this->routes as $route) {
@@ -93,6 +96,11 @@ class Base {
       $dispatcher_filename = $_SERVER['SCRIPT_FILENAME'];
     }
     return str_replace('/'.basename($dispatcher_filename), '', $dispatcher_url);
+  }
+  
+  public function handle_static_route($url_params) {
+    return $url_params['page'];
+    
   }
 }
 ?>

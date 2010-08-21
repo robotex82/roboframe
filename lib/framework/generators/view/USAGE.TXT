@@ -1,0 +1,3 @@
+Usage:
+
+> php scripts/generate.php view ControllerName view_name format

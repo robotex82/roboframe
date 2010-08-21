@@ -113,5 +113,12 @@ class TestOfRouterClass extends UnitTestCase {
     $this->assertEqual(\Router\Base::base_url($dispatcher_url, $dispatcher_filename), '/roboframe');
   }
 
+  function test_static_url() {
+    $routes_filename = dirname(__FILE__).'/../test_assets/Router/default_routes.ini';
+    $valid_url = '404.php';
+    $url_params = array('page' => '404.php', 'status' => '404' );
+    $r = new \Router\Base(false, $routes_filename);
+    $this->assertEqual($r->url_for($url_params), $valid_url, 'Router with default route should create valid URL ['.$valid_url.'] from params ['.join('|', $url_params).']');
+  }
 }
 ?>
