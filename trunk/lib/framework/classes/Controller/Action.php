@@ -93,6 +93,11 @@ abstract class Action extends Base {
     $this->set_action_name($action);
     $action_method = $action;
     if (!method_exists($this, $action_method)) {
+      if(\Roboframe\Base::environment() == 'production') {
+        //TODO: Implement dynamic error pages
+        $this->render('page:404.html', 'status:404');
+        exit(0);
+      }
       exit("Method [".$action_method."] does not exist in Controller [".$this->getName()."]");
     }
     if(method_exists($this, 'init')) {
