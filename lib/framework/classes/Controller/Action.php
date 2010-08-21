@@ -73,6 +73,10 @@ abstract class Action extends Base {
     return $this->_name;
   }
   
+  public function controller_name() {
+    return $this->_name;
+  }
+  
   public function set_action_name($action_name) {
     $this->_action_name = $action_name;
   }
