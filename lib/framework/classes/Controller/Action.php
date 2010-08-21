@@ -3,6 +3,7 @@ namespace Controller;
 //require_once('classes/class.View.php');
 abstract class Action extends Base {
   protected $_name;
+  protected $_action;
   protected $viewData      = array();
   public    $layout; //        = 'default';
   public    $output_format = 'xhtml';
@@ -72,6 +73,13 @@ abstract class Action extends Base {
     return $this->_name;
   }
   
+  public function set_action_name($action_name) {
+    $this->_action_name = $action_name;
+  }
+  public function action_name() {
+    return $this->_action_name;
+  }
+  
   public function setVar($key, $value) {
     $this->viewData[$key] = $value;
   }
@@ -82,6 +90,7 @@ abstract class Action extends Base {
   }
   public function dispatchAction($action) {
     //$actionMethod = "do" . ucfirst($action);
+    $this->set_action_name($action);
     $action_method = $action;
     if (!method_exists($this, $action_method)) {
       exit("Method [".$action_method."] does not exist in Controller [".$this->getName()."]");
@@ -128,6 +137,7 @@ abstract class Action extends Base {
         exit(0);
       }
     }
+
     $this->$action_method();
     $this->displayView($action);
   }
