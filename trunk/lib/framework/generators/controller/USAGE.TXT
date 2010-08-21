@@ -1,0 +1,3 @@
+Usage:
+
+> php scripts/generate.php controller ControllerName method1,method2,method3,...
