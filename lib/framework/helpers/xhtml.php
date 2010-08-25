@@ -130,5 +130,13 @@ function link_to($label, $options) {
   if(is_string($options)) {
     echo "<a href=\"{$options}\">{$label}</a>";
   }
+}
 
+function mail_to_link($target, $text = false) {
+  if(!$text) {
+    echo '<a href="mailto:'.$target.'">'.$target.'</a>';
+  } else {
+    echo '<a href="mailto:'.$target.'">'.$text.'</a>';
+  }
+  
 }
