@@ -1,6 +1,6 @@
 #What's coming
 
-= Undorted list of future features =
+= Unsorted list of future features =
 
   * i18n and l10n
   * HTML5 support
