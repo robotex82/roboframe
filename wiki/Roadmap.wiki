@@ -10,3 +10,4 @@
   * Linux support for the "roboframe" command
   * Online plugin repository
   * Documentation generator (based on reflection)
+  * Refactoring migration support
