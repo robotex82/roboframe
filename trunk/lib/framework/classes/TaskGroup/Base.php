@@ -1,5 +1,6 @@
 <?php
 namespace TaskGroup;
+use \ReflectionMethod;
 /**
  * TaskGroup Baseclass. All TaskGroups extend this class
  * 
@@ -33,5 +34,14 @@ class Base {
   
   public static function available() {
     return array_keys(static::$tasks);
+  }
+  
+  public static function task_exists($taskname) {
+    return in_array($taskname, self::available());
+  }
+  
+  public static function documentation_for_task($taskname) {
+    $r = new ReflectionMethod(get_called_class(), $taskname);
+    return $r->getDocComment(); 
   }
 }

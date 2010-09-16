@@ -7,6 +7,15 @@ abstract class Base {
   private $identifier;
   private $name;
   private $verbose = true;
+  static private $_migration_root = false;
+  
+  public static function set_migration_root($mr) {
+    self::$_migration_root = $mr;
+  }
+  
+  public static function migration_root() {
+    return self::$_migration_root;
+  }
 
   abstract protected function up();
   abstract protected function down();
@@ -165,6 +174,10 @@ abstract class Base {
     $database_adapter = $this->database_adapter();
     $fields = array('identifier:string:3');
     $database_adapter::create_table($this->database_connection, 'schema_info', $fields);
+  }
+  
+  public static function init() {
+    self::set_migration_root(APPLICATION_ROOT.'/migrations');
   }
 }
 ?>

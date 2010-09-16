@@ -16,41 +16,41 @@ class Base {
   private   $headers = array();
   private $body_content_type = 'text/plain';
   
-    /**
-    * Set the html_mail value
-    * @param type $html_mail
-    */
-    public function set_html_mail($html_mail) {
-      if($html_mail === true) {
-        $this->body_content_type = 'text/html';
-      } elseif($html_mail === false) {
-        $this->body_content_type = 'text/plain';
-      }
+  /**
+  * Set the html_mail value
+  * @param type $html_mail
+  */
+  public function set_html_mail($html_mail) {
+    if($html_mail === true) {
+      $this->body_content_type = 'text/html';
+    } elseif($html_mail === false) {
+      $this->body_content_type = 'text/plain';
     }
-  
-    /**
-    * Returns the body_content_type value.
-    * @return type
-    */
-    public function body_content_type() {
-      return $this->body_content_type;
-    }
-  
-    /**
-    * Set the headers value
-    * @param type $headers
-    */
-    public function add_header($header) {
-      $this->headers[] = $header;
-    }
-  
-    /**
-    * Returns the headers value.
-    * @return type
-    */
-    public function headers() {
-      return join("\n", $this->headers);
-    }
+  }
+
+  /**
+  * Returns the body_content_type value.
+  * @return type
+  */
+  public function body_content_type() {
+    return $this->body_content_type;
+  }
+
+  /**
+  * Set the headers value
+  * @param type $headers
+  */
+  public function add_header($header) {
+    $this->headers[] = $header;
+  }
+
+  /**
+  * Returns the headers value.
+  * @return type
+  */
+  public function headers() {
+    return join("\n", $this->headers);
+  }
   
   static public function set_view_root($vr) {
     self::$view_root = $vr;
@@ -264,7 +264,8 @@ class Base {
   }
   
   public static function class_loader($namespaced_class) {
-    $class = end(explode("\\", $namespaced_class));
+    $ec = explode("\\", $namespaced_class);
+    $class = end($ec);
     $file = APPLICATION_ROOT.'/models/'.\Inflector\Base::underscore($class).'.php';
     if (!is_readable($file)) {
       return false;

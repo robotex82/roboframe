@@ -1,10 +1,18 @@
 <|?php
-class <?= $group_name ?>Tasks extends TaskGroup {
-  protected static $tasks = array('task' =>'prerequisite');
+namespace TaskGroup;
+use Exception;
+class <?= $group_name ?>Tasks extends Base {
+  protected static $tasks = array(
+<? $i = 0; ?>
+<? foreach($tasks as $t) : ?>
+  <? if($i > 0) : ?>,<? endif; ?>
+  '<?= $t ?>' => ''
+<? $i++; endforeach; ?>
+  );
   
-  /*
-  public function task($options) {
+<? foreach($tasks as $t) : ?>
+  public function <?= $t ?>($options) {
     return true;
   }
-  */
+<? endforeach; ?>
 }

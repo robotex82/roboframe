@@ -1,7 +1,10 @@
 <?php
 namespace View;
+// TODO: Change this!
+
 use Exception;
 \Roboframe\Base::enable_module('Output\Manager\Base');
+\Roboframe\Base::enable_module('Html\Form');
 class Base {
   //protected $output_format = 'xhtml';
   protected $view_data = array();
@@ -10,7 +13,8 @@ class Base {
   //protected $layout = 'default';
   protected $layout_path;
   protected $view_path;
-  protected $view_root;
+  static protected $_view_root = false;
+  static protected $_layout_root = false;
   protected $controller_name;
   protected $action_name;  
   static protected $helpers = array();
@@ -31,7 +35,7 @@ class Base {
   
   public function __construct($controller_name, $action_name, $view_data, $output_format, $layout) {
     \Output\Manager\Base::auto_register_framework_output_handlers();
-    $this->set_view_root(VIEW_ROOT);
+    //$this->set_view_root(VIEW_ROOT);
     //$this->set_view_path($view_path);
     $this->set_controller_name($controller_name);
     $this->set_action_name($action_name);
@@ -43,7 +47,7 @@ class Base {
     $this->output_manager->set_layout($layout);
     $this->set_layout_path($this->output_manager->get_layout_path());
     
-    self::register_helper(FRAMEWORK_PATH.'/helpers/xhtml.php');
+    //self::register_helper(FRAMEWORK_PATH.'/helpers/xhtml.php');
     self::register_helper(APPLICATION_ROOT.'/helpers/application_helpers.php');
   }
 /*  
@@ -56,16 +60,24 @@ class Base {
     $output_parts = explode('|', $output_format);
     $output_extension = $output_parts[0];
 //    return VIEW_ROOT . '/' . $this->get_controller_name() . '/' . $this->get_action_name() . '.'.$output_extension.'.php';
-    return $this->get_view_root() . '/' . $this->get_controller_name() . '/' . $this->get_action_name() . '.'.$output_extension.'.php';
+    return self::view_root() . '/' . $this->get_controller_name() . '/' . $this->get_action_name() . '.'.$output_extension.'.php';
     //return $this->view_path;
   }
   
-  public function set_view_root($view_root) {
-    $this->view_root = $view_root;
+  public static function set_view_root($view_root) {
+    self::$_view_root = $view_root;
   }
   
-  public function get_view_root() {
-    return $this->view_root;
+  public static function view_root() {
+    return self::$_view_root;
+  }
+  
+  public static function set_layout_root($lr) {
+    self::$_layout_root = $lr;
+  }
+  
+  public static function layout_root() {
+    return self::$_layout_root;
   }
   
   public function add_view_data($key, $data) {
@@ -149,7 +161,7 @@ class Base {
     //if (!is_file($content)) {
     if ($this->output_manager->render_view() && !is_file($content)) {
       //exit("View [".$view."] not found");
-      exit('View ['.$content.'] not found in ['.$this->get_view_root().']');
+      exit('View ['.$content.'] not found in ['.self::view_root().']');
     }
 
     if(method_exists($this->output_manager, 'before_render')) {
@@ -185,8 +197,19 @@ class Base {
     } 
   }
   
-  public function render_partial($name, $local_vars = array()) {
-    $file = $this->get_view_root() . '/' . $this->get_controller_name() . '/_' . $name . ".php";
+  public function render_partial($name) {
+    /*
+    var_dump(debug_backtrace());
+    $args = func_get_args();
+    $name = $args[0];
+    $local_vars = array();
+    if(func_num_args() > 0) {
+      for($i = 1; $i < func_num_args(); $i++) {
+        $local_vars[] = $args[$i];
+      }
+    } 
+    */ 
+    $file = self::view_root() . '/' . $this->get_controller_name() . '/_' . $name . ".php";
       if(!file_exists($file)) {
       throw new \Exception("Partial [{$file}] does not exist!");
     }
@@ -194,12 +217,16 @@ class Base {
     if(!is_readable($file)) {
       throw new \Exception("Could not read partial [{$file}]!");
     }
-    
+    /*
     foreach($local_vars as $var => $value) {
       $$var = $value;
     }
+    */
+    //Create variables for the template
+    foreach ($this->get_view_data() as $key => $value) {
+      $$key = $value;
+    }    
     include($file);
     
   }
 }
-?>

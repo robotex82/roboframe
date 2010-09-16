@@ -8,7 +8,7 @@ function javascript_link_tag($name) {
 }
 
 function back_url() {
-  return $_SERVER['HTTP_REFERER'];
+  return @$_SERVER['HTTP_REFERER'];
 }
 /*
  * Params:

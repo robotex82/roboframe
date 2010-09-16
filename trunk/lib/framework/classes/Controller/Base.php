@@ -2,16 +2,24 @@
 namespace Controller;
 //require_once 'class.Request.php';
 abstract class Base {
-  private $logger;
+  private $_logger;
   private $request;
+  private static $controller_root = false;
+  
+  public static function set_controller_root($cr) {
+    self::$controller_root = $cr;
+  }
+  
+  public static function controller_root() {
+    return self::$controller_root;
+  }
 
   public function set_logger($logger) {
-    $this->logger = new $logger;
+    $this->_logger = $logger;
   }
   
   public function logger() {
-    
-    return $this->logger;
+    return $this->_logger;
   }
   
   public function set_request($request_data) {
@@ -49,7 +57,7 @@ abstract class Base {
     //$class = ucwords($page) . "Controller";
     $file_class = $page . "_controller";
     //e.g. pages/home/HomeActions.php
-    $file = CONTROLLER_ROOT . "/" . $file_class . ".php";
+    $file = \Controller\Base::controller_root() . "/" . $file_class . ".php";
     if (!is_file($file)) {
       if(\Roboframe\Base::environment() == 'production') {
         //TODO: Implement dynamic error pages
@@ -62,8 +70,8 @@ abstract class Base {
     $controller = new $class();
     //$controller->set_request($request_data);
     $controller->set_request($this->get_request_data());
-    $controller->setName($page);
-    $controller->dispatchAction($action);
+    //$controller->set_name($page);
+    $controller->dispatch_action($action);
     exit(0);
   }
   

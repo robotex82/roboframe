@@ -26,7 +26,8 @@ class Base {
   
   static public function auto_register_framework_generators() {
     foreach(glob(realpath(FRAMEWORK_PATH.'/generators').'/*') as $path) {
-      $name = end(explode('/', $path));
+      $exploded_path = explode('/', $path);
+      $name = end($exploded_path);
       //echo $name." => ".$path."\r\n";
       self::register_generator($name, $path);
     }

@@ -12,6 +12,15 @@ abstract class Base {
   protected $validators = array();
   protected $errors = array();
   protected $_connection_name = false;
+  private static $_model_root = false;
+  
+  public static function set_model_root($mr) {
+    self::$_model_root = $mr;
+  }
+  
+  public static function model_root() {
+    return self::$_model_root;
+  }
   
   //public $database_connection = null;
   
@@ -123,8 +132,8 @@ abstract class Base {
     }
   }
   
-  public function init() {
-
+  public static function init() {
+    self::set_model_root(APPLICATION_ROOT.'/models');
     spl_autoload_extensions('.php');
     spl_autoload_register('self::class_loader');
     
@@ -137,6 +146,4 @@ abstract class Base {
     }
     include $file; 
   }
-
 }
-?>

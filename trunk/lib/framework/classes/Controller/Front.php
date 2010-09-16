@@ -6,12 +6,20 @@ namespace Controller;
 
 class Front extends Base {
   public static function createInstance() {
-    if (!defined("CONTROLLER_ROOT") || !defined("VIEW_ROOT") || !defined("LAYOUT_ROOT")) {
-      exit("Critical error: Cannot proceed without CONTROLLER_ROOT, VIEW_ROOT and LAYOUT_ROOT.");
+    if (!\Controller\Base::controller_root()) {
+      exit('Critical error: Cannot proceed without valid \Controller\Base::controller_root()');
     }
-    $instance = new self();
-    //$instance->set_request($_REQUEST);
-    return $instance;
+    
+    if (!\View\Base::view_root()) {
+      exit('Critical error: Cannot proceed without valid \View\Base::view_root()');
+    }
+    
+    if (!\View\Base::layout_root()) {
+      exit('Critical error: Cannot proceed without valid \View\Base::layout_root()');
+    }
+    //$instance = new self();
+    //return $instance;
+    return new self();
   }
   public function dispatch() {
 /*

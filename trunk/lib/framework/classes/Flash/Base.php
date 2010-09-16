@@ -5,7 +5,7 @@ class Base {
   protected $keys_to_delete = array();
 
   public function __construct() {
-    if(!is_array($_SESSION['flash'])) {
+    if(!isset($_SESSION['flash']) || !is_array($_SESSION['flash'])) {
       $_SESSION['flash'] = array();
     }    
     $this->keys_to_delete = array_keys($_SESSION['flash']);
