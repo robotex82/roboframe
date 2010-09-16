@@ -119,11 +119,11 @@ class Base {
     return $string;
   }
   
-  public function tableize($class_name) {
+  public static function tableize($class_name) {
     return self::pluralize(self::underscore($class_name));
   }
   
-  public function camelize($lower_case_and_underscored_word) {
+  public static function camelize($lower_case_and_underscored_word) {
     // lower_case_and_underscored_word.to_s.gsub(/\/(.?)/) { "::" + $1.upcase }.gsub(/(^|_)(.)/) { $2.upcase }
     //$return = preg_replace('/(^|_)(.)/', strtoupper('\1'), $camel_cased_word); 
     $words = explode('_', $lower_case_and_underscored_word);

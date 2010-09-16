@@ -15,7 +15,8 @@ class Base {
 
   static public function set_environment($e) {
   	if(empty($e)) {
-  	  throw new \Exception("Cannot set empty environment! Set 'ROBOFRAME_ENV' in the environment!");
+  	  //throw new \Exception("Cannot set empty environment! Set 'ROBOFRAME_ENV' in the environment!");
+  	  $e = 'development';
   	}
     self::$environment = $e;
   }

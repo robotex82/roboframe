@@ -1,5 +1,6 @@
 <?php
 namespace Generator;
+use Inflector\Base as Inflector;
 /**
  * 
  * @author Roberto Vasquez Angel

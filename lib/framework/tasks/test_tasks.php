@@ -16,15 +16,6 @@ class TestTasks extends Base {
   public function framework() {
     $ts = &new TestSuite('Roboframe Framework Tests');
     if(is_dir($roboframe_tests_dir = FRAMEWORK_PATH.'/tests')) {
-      /*
-      if ($handle = opendir($roboframe_tests_dir)) {
-        while (false !== ($roboframe_tests_dir_entry = readdir($handle))) {
-          if (substr($roboframe_tests_dir_entry, 0, 1) != ".") {
-            $ts->addFile($roboframe_tests_dir.'/'.$roboframe_tests_dir_entry);
-          }
-        }
-      }
-      */
       foreach(glob($roboframe_tests_dir.'/*.test.php') as $test) {
         $ts->addFile($test);
       }
@@ -36,18 +27,9 @@ class TestTasks extends Base {
     $ts = &new TestSuite('All plugin tests');
     foreach(PluginManager\Base::find_all() as $plugin) {
       if(is_dir($plugin_tests_dir = $plugin.'/tests')) {
-        /*
-        if ($handle = opendir($plugin_tests_dir)) {
-          while (false !== ($plugin_tests_dir_entry = readdir($handle))) {
-            if (substr($plugin_tests_dir_entry, 0, 1) != ".") {
-              $ts->addFile($plugin_tests_dir.'/'.$plugin_tests_dir_entry);
-            }
-          }
+        foreach(glob($plugin_tests_dir.'/*.test.php') as $test) {
+          $ts->addFile($test);
         }
-        */
-      foreach(glob($plugin_tests_dir.'/*.test.php') as $test) {
-        $ts->addFile($test);
-      }
       }
     }
     $ts->run(new TextReporter());

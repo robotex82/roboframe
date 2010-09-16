@@ -1,5 +1,7 @@
 <?php
 namespace Logger;
+use Exception;
+\Roboframe\Base::enable_module('Logger\Base');
 class Text extends Base {
   private static $filename;
   private $instance_filename;

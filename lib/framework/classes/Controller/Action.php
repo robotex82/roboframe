@@ -1,6 +1,5 @@
 <?php
 namespace Controller;
-//require_once('classes/class.View.php');
 abstract class Action extends Base {
   protected $_name;
   protected $_action;
@@ -50,6 +49,7 @@ abstract class Action extends Base {
   
   public function __construct() {
     parent::__construct();
+    $this->set_name(str_replace('_controller', '', \Inflector\Base::underscore(get_called_class())));
     $this->flash = new \Flash\Base();
   }
   
@@ -66,7 +66,7 @@ abstract class Action extends Base {
     return $this->output_format;
   }
   
-  public function setName($name) {
+  public function set_name($name) {
     $this->_name = $name;
   }
   public function getName() {
@@ -92,7 +92,7 @@ abstract class Action extends Base {
       return $this->viewData[$key];
     }
   }
-  public function dispatchAction($action) {
+  public function dispatch_action($action) {
     //$actionMethod = "do" . ucfirst($action);
     $this->set_action_name($action);
     $action_method = $action;

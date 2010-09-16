@@ -46,11 +46,14 @@ class Base {
   }
   
   static public function auto_register_application_task_groups() {
-    foreach(glob(realpath(APP_BASE.'/lib/tasks').'/*') as $path) {
-      //$name = end(explode('/', $path));
-      $name = basename($path, '_tasks.php');
-      //echo $name." => ".$path."\r\n";
-      self::register_task_group($name, $path);
+    if(is_dir(realpath(APP_BASE.'/lib/tasks'))) {
+      foreach(glob(realpath(APP_BASE.'/lib/tasks').'/*') as $path) {
+        //$name = end(explode('/', $path));
+        $name = basename($path, '_tasks.php');
+        //echo APP_BASE."\r\n";
+        //echo $name." => ".$path."\r\n";
+        self::register_task_group($name, $path);
+      }    
     }
   }
 /*  
@@ -77,16 +80,9 @@ class Base {
     return "\\TaskGroup\\".\Inflector\Base::camelize($name).'Tasks';
     //return self::$task_groups[$name];
   }
-/*
-    if(is_readable(APP_BASE.'/lib/tasks/'.$name.'_tasks.php')) {
-      require_once APP_BASE.'/lib/tasks/'.$name.'_tasks.php';
-      return APP_BASE.'/lib/tasks/'.$name.'_tasks.php';
-    }
 
-  if(is_readable(FRAMEWORK_PATH.'/tasks/'.$name.'_tasks.php')) {
-      require_once(FRAMEWORK_PATH.'/tasks/'.$name.'_tasks.php');
-      return FRAMEWORK_PATH.'/tasks/'.$name.'_tasks.php';
-    }
+  public static function documentation_for_task_group($taskgroup) {
+    $r = new ReflectionClass($taskgroup);
+    return $r->getDocComment(); 
   }
-  */
 }
