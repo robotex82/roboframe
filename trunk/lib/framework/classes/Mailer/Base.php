@@ -259,14 +259,14 @@ class Base {
   }
   
   public static function init() {
-    spl_autoload_extensions('.php');
-    spl_autoload_register('self::class_loader');    
+    spl_autoload_extensions('_mailer.php');
+    spl_autoload_register('self::mailer_loader');    
   }
   
-  public static function class_loader($namespaced_class) {
+  public static function mailer_loader($namespaced_class) {
     $ec = explode("\\", $namespaced_class);
     $class = end($ec);
-    $file = APPLICATION_ROOT.'/models/'.\Inflector\Base::underscore($class).'.php';
+    $file = APPLICATION_ROOT.'/models/'.\Inflector\Base::underscore($class).'_mailer.php';
     if (!is_readable($file)) {
       return false;
     }

@@ -136,7 +136,6 @@ class Base {
   
   public static function humanize($string) {
     return ucwords(implode(' ', explode('_', $string)));
-    
   }
 }
 ?>

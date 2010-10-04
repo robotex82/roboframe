@@ -53,19 +53,27 @@ class Text extends Base {
   }
   
   public function debug($message) {
-    $this->write('DEBUG: '.$message);
+    if(self::log_debug_messages()) {
+      $this->write('DEBUG: '.$message);
+    }
   }
   
   public function info($message) {
-    $this->write('INFO: '.$message);
+    if(self::log_info_messages()) {
+      $this->write('INFO: '.$message);
+    }
   }
   
   public function warn($message) {
-    $this->write('WARNING: '.$message);
+    if(self::log_warn_messages()) {
+      $this->write('WARNING: '.$message);
+    }
   }
   
   public function error($message) {
-    $this->write('ERROR: '.$message);
+    if(self::log_error_messages()) {
+      $this->write('ERROR: '.$message);
+    }
   }
   
   public function write($message) {
@@ -75,7 +83,7 @@ class Text extends Base {
       throw new \Exception('Could not write log! Directory ['.dirname($filename).'] is missing!');
     }
     $now = date("Y-m-d H:i:s");
-    $ip_address = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : null.' ';
+    $ip_address = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'].' ' : ' ';
     error_log ('['.$ip_address.$now.' '.$_SERVER['SCRIPT_NAME'].'] '.$message."\r\n", 3, $filename);
   }
 }

@@ -49,8 +49,8 @@ class Form {
   public function label($name) {
     $options = array(
       'id' =>  $name
-     ,'for' => $name
-     ,'tag_content' => $name
+     ,'for' => Inflector::underscore($this->object_class()).'_'.$name
+     ,'tag_content' => Inflector::humanize($name)
      //,'value' => @$this->object()->$name
     );
     $output = self::tag_builder('label', $options);

@@ -209,8 +209,14 @@ class Base {
       }
     } 
     */ 
-    $file = self::view_root() . '/' . $this->get_controller_name() . '/_' . $name . ".php";
-      if(!file_exists($file)) {
+
+    if(strstr($name, '/')) {
+      $file =  self::view_root() . '/' . $name . ".php";
+    } else {
+      $file = self::view_root() . '/' . $this->get_controller_name() . '/_' . $name . ".php";
+    }
+
+    if(!file_exists($file)) {
       throw new \Exception("Partial [{$file}] does not exist!");
     }
     
