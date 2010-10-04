@@ -120,7 +120,11 @@ function checkbox($args) {
 
 function link_to($label, $options) {
   if(is_array($options)) {
-    $output = "<a href=\"".Router\Base::base_url()."/{$options['controller']}/{$options['action']}";
+    $output = "<a href=\"".Router\Base::base_url()."/{$options['controller']}";
+    if(isset($options['action'])) {
+    $output.= "/{$options['action']}";
+    }
+    
     if(isset($options['id'])) {
       $output.= "/{$options['id']}";
     }

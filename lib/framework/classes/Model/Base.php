@@ -8,10 +8,12 @@ require_once(FRAMEWORK_PATH.'/classes/validators/InclusionOfValidator.php');
 require_once(FRAMEWORK_PATH.'/classes/validators/FormatOfValidator.php');
 */
 abstract class Base {
+/*  
   protected $data = array();
   protected $validators = array();
   protected $errors = array();
   protected $_connection_name = false;
+*/  
   private static $_model_root = false;
   
   public static function set_model_root($mr) {
@@ -21,7 +23,7 @@ abstract class Base {
   public static function model_root() {
     return self::$_model_root;
   }
-  
+/*  
   //public $database_connection = null;
   
   public function __construct() {
@@ -109,11 +111,11 @@ abstract class Base {
     }
     return true;
   }
-/*  
-  public function add_to_errors($field, $message) {
-    $this->errors[$field] = $message;
-  }
-*/
+  
+//  public function add_to_errors($field, $message) {
+//    $this->errors[$field] = $message;
+//  }
+
   public function set_error_message_for($field, $message) {
     $this->errors[$field] = $message;
   }
@@ -131,7 +133,7 @@ abstract class Base {
       return $this->errors[$fieldname];
     }
   }
-  
+*/  
   public static function init() {
     self::set_model_root(APPLICATION_ROOT.'/models');
     spl_autoload_extensions('.php');
@@ -140,6 +142,7 @@ abstract class Base {
   }
   
   public static function class_loader($class) {
+    var_dump($class);
     $file = APPLICATION_ROOT.'/models/'.\Inflector\Base::underscore($class).'.php';
     if (!is_readable($file)) {
       return false;
