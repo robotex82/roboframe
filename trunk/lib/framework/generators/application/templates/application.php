@@ -10,7 +10,18 @@
 <body>
   <div id="content">
     <div class="flash">
-      <p style="color: green"><?= $flash->notice; ?></p>
+      <? if($flash['notice']) : ?>
+        <p style="color: green"><?= $flash['notice']; ?></p>
+      <? endif; ?>
+      <? if($flash['message']) : ?>
+        <p style="color: green"><?= $flash['message']; ?></p>
+      <? endif; ?>
+      <? if($flash['warning']) : ?>
+        <p style="color: red"><?= $flash['warning']; ?></p>
+      <? endif; ?>
+      <? if($flash['error']) : ?>
+        <p style="color: red"><?= $flash['error']; ?></p>
+      <? endif; ?>
     </div>
     <? include($content); ?>
   </div>
