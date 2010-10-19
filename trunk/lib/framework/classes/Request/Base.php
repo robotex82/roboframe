@@ -38,5 +38,10 @@ class Base {
     return $this->$var;
     
   }
+  
+  public function post() {
+    if(count($_POST) > 0) return true;
+    return false;
+  }
 }
 ?>

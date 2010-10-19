@@ -4,6 +4,7 @@ namespace Controller;
 abstract class Base {
   private $_logger;
   private $request;
+  private $_params;
   private static $controller_root = false;
   
   public static function set_controller_root($cr) {
@@ -24,6 +25,7 @@ abstract class Base {
   
   public function set_request($request_data) {
     $this->request = new \Request\Base($request_data);
+    $this->params = $this->request()->get_data(); 
   }
   
   public function request() {
@@ -75,13 +77,15 @@ abstract class Base {
     exit(0);
   }
   
-  public function redirect_to() {
+  public function redirect_to($params) {
 //    print_r(func_get_args());
+/*
     $params = array();
     foreach(func_get_args() as $arg) {
       $arg_parts = explode(':', $arg);
       $params[$arg_parts[0]] = $arg_parts[1];
-    }  
+    }
+    */  
     $r = new \Router\Base();
  /*
      

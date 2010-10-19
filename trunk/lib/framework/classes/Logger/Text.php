@@ -45,7 +45,7 @@ class Text extends Base {
   }
   
   public static function init() {
-    \Logger\Base::set_logger(new self(APP_BASE.'/logs/'.\Roboframe\Base::environment().'_'.date("Y-m-d").'.log'));
+    \Logger\Base::set_logger(new static(APP_BASE.'/logs/'.\Roboframe\Base::environment().'_'.date("Y-m-d").'.log'));
   }
   
   public function log($message) {

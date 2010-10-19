@@ -21,6 +21,15 @@ class Form {
     $this->set_object($object);
   }
   
+  public function error_message_for($field) {
+    $error = @$this->object()->errors->$field;
+    return $error[0];
+  }  
+  
+  public function error_messages() {
+    return @$this->object()->errors;
+  }
+  
   public function checkbox($name) {
     $options = array(
       'id'    => Inflector::underscore($this->object_class()).'_'.$name
@@ -46,14 +55,14 @@ class Form {
     return $output;
   }
   
-  public function label($name) {
+  public function label($name, array $options = array()) {
     $options = array(
       'id' =>  $name
      ,'for' => Inflector::underscore($this->object_class()).'_'.$name
      ,'tag_content' => Inflector::humanize($name)
      //,'value' => @$this->object()->$name
     );
-    $output = self::tag_builder('label', $options);
+    $output = self::tag_builder('label', array_merge($options));
     return $output;
   }
 
@@ -120,6 +129,10 @@ class Form {
   
   public static function tag_builder($tag, array $options = array()) {
     $output = '<'.$tag;
+    if(array_key_exists('action', $options)) {
+      $output.= ' action="'.$options['action'].'"';
+    }
+    
     if(array_key_exists('id', $options)) {
       $output.= ' id="'.$options['id'].'"';
     }
@@ -134,6 +147,10 @@ class Form {
     
     if(array_key_exists('type', $options)) {
       $output.= ' type="'.$options['type'].'"';
+    }
+    
+      if(array_key_exists('method', $options)) {
+      $output.= ' method="'.$options['method'].'"';
     }
     
     if(array_key_exists('name', $options)) {

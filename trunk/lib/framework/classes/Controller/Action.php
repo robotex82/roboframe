@@ -1,5 +1,6 @@
 <?php
 namespace Controller;
+use Logger\Base as Logger;
 abstract class Action extends Base {
   protected $_name;
   protected $_action;
@@ -7,41 +8,7 @@ abstract class Action extends Base {
   public    $layout; //        = 'default';
   public    $output_format = 'xhtml';
   protected $flash;
-  protected $before_filters = array();
-  
-  /**
-   * registers a before_filter
-   * 
-   * The first param is the filter method that is called
-   * The second and third params define exceptions as except and only lists. 
-   * 
-   * Register filters in the init function of the controller.
-   * 
-   * Example:
-   * <code>
-   * protected function init() {
-   *   $this->before_filter('say_hello', null, 'enlist,add');
-   * }
-   * </code>
-   *
-   * @param $method
-   * @param $except
-   * @param $only
-   * @return unknown_type
-   */
-  public function before_filter($method, $except = null, $only = null) {
-    $this->before_filters[$method] = array();
-    if(!is_null($except)) {
-      $this->before_filters[$method]['except'] = explode(',', $except);
-    }
-    if(!is_null($only)) {
-      $this->before_filters[$method]['only'] = explode(',', $only);
-    }
-  }
-  
-  private function get_before_filters() {
-    return $this->before_filters;
-  }
+  static protected $_before_filters = array();
   
   public function flash() {
     return $this->flash;
@@ -107,7 +74,35 @@ abstract class Action extends Base {
     if(method_exists($this, 'init')) {
       $this->init();
     }
+    
+    
+    //var_dump(static::$_before_filters);
+    foreach(static::$_before_filters as $bf) {
+      if(!array_key_exists('except', $bf) && !array_key_exists('only', $bf)) {
+        if(!$this->invoke_callback($bf[0])) {
+          echo 'Filter chain broken on method ['.$bf[0].']!';
+          exit();
+        }
+        continue;
+      }
+      if(array_key_exists('except', $bf) && !in_array($action_method, $bf['except'])) {
+              if(!$this->invoke_callback($bf[0])) {
+          echo 'Filter chain broken on method ['.$bf[0].']!';
+          exit();
+        }
+        continue;
+      }
+      
+      if(array_key_exists('only', $bf) && in_array($action_method, $bf['only'])) {
+        if(!$this->invoke_callback($bf[0])) {
+          echo 'Filter chain broken on method ['.$bf[0].']!';
+          exit();
+        }
+        continue;
+      }      
+    }
 
+/*
     //var_dump($this->get_before_filters());
     foreach($this->get_before_filters() as $before_method => $exceptions) {
       if(!isset($exceptions['except']) && !isset($exceptions['only'])) {
@@ -146,7 +141,7 @@ abstract class Action extends Base {
         exit(0);
       }
     }
-
+*/
     $this->$action_method();
     $this->displayView($action);
   }
@@ -182,6 +177,29 @@ abstract class Action extends Base {
 */
     exit(0);
   }
+  
+  private function invoke_callback($method_name, $must_exist = true) {
+    if(method_exists($this, $method_name)) {
+      Logger::logger()->debug("Invoking callback [{$method_name}]");
+      return $this->$method_name();
+    }
+    
+    if($must_exist) {
+      throw new Exception("Called non existing callback [{$method_name}]");
+    }
+    
+    return true;
+  }
+  
+  protected function register_before_filter($bf, $first = false) {
+    if($first) {
+      static::$_before_filters = array_pad(static::$_before_filters, -(count(static::$_before_filters) + 1), $bf);
+    } else {
+      array_push(static::$_before_filters, $bf);  
+    }
+    
+  }
+  
   
   public function __set($key, $value)  {
     $this->setVar($key, $value);
