@@ -1,5 +1,6 @@
 <?php
 namespace Roboframe;
+use Logger\Base as Logger;
 class Base {
   protected static $environment;
   protected static $http_proxy;
@@ -18,7 +19,15 @@ class Base {
   	  //throw new \Exception("Cannot set empty environment! Set 'ROBOFRAME_ENV' in the environment!");
   	  $e = 'development';
   	}
-    self::$environment = $e;
+  	self::$environment = $e;
+  }
+  
+  static public function set_error_handler($error_handler) {
+    Logger::logger()->debug("Setting error handler [{$error_handler}]");
+    $parts = explode("::", $error_handler);
+    $method = array_pop($parts);
+    $class = implode('', $parts);
+    set_error_handler(array($class, $method));
   }
   
   static public function environment() {
@@ -53,7 +62,8 @@ class Base {
 */
   public static function list_controller_actions($controller_file_name) {
     $file_content = file(APPLICATION_ROOT.'/controllers/'.$controller_file_name);
-    $pattern = '/^[ ]*public function [ ]*(.*)\(/';
+    $pattern = '/^[ ]*[public|protected|static|]*[ ]*function [ ]*([^\(]*).*/';
+    //$pattern = '/^[ ]*[public|protected|static|]*[ ]*function [ ]*([a-zA-Z_]*)(.*)$/';
     $controller_actions = array();
     foreach($file_content as $line) {
       if(preg_match($pattern, $line, $matches)) {

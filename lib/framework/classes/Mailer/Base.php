@@ -6,7 +6,7 @@ use Exception;
 class Base {
   protected $view_data = array();
   static protected $view_root;
-  static protected $configuration_file;
+  static protected $configuration_file = null;
   protected $recipients;
   protected $subject;
   protected $body;
@@ -65,7 +65,7 @@ class Base {
   }
   
   static public function configuration_file() {
-    return self::$configuration_file;
+    return (self::$configuration_file) ? self::$configuration_file : APP_BASE.'/config/mailer.ini';
   }
   
   /*
@@ -106,6 +106,10 @@ class Base {
   
   
   public function __call($method, $args) {
+    var_dump($method);
+    var_dump($args);
+    
+    /*
     if(substr($method, 0, 7) == 'render_') {
       $action_name = str_replace('render_', '', $method);
       return $this->render_with_template($action_name);
@@ -125,7 +129,8 @@ class Base {
         }    
       }
       throw new Exception('Did not find Mailer method ['.$deliver_method.']!');
-    }  
+    } 
+    */ 
   }
   
   private function send($deliver_method) {
@@ -249,8 +254,10 @@ class Base {
   
   private function render_with_template($action_name) {
     //$controller_name = \Inflector\Base::underscore(get_class($this));
-    $controller_name = \Inflector\Base::underscore(end(explode("\\", get_class($this))));
-    $this->$action_name();
+    $class = get_class($this);
+    $exploded_class = explode("\\", $class);
+    $controller_name = \Inflector\Base::underscore(end($exploded_class));
+    //$this->$action_name();
 //    $view_data = array();
     $layout = '';
     $view = new \View\Base($controller_name, $action_name, $this->view_data, $this->output_format, $layout);
@@ -271,5 +278,27 @@ class Base {
       return false;
     }
     include $file; 
+  }
+  
+  static public function __callStatic($method, $arguments) {
+    //echo $method;
+    //echo get_called_class();
+
+    if(substr($method, 0, 8) == 'deliver_') {
+      $action_method = substr($method, 8);
+      return self::deliver($action_method, $arguments);
+    }
+    throw new Exception("Undefined method [{$method}]");
+    //var_dump($m);
+  }
+  
+  public static function deliver($method, $arguments) {
+    $klass = get_called_class();
+    $m = new $klass;    
+    if(method_exists($m, $method)) {
+      call_user_func_array(array($m, $method), $arguments);
+      return $m->send($method);
+    }  
+    throw new Exception('Did not find Mailer method ['.$deliver_method.']!');
   }
 }

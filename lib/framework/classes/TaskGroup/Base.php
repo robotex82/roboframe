@@ -1,6 +1,7 @@
 <?php
 namespace TaskGroup;
 use \ReflectionMethod;
+use \Exception;
 /**
  * TaskGroup Baseclass. All TaskGroups extend this class
  * 
@@ -43,5 +44,14 @@ class Base {
   public static function documentation_for_task($taskname) {
     $r = new ReflectionMethod(get_called_class(), $taskname);
     return $r->getDocComment(); 
+  }
+  
+  public static function map(array $options, $index, $mandatory = true, $message = null) {
+    if($mandatory && !array_key_exists($index, $options)) {
+      $message = ($message) ? $message : "Missing parameter [{$index}]";
+      throw new Exception($message);
+    }
+    return @$options[$index];
+    
   }
 }

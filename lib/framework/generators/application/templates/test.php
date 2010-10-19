@@ -1,7 +1,9 @@
 <?php
 putenv('ROBOFRAME_ENV=test');
+error_reporting(E_ALL &~(E_STRICT | E_DEPRECATED));
 require_once(dirname(__FILE__).'/../config/bootstrap.php');
-echo "Loaded Roboframe with environment  => [".getenv('ROBOFRAME_ENV')."]\r\n";
+Roboframe\Base::enable_module('Cli\Input');
+echo "Loaded Roboframe with environment  => [".Roboframe\Base::environment()."]\r\n";
 
 \TaskGroup\Manager\Base::auto_register_framework_task_groups();
 
@@ -13,7 +15,7 @@ if(!isset($argv[1])) {
 $task_group    = "test";
 $task_name     = $argv[1];
 $task_path     = $task_group.'::'.$task_name;
-
+$options       = Cli\Input::parse_arguments(@$argv[2]);
 echo "\r\nInvoking task [".$task_path."]...";
 // Check if task exists
 if(!$task_group_class = \TaskGroup\Manager\Base::find_and_load($task_group)) {
@@ -32,7 +34,7 @@ echo "[passed]\r\n";
 //$tg = new $task_group_class();
 //$g->map_options(Generator::extract_generator_options_from_cli($argv));
 try{
-  $task_group_class::run($task_name);
+  $task_group_class::run($task_name, $options);
 } catch(exception $e) {
   echo "An exception has occurred: ".$e->getmessage()."\r\n";
   echo "Available tasks in [{$task_group}] are:\r\n";
