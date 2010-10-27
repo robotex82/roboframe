@@ -1,5 +1,6 @@
 <?php
 namespace Controller;
+use Exception;
 use Logger\Base as Logger;
 abstract class Action extends Base {
   protected $_name;

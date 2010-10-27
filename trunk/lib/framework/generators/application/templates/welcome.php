@@ -47,11 +47,7 @@
         <td><?= APPLICATION_ROOT ?></td>
         <td>config/bootstrap.php</td>
       </tr>
-      <tr>        
-        <td>PAGE_ROOT</td>
-        <td><?= PAGE_ROOT ?></td>
-        <td>config/bootstrap.php</td>
-      </tr>    
+  
     </table>
   </div>
 </body>
