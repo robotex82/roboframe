@@ -8,7 +8,7 @@ Add your content here.
 = Details =
 
 App following code to your httpd.conf:
-`
+{{{
 Alias /<URI_PATH> <APPLICATION_ROOT>/public
 
 <Directory <APPLICATION_ROOT>/public>
@@ -17,4 +17,4 @@ Alias /<URI_PATH> <APPLICATION_ROOT>/public
     AllowOverride All
     SetEnv roboframe_env <ENVIRONMENT>
 </Directory>
-`
+}}}
