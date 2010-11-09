@@ -3,6 +3,7 @@
 = Prerequisites =
 
   * PHP > 5.3
+  * Activated Short Open Tags
 
 
 = Howto Install =
